@@ -4,14 +4,14 @@ import javax.json.JsonObject;
 
 public class TaskRunner {
 
-        TaskDelegate taskDelegate;
+    TaskDelegate taskDelegate;
 
-        public TaskRunner(TaskDelegate task){
-            this.taskDelegate  = task;
-        }
+    public TaskRunner(TaskDelegate task) {
+        this.taskDelegate = task;
+    }
 
-        public JsonObject doTask(){
-            return taskDelegate.doTask();
-        }
+    public JsonObject doTask() {
+        return taskDelegate.doTask();
+    }
 
 }
