@@ -17,6 +17,7 @@ public class TaskDelegate {
         this.taskJson = reader.readObject();
     }
 
+    //TODO executors thread pool
     public JsonObject doTask() {
         task = lookupService.getTask(taskJson);
         return task.doTask(taskJson);

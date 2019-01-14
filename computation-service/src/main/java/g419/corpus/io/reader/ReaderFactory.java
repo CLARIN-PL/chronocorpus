@@ -92,7 +92,7 @@ public class ReaderFactory {
 			in = new GZIPInputStream(in);
 		}
 		if (inputFormat.equals("ccl")){
-			InputStream desc =null;// getInputStream(root, uri.replace(".xml", ".ini"), gz);
+			InputStream desc = null;// getInputStream(root, uri.replace(".xml", ".ini"), gz);
                         //System.out.println(desc+" "+uri.replace(".xml", ".ini"));
 			return new CclSAXStreamReader(uri, in, desc, null);
 		}
