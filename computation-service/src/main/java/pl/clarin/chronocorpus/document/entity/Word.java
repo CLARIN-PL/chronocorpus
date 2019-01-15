@@ -6,7 +6,7 @@ public class Word {
 
     private String orth;
 
-    private short pos;
+    private String ctag;
 
     private short letterCount;
 
@@ -14,10 +14,10 @@ public class Word {
 
     private short phonemCount;
 
-    public Word(String base, String orth, short pos) {
+    public Word(String orth, String base, String ctag) {
         this.base = base;
         this.orth = orth;
-        this.pos = pos;
+        this.ctag = ctag;
     }
 
     public Word withLetterCount(short cnt){
@@ -42,8 +42,8 @@ public class Word {
         return orth;
     }
 
-    public short getPos() {
-        return pos;
+    public String getCtag() {
+        return ctag;
     }
 
     public short getLetterCount() {
@@ -56,5 +56,12 @@ public class Word {
 
     public short getPhonemCount() {
         return phonemCount;
+    }
+
+    @Override
+    public String toString() {
+        return "Word{" +
+                "orth='" + orth + '\'' +
+                '}';
     }
 }

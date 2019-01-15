@@ -14,4 +14,11 @@ public class Sentence {
     public List<Word> getWords() {
         return words;
     }
+
+    @Override
+    public String toString() {
+        return "Sentence{" +
+                "words=" + words +
+                '}';
+    }
 }

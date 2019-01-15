@@ -29,7 +29,7 @@ public class ConcordanceQueryService {
         return instance;
     }
 
-    public JsonObject findConcordance(String lemma){
+    public JsonObject findConcordanceByOrth(String orth){
 
         Map<UUID, List<Sentence>> sentences = new HashMap<>();
 
@@ -39,7 +39,7 @@ public class ConcordanceQueryService {
                     .stream()
                     .filter(s -> s.getWords()
                             .stream()
-                            .anyMatch(word -> word.getBase().equals(lemma)))
+                            .anyMatch(word -> word.getOrth().equals(orth)))
                     .collect(Collectors.toList());
             sentences.put(d.getId(), matching);
         }
@@ -47,7 +47,10 @@ public class ConcordanceQueryService {
         JsonArrayBuilder concordances = Json.createArrayBuilder();
         sentences.forEach((k, v) -> {
             v.stream()
-                    .map(s -> new Concordance(k, lemma).mapSentenceToConcordance(s))
+                    .map(s -> ConcordanceMapper
+                            .getInstance()
+                            .mapSentenceToConcordanceListByOrth(k, orth, s))
+                    .flatMap(Collection::stream)
                     .forEach(cc -> concordances.add(cc.getAsJson()));
         });
 

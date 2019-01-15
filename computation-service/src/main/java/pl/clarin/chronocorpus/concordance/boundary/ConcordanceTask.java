@@ -12,15 +12,15 @@ public class ConcordanceTask implements Task {
 
     @Override
     public JsonObject doTask(JsonObject json) {
-            JsonArray properties = json.getJsonArray("properties");
+            JsonArray properties = json.getJsonArray("params");
 
             Optional<String> lemma = properties.getValuesAs(JsonObject.class)
                     .stream()
-                    .filter(p -> p.getString("name").equals("lemma"))
+                    .filter(p -> p.getString("name").equals("orth"))
                     .map(l -> l.getString("value"))
                     .findFirst();
 
-            return lemma.map(l -> ConcordanceQueryService.getInstance().findConcordance(l))
+            return lemma.map(l -> ConcordanceQueryService.getInstance().findConcordanceByOrth(l))
                     .orElse(Json.createObjectBuilder().build());
     }
 }

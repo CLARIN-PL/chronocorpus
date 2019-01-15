@@ -1,12 +1,8 @@
 package pl.clarin.chronocorpus.concordance.entity;
 
-import pl.clarin.chronocorpus.document.entity.Sentence;
-import pl.clarin.chronocorpus.document.entity.Word;
-
 import javax.json.Json;
 import javax.json.JsonObject;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class Concordance {
 
@@ -49,14 +45,5 @@ public class Concordance {
                 .add("left",left)
                 .add("word", word)
                 .add("right",right).build();
-    }
-
-    public Concordance mapSentenceToConcordance(Sentence s){
-        String[] sentence = s.getWords().stream()
-                .map(Word::getBase)
-                .collect(Collectors.joining(" ")).split(word);
-        this.left = sentence.length > 0 ? sentence[0] : "";
-        this.right = sentence.length > 1 ? sentence[2] : "";
-        return this;
     }
 }

@@ -10,15 +10,12 @@ public class Document {
 
     private Metadata metadata;
 
-    private String text;
+    private List<Sentence> sentences = new ArrayList<>();
 
-    public Document(UUID id, Metadata metadata, String text) {
+    public Document(UUID id, Metadata metadata) {
         this.id = id;
         this.metadata = metadata;
-        this.text = text;
     }
-
-    private List<Sentence> sentences = new ArrayList<>();
 
     public void addSentence(Sentence s){
         sentences.add(s);
@@ -30,10 +27,6 @@ public class Document {
 
     public Metadata getMetadata() {
         return metadata;
-    }
-
-    public String getText() {
-        return text;
     }
 
     public List<Sentence> getSentences() {
