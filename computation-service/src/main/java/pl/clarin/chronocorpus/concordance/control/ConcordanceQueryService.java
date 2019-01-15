@@ -1,7 +1,7 @@
 package pl.clarin.chronocorpus.concordance.control;
 
-import pl.clarin.chronocorpus.concordance.entity.Concordance;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
+import pl.clarin.chronocorpus.document.control.JetstreamDB;
 import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Sentence;
 
@@ -33,7 +33,7 @@ public class ConcordanceQueryService {
 
         Map<UUID, List<Sentence>> sentences = new HashMap<>();
 
-        for(Document d: DocumentStore.getInstance().getStore()){
+        for(Document d: JetstreamDB.INSTANCE.root().getDocuments()){
 
             List<Sentence> matching = d.getSentences()
                     .stream()

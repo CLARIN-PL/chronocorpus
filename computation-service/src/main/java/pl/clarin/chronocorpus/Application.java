@@ -5,6 +5,7 @@ import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
+import pl.clarin.chronocorpus.document.control.JetstreamDB;
 import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Word;
 import pl.clarin.chronocorpus.task.boundary.TaskDelegate;
@@ -16,19 +17,29 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class Application {
 
-    public static void main(String... args) throws Exception {
+    public Application(){
+        DocumentStore store = JetstreamDB.INSTANCE.root();
+        if(store.getDocuments().isEmpty()){
+            try {
+                store.setDocuments(documentsLoader());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    public static void main(String... args){
+        new Application().run();
+    }
+
+    public void run(){
         String concordanceJson = "{\"task\":\"concordance\",\"user\":\"username\",\"corpus\":[\"chronopress\"],\"params\":[" +
                 "{\"name\":\"orth\",\"value\":\"gimnazjum\"}]}";
-
-        DocumentStore.getInstance().initializeStore(documentsLoader());
 
         TaskDelegate taskDelegate = new TaskDelegate();
         taskDelegate.setTaskString(concordanceJson);
@@ -37,12 +48,13 @@ public class Application {
         JsonObject result = taskRunner.doTask();
 
         System.out.println(result);
+
     }
 
-    //TODO data loaded from folder add db
-    public static List<Document> documentsLoader() throws Exception {
+    public Set<Document> documentsLoader() throws Exception {
 
-        List<Document> documents = new ArrayList<>();
+        System.out.println("Loading from files please wait .....");
+        Set<Document> documents = new HashSet<>();
 
         try (Stream<Path> paths = Files.walk(Paths.get("ccl/"))) {
             paths.filter(Files::isRegularFile)
