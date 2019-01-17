@@ -35,12 +35,19 @@ public class Word {
         return this;
     }
     public String getBase() {
+
         return base;
     }
 
     public String getOrth() {
+
         return orth;
     }
+
+    public String getOrthbyBase(String base){
+            return orth;
+    }
+
 
     public String getCtag() {
         return ctag;
@@ -61,7 +68,7 @@ public class Word {
     @Override
     public String toString() {
         return "Word{" +
-                "orth='" + orth + '\'' +
+                "orth='" + orth + '\'' +", base='" + base + '\'' +
                 '}';
     }
 }

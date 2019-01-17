@@ -39,7 +39,7 @@ public class Application {
 
     public void run(){
         String concordanceJson = "{\"task\":\"concordance\",\"user\":\"username\",\"corpus\":[\"chronopress\"],\"params\":[" +
-                "{\"name\":\"orth\",\"value\":\"gimnazjum\"}]}";
+                "{\"name\":\"orth\",\"value\":\"koty\"},{\"name\":\"base\",\"value\":\"krowa\"}]}";
 
         TaskDelegate taskDelegate = new TaskDelegate();
         taskDelegate.setTaskString(concordanceJson);

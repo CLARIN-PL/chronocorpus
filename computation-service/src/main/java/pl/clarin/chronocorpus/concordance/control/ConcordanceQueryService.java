@@ -58,4 +58,34 @@ public class ConcordanceQueryService {
                 .add("rows", concordances)
                 .build();
     }
+ //Czy na pewno potrzebne?
+    public JsonObject findConcordanceByBase(String base){
+
+        Map<UUID, List<Sentence>> sentences = new HashMap<>();
+
+
+        for(Document d: JetstreamDB.INSTANCE.root().getDocuments()){
+
+            List<Sentence> matching = d.getSentences()
+                    .stream()
+                    .filter(s -> s.getWords()
+                            .stream()
+                            .anyMatch(word -> word.getBase().equals(base)))
+                    .collect(Collectors.toList());
+            sentences.put(d.getId(), matching);
+        }
+        JsonArrayBuilder concordances = Json.createArrayBuilder();
+        sentences.forEach((k, v) -> {
+            v.stream()
+                    .map(s -> ConcordanceMapper
+                            .getInstance()
+                            .mapSentenceToConcordanceListByBase(k, base, s))
+                    .flatMap(Collection::stream)
+                    .forEach(cc -> concordances.add(cc.getAsJson()));
+        });
+
+        return Json.createObjectBuilder()
+                .add("rows", concordances)
+                .build();
+    }
 }

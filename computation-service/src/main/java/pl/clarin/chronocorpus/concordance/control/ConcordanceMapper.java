@@ -7,7 +7,10 @@ import pl.clarin.chronocorpus.document.entity.Word;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -30,6 +33,17 @@ public class ConcordanceMapper {
     }
 
     public  List<Concordance> mapSentenceToConcordanceListByOrth(UUID docId, String orth, Sentence s){
+
+        String[] sentence = s.getWords().stream()
+                .map(Word::getOrth)
+                .collect(Collectors.joining(" ")).split(orth);
+
+        return getConcordances(docId, orth, sentence);
+    }
+
+    public  List<Concordance> mapSentenceToConcordanceListByBase(UUID docId, String base, Sentence s){
+
+    String orth = s.getWords().stream().filter(word -> word.getBase().equals(base)).findFirst().get().getOrth();
 
         String[] sentence = s.getWords().stream()
                 .map(Word::getOrth)
