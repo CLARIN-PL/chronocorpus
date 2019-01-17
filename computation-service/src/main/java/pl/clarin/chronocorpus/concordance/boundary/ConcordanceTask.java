@@ -16,11 +16,21 @@ public class ConcordanceTask implements Task {
 
             Optional<String> lemma = properties.getValuesAs(JsonObject.class)
                     .stream()
-                    .filter(p -> p.getString("name").equals("orth"))
+                    .filter(p -> p.getString("name").equals("base"))
                     .map(l -> l.getString("value"))
                     .findFirst();
 
-            return lemma.map(l -> ConcordanceQueryService.getInstance().findConcordanceByOrth(l))
+            return lemma.map(l -> ConcordanceQueryService.getInstance().findConcordanceByBase(l))
                     .orElse(Json.createObjectBuilder().build());
+
+//                        Optional<String> lemma = properties.getValuesAs(JsonObject.class)
+//                    .stream()
+//                    .filter(p -> p.getString("name").equals("orth"))
+//                    .map(l -> l.getString("value"))
+//                    .findFirst();
+//
+//            return lemma.map(l -> ConcordanceQueryService.getInstance().findConcordanceByOrth(l))
+//                    .orElse(Json.createObjectBuilder().build());
+//
     }
 }
