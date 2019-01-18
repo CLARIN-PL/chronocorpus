@@ -4,6 +4,7 @@ import javax.json.JsonObject;
 
 public interface Task {
 
-    JsonObject doTask(JsonObject json);
+    String getId();
+    JsonObject doTask();
 
 }

@@ -1,10 +1,13 @@
 package pl.clarin.chronocorpus.document.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-public class Metadata {
+public class Metadata implements Serializable {
 
     private String corpusName;
 
@@ -12,9 +15,20 @@ public class Metadata {
 
     private boolean publicAccess;
 
-    private Date publicationDate;
-
     private final List<Property> properties = new ArrayList<Property>();
+
+    public Metadata(){
+    }
+
+    public Metadata(String corpusName, String owner, boolean publicAccess) {
+        this.corpusName = corpusName;
+        this.owner = owner;
+        this.publicAccess = publicAccess;
+    }
+
+    public void addProperty(Property p){
+        properties.add(p);
+    }
 
     public String getCorpusName() {
         return corpusName;
@@ -40,15 +54,11 @@ public class Metadata {
         this.publicAccess = publicAccess;
     }
 
-    public Date getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(Date publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
     public List<Property> getProperties() {
         return properties;
+    }
+
+    public boolean matches(List<Property> prop){
+        return true;
     }
 }

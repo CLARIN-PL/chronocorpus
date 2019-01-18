@@ -1,16 +1,33 @@
 package pl.clarin.chronocorpus.document.entity;
 
-public abstract class Property {
+import java.io.Serializable;
 
-    private final String name;
+public class Property implements Serializable {
 
-    public abstract String getValueAsString();
+    private String name;
+    private String value;
 
-    public Property(String name) {
+    public Property(){
+    }
+
+    public Property(String name, String value) {
         this.name = name;
+        this.value = value;
+    }
+
+    public String getValueAsString() {
+        return value;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public boolean matches(Property p) {
+        return this.name.equals(p.getName()) && getValueAsString().equals(p.getValueAsString());
     }
 }

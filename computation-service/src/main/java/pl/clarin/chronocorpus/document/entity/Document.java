@@ -1,18 +1,22 @@
 package pl.clarin.chronocorpus.document.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Document {
+public class Document implements Serializable {
 
-    private UUID id;
+    private String id;
 
     private Metadata metadata;
 
     private List<Sentence> sentences = new ArrayList<>();
 
-    public Document(UUID id, Metadata metadata) {
+    public Document() {
+    }
+
+    public Document(String id, Metadata metadata) {
         this.id = id;
         this.metadata = metadata;
     }
@@ -21,7 +25,7 @@ public class Document {
         sentences.add(s);
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
@@ -32,4 +36,5 @@ public class Document {
     public List<Sentence> getSentences() {
         return sentences;
     }
+
 }

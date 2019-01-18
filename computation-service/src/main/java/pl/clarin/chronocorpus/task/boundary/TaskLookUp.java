@@ -8,9 +8,9 @@ public class TaskLookUp {
 
     public Task getTask(JsonObject json){
 
-        if(json.containsKey("task")){
-            if(json.getString("task").equalsIgnoreCase("concordance")){
-                return new ConcordanceTask();
+        if(json.containsKey("task_type")){
+            if(json.getString("task_type").equalsIgnoreCase("concordance")){
+                return new ConcordanceTask(json);
             }
         }
         return null;

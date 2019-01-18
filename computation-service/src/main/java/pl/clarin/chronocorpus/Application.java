@@ -5,55 +5,80 @@ import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
-import pl.clarin.chronocorpus.document.control.JetstreamDB;
 import pl.clarin.chronocorpus.document.entity.Document;
+import pl.clarin.chronocorpus.document.entity.Metadata;
+import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.document.entity.Word;
-import pl.clarin.chronocorpus.task.boundary.TaskDelegate;
-import pl.clarin.chronocorpus.task.boundary.TaskRunner;
+import pl.clarin.chronocorpus.task.boundary.TaskManager;
 
-import javax.json.JsonObject;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public class Application {
 
-    public Application(){
-        DocumentStore store = JetstreamDB.INSTANCE.root();
-        if(store.getDocuments().isEmpty()){
+    private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
+
+    public Application() {
+        if (DocumentStore.getInstance().hasNoStoredDocuments()) {
             try {
-                store.setDocuments(documentsLoader());
+                DocumentStore.getInstance().setDocuments(documentsLoader());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public static void main(String... args){
+    public static void main(String... args) {
         new Application().run();
     }
 
-    public void run(){
-        String concordanceJson = "{\"task\":\"concordance\",\"user\":\"username\",\"corpus\":[\"chronopress\"],\"params\":[" +
-                "{\"name\":\"orth\",\"value\":\"koty\"},{\"name\":\"base\",\"value\":\"krowa\"}]}";
+    public void run() {
 
-        TaskDelegate taskDelegate = new TaskDelegate();
-        taskDelegate.setTaskString(concordanceJson);
+        TaskManager.getInstance().submitTask(createConcordanceJson("123", "ludzie"));
+        TaskManager.getInstance().submitTask(createConcordanceJson("546", "krowy"));
+        TaskManager.getInstance().submitTask(createConcordanceJson("6543", "partie"));
+        TaskManager.getInstance().submitTask(createConcordanceJson("14545", "czerwony"));
+        TaskManager.getInstance().submitTask(createConcordanceJson("54555", "armia"));
+        TaskManager.getInstance().submitTask(createConcordanceJson("4543", "robić"));
+        TaskManager.getInstance().submitTask(createConcordanceJson("222123", "palic"));
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        TaskManager.getInstance().submitTask(createConcordanceJson("1455555", "czerwony"));
 
-        TaskRunner taskRunner = new TaskRunner(taskDelegate);
-        JsonObject result = taskRunner.doTask();
+    }
 
-        System.out.println(result);
-
+    public String createConcordanceJson(String id, String base) {
+        return "" +
+                "{" +
+                "\"id\":\"" + id + "\"," +
+                "\"task_type\":\"concordance\"," +
+                "\"user\":\"username\"," +
+                "\"corpus\":[\"chronopress\"]," +
+                "\"metadata_filter\":[" +
+                "{\"name\":\"author\",\"value\":\"Janusz\"}," +
+                "{\"name\":\"publication_day\",\"value\":\"12\"}," +
+                "{\"name\":\"publication_month\",\"value\":\"5\"}," +
+                "{\"name\":\"publication_year\",\"value\":\"1945\"}]," +
+                "\"params\":[" +
+                "{\"name\":\"base\",\"value\":\"" + base + "\"}]" +
+                "}";
     }
 
     public Set<Document> documentsLoader() throws Exception {
 
-        System.out.println("Loading from files please wait .....");
+        LOGGER.info("Loading documents from files please wait .....");
+        long start = System.currentTimeMillis();
         Set<Document> documents = new HashSet<>();
 
         try (Stream<Path> paths = Files.walk(Paths.get("ccl/"))) {
@@ -65,12 +90,16 @@ public class Application {
                             g419.corpus.structure.Document ccl = ReaderFactory.get().getStreamReader("url", is, "ccl")
                                     .nextDocument();
 
-                            Document doc = new Document(UUID.randomUUID(), null);
 
-                            for(Paragraph p : ccl.getParagraphs()){
-                                for(Sentence s: p.getSentences()){
+                            Metadata meta = new Metadata("chronopress", "apawłow", true);
+                            meta.addProperty(new Property("publication_year", "1945"));
+
+                            Document doc = new Document(UUID.randomUUID().toString(), meta);
+
+                            for (Paragraph p : ccl.getParagraphs()) {
+                                for (Sentence s : p.getSentences()) {
                                     pl.clarin.chronocorpus.document.entity.Sentence sentence = new pl.clarin.chronocorpus.document.entity.Sentence();
-                                    for(Token t : s.getTokens()){
+                                    for (Token t : s.getTokens()) {
                                         t.getDisambTags().stream()
                                                 .findFirst()
                                                 .map(tag -> new Word(t.getOrth(), tag.getBase(), tag.getCtag()))
@@ -85,7 +114,8 @@ public class Application {
                         }
                     });
         }
-
+        long end = System.currentTimeMillis();
+        LOGGER.info("Loading documents took: "+ (end-start) +"ms");
         return documents;
     }
 

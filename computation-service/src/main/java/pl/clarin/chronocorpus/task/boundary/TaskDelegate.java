@@ -11,15 +11,26 @@ public class TaskDelegate {
     private Task task;
     private JsonObject taskJson;
 
-    //TODO error handling
     public void setTaskString(String taskString){
         JsonReader reader = Json.createReader(new StringReader(taskString));
-        this.taskJson = reader.readObject();
+        try {
+            this.taskJson = reader.readObject();
+            task = lookupService.getTask(taskJson);
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
-    //TODO executors thread pool
     public JsonObject doTask() {
-        task = lookupService.getTask(taskJson);
-        return task.doTask(taskJson);
+        return task.doTask();
     }
+
+    public String getTaskType(){
+        return task.getClass().getSimpleName();
+    }
+
+    public String getTaskId(){
+        return task.getId();
+    }
+
 }

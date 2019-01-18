@@ -1,21 +1,24 @@
 package pl.clarin.chronocorpus.concordance.control;
 
 import pl.clarin.chronocorpus.document.control.DocumentStore;
-import pl.clarin.chronocorpus.document.control.JetstreamDB;
 import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Sentence;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ConcordanceQueryService {
 
     public static volatile ConcordanceQueryService instance;
 
-    private ConcordanceQueryService(){
+    private ConcordanceQueryService() {
     }
 
     public static ConcordanceQueryService getInstance() {
@@ -29,11 +32,12 @@ public class ConcordanceQueryService {
         return instance;
     }
 
-    public JsonObject findConcordanceByOrth(String orth){
+    public JsonObject findConcordanceByOrth(String orth) {
 
-        Map<UUID, List<Sentence>> sentences = new HashMap<>();
+        Map<String, List<Sentence>> sentences = new HashMap<>();
 
-        for(Document d: JetstreamDB.INSTANCE.root().getDocuments()){
+
+        for (Document d : DocumentStore.getInstance().getDocuments()) {
 
             List<Sentence> matching = d.getSentences()
                     .stream()
@@ -58,13 +62,13 @@ public class ConcordanceQueryService {
                 .add("rows", concordances)
                 .build();
     }
- //Czy na pewno potrzebne?
-    public JsonObject findConcordanceByBase(String base){
 
-        Map<UUID, List<Sentence>> sentences = new HashMap<>();
+    public JsonArray findConcordanceByBase(String base) {
+
+        Map<String, List<Sentence>> sentences = new HashMap<>();
 
 
-        for(Document d: JetstreamDB.INSTANCE.root().getDocuments()){
+        for (Document d : DocumentStore.getInstance().getDocuments()) {
 
             List<Sentence> matching = d.getSentences()
                     .stream()
@@ -74,6 +78,7 @@ public class ConcordanceQueryService {
                     .collect(Collectors.toList());
             sentences.put(d.getId(), matching);
         }
+
         JsonArrayBuilder concordances = Json.createArrayBuilder();
         sentences.forEach((k, v) -> {
             v.stream()
@@ -84,8 +89,6 @@ public class ConcordanceQueryService {
                     .forEach(cc -> concordances.add(cc.getAsJson()));
         });
 
-        return Json.createObjectBuilder()
-                .add("rows", concordances)
-                .build();
+        return concordances.build();
     }
 }

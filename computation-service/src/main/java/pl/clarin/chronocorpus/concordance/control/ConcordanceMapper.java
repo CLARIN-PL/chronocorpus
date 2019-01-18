@@ -23,7 +23,7 @@ public class ConcordanceMapper {
 
     public static ConcordanceMapper getInstance() {
         if (instance == null) {
-            synchronized (DocumentStore.class) {
+            synchronized (ConcordanceMapper.class) {
                 if (instance == null) {
                     instance = new ConcordanceMapper();
                 }
@@ -32,28 +32,29 @@ public class ConcordanceMapper {
         return instance;
     }
 
-    public  List<Concordance> mapSentenceToConcordanceListByOrth(UUID docId, String orth, Sentence s){
+    public  List<Concordance> mapSentenceToConcordanceListByOrth(String docId, String orth, Sentence s){
 
-        String[] sentence = s.getWords().stream()
+        String[] sentence = getSentenceString(orth, s);
+        return getConcordances(docId, orth, sentence);
+    }
+
+    private String[] getSentenceString(String orth, Sentence s) {
+        return s.getWords().stream()
                 .map(Word::getOrth)
                 .collect(Collectors.joining(" ")).split(orth);
+    }
+
+    public  List<Concordance> mapSentenceToConcordanceListByBase(String docId, String base, Sentence s){
+
+        String orth = s.getWords().stream().filter(word -> word.getBase().equals(base)).findFirst().get().getOrth();
+
+        String[] sentence = getSentenceString(orth, s);
 
         return getConcordances(docId, orth, sentence);
     }
 
-    public  List<Concordance> mapSentenceToConcordanceListByBase(UUID docId, String base, Sentence s){
 
-    String orth = s.getWords().stream().filter(word -> word.getBase().equals(base)).findFirst().get().getOrth();
-
-        String[] sentence = s.getWords().stream()
-                .map(Word::getOrth)
-                .collect(Collectors.joining(" ")).split(orth);
-
-        return getConcordances(docId, orth, sentence);
-    }
-
-
-    private List<Concordance> getConcordances(UUID docId, String orth, String[] sentence) {
+    private List<Concordance> getConcordances(String docId, String orth, String[] sentence) {
         List<Concordance> crd = new ArrayList<>();
         IntStream.range(0, sentence.length-1)
                 .forEach(i -> {

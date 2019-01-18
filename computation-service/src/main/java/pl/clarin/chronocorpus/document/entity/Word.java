@@ -1,6 +1,8 @@
 package pl.clarin.chronocorpus.document.entity;
 
-public class Word {
+import java.io.Serializable;
+
+public class Word implements Serializable {
 
     private String base;
 
@@ -13,6 +15,8 @@ public class Word {
     private short syllableCount;
 
     private short phonemCount;
+
+    public Word(){}
 
     public Word(String orth, String base, String ctag) {
         this.base = base;

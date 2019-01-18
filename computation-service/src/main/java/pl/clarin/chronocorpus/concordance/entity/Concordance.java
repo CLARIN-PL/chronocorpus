@@ -6,24 +6,24 @@ import java.util.UUID;
 
 public class Concordance {
 
-    private UUID documentId;
+    private String documentId;
     private String left;
     private String word;
     private String right;
 
-    public Concordance(UUID documentId,String lemma) {
+    public Concordance(String documentId,String lemma) {
         this.documentId = documentId;
         this.word = lemma;
     }
 
-    public Concordance(UUID id, String left, String word, String right) {
+    public Concordance(String id, String left, String word, String right) {
         this.documentId = id;
         this.left = left;
         this.word = word;
         this.right = right;
     }
 
-    public UUID getDocumentId() {
+    public String getDocumentId() {
         return documentId;
     }
 
