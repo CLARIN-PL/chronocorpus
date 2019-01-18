@@ -102,7 +102,7 @@ public class Application {
                                     for (Token t : s.getTokens()) {
                                         t.getDisambTags().stream()
                                                 .findFirst()
-                                                .map(tag -> new Word(t.getOrth(), tag.getBase(), tag.getCtag()))
+                                                .map(tag -> new Word(t.getOrth(), tag.getBase(), tag.getCtag(), t.getNoSpaceAfter()))
                                                 .ifPresent(sentence::addWord);
                                     }
                                     doc.addSentence(sentence);

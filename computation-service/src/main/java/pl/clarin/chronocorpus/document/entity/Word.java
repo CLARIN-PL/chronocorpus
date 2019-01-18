@@ -16,12 +16,15 @@ public class Word implements Serializable {
 
     private short phonemCount;
 
+    private boolean noSpaceAfter;
+
     public Word(){}
 
-    public Word(String orth, String base, String ctag) {
+    public Word(String orth, String base, String ctag, boolean noSpaceAfter) {
         this.base = base;
         this.orth = orth;
         this.ctag = ctag;
+        this.noSpaceAfter = noSpaceAfter;
     }
 
     public Word withLetterCount(short cnt){
@@ -67,6 +70,10 @@ public class Word implements Serializable {
 
     public short getPhonemCount() {
         return phonemCount;
+    }
+
+    public boolean isNoSpaceAfter() {
+        return noSpaceAfter;
     }
 
     @Override
