@@ -19,7 +19,6 @@ public class ConcordanceTask implements Task {
     public ConcordanceTask(JsonObject json) {
         this.id = json.getString("id");
 
-        //TODO create properties factory
         JsonArray jsonParams = json.getJsonArray("params");
         params = jsonParams.getValuesAs(JsonObject.class)
                 .stream()

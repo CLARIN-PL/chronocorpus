@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DocumentStore {
+
     private static final Logger LOGGER = Logger.getLogger(DocumentStore.class.getName());
     private static volatile DocumentStore instance;
     private Set<Document> documents = new HashSet<>();
@@ -56,12 +57,10 @@ public class DocumentStore {
                 Kryo kryo = new Kryo();
                 Input in = new Input(new FileInputStream(f));
                 Set<Document> aNewSet = kryo.readObject(in, HashSet.class);
-
-                //ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
-                //Set<Document> aNewSet = (Set<Document>) ois.readObject();
                 setDocuments(aNewSet);
-                long end = System.currentTimeMillis();
-                LOGGER.info("Restoring documents took: "+ (end-start) +"ms");
+
+                long time = System.currentTimeMillis() - start;
+                LOGGER.info("Restoring documents took: "+ time +"ms");
             }
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Restoring document store failure", e);
@@ -75,8 +74,6 @@ public class DocumentStore {
             kryo.writeObject(out, documents);
             out.close();
 
-            //ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename));
-            //oos.writeObject(documents);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Document store backup failure", e);
         }

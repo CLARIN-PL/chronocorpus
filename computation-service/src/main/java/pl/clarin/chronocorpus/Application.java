@@ -49,12 +49,20 @@ public class Application {
         TaskManager.getInstance().submitTask(createConcordanceJson("54555", "armia"));
         TaskManager.getInstance().submitTask(createConcordanceJson("4543", "robić"));
         TaskManager.getInstance().submitTask(createConcordanceJson("222123", "palic"));
+
         try {
-            Thread.sleep(5000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        TaskManager.getInstance().submitTask(createConcordanceJson("1455555", "czerwony"));
+
+          TaskManager.getInstance().submitTask(createConcordanceJson("1455555", "czerwony"));
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        TaskManager.getInstance().submitTask(createConcordanceJson("1423455", "ludzie"));
 
     }
 
@@ -75,6 +83,7 @@ public class Application {
                 "}";
     }
 
+    //TODO move to class
     public Set<Document> documentsLoader() throws Exception {
 
         LOGGER.info("Loading documents from files please wait .....");
@@ -114,8 +123,8 @@ public class Application {
                         }
                     });
         }
-        long end = System.currentTimeMillis();
-        LOGGER.info("Loading documents took: "+ (end-start) +"ms");
+        long time = System.currentTimeMillis() - start;
+        LOGGER.info("Loading documents took: "+ time +"ms");
         return documents;
     }
 
