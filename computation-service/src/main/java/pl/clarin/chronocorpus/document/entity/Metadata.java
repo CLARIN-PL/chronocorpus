@@ -58,7 +58,20 @@ public class Metadata implements Serializable {
         return properties;
     }
 
-    public boolean matches(List<Property> prop){
+    public boolean matches(List<Property> userProperties, List<Property> publication){
+//        boolean isCollection = publication.stream().filter(mode -> "publication_mode".equals(mode.getName())).findAny().orElse(null).getValueAsString().equals("collection");
+//        if(isCollection){
+//
+//        }else{
+
+//
+//            System.out.println("delimiter:");
+//            for(Property p : userProperties) {
+//            System.out.println(p.getName() + ";" + p.getValueAsString());
+////            if (this.getProperties().stream().anyMatch(documentyproperty -> documentyproperty.matches(p))) {
+////            }
+//        }
+
         return true;
     }
 }

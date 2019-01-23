@@ -32,24 +32,19 @@ public class ConcordanceMapper {
         return instance;
     }
 
-    public  List<Concordance> mapSentenceToConcordanceListByOrth(String docId, String orth, Sentence s){
-
-        String[] sentence = getSentenceString(orth, s);
-        return getConcordances(docId, orth, sentence);
-    }
-
     private String[] getSentenceString(String orth, Sentence s) {
         return s.getWords().stream()
-                .map(Word::getOrth)
-                .collect(Collectors.joining(" ")).split(orth);
+                .map(Word::GetOrthWithDelimiter)
+                .collect(Collectors.joining()).split(orth);
     }
 
-    public  List<Concordance> mapSentenceToConcordanceListByBase(String docId, String base, Sentence s){
-
-        String orth = s.getWords().stream().filter(word -> word.getBase().equals(base)).findFirst().get().getOrth();
+    public  List<Concordance> mapSentenceToConcordanceList(String docId, String keyWord, Sentence s, Boolean getByBase){
+        String orth = keyWord;
+        if(getByBase){
+            orth  = s.getWords().stream().filter(word -> word.getBase().equals(keyWord)).findFirst().get().getOrth();
+        }
 
         String[] sentence = getSentenceString(orth, s);
-
         return getConcordances(docId, orth, sentence);
     }
 

@@ -15,6 +15,11 @@ public class Property implements Serializable {
         this.value = value;
     }
 
+    public Property(String name, int value) {
+        this.name = name;
+        this.value = String.valueOf(value);
+    }
+
     public String getValueAsString() {
         return value;
     }
