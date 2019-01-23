@@ -43,7 +43,7 @@ public class Application {
     public void run() {
 
         TaskManager.getInstance().submitTask(createConcordanceJson("123", "ludzie"));
-        TaskManager.getInstance().submitTask(createConcordanceJson("546", "krowy"));
+        TaskManager.getInstance().submitTask(createConcordanceJson("546", "samolot"));
         TaskManager.getInstance().submitTask(createConcordanceJson("6543", "partie"));
         TaskManager.getInstance().submitTask(createConcordanceJson("14545", "czerwony"));
         TaskManager.getInstance().submitTask(createConcordanceJson("54555", "armia"));
@@ -74,14 +74,15 @@ public class Application {
                 "\"user\":\"username\"," +
                 "\"corpus\":[\"chronopress\"]," +
                 "\"metadata_filter\":[" +
-                "{\"name\":\"author\",\"value\":\"Janusz\"}]," +
+                "{\"name\":\"publication_year\",\"value\":\"1945\"}]," +
+//                "{\"name\":\"author\",\"value\":\"Janusz\"}]," +
                 "\"publication\":[" +
 //                "{\"name\":\"publication_mode\",\"value\":\"collection\"}," +
 //                "{\"name\":\"publication_year\",\"value\":\"1946\"}," +
 //                "{\"name\":\"publication_year\",\"value\":\"1945\"}]," +
-                "{\"name\":\"publication_mode\",\"value\":\"specific\"}," +
-                "{\"name\":\"publication_day\",\"value\":\"12\"}," +
-                "{\"name\":\"publication_month\",\"value\":\"5\"}," +
+//                "{\"name\":\"publication_mode\",\"value\":\"specific\"}," +
+//                "{\"name\":\"publication_day\",\"value\":\"12\"}," +
+//                "{\"name\":\"publication_month\",\"value\":\"5\"}]," +
                 "{\"name\":\"publication_year\",\"value\":\"1945\"}]," +
                 "\"params\":[" +
                 "{\"name\":\"base\",\"value\":\"" + base + "\"}]" +
