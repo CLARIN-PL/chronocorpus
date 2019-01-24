@@ -1,6 +1,6 @@
 package pl.clarin.chronocorpus.concordance.boundary;
 
-import pl.clarin.chronocorpus.document.entity.Metadata;
+
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.task.boundary.Task;
 import pl.clarin.chronocorpus.concordance.control.ConcordanceQueryService;
@@ -9,7 +9,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import java.util.*;
-import java.util.stream.Collector;
+
 import java.util.stream.Collectors;
 
 public class ConcordanceTask implements Task {

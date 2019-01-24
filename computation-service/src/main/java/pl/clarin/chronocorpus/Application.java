@@ -41,29 +41,42 @@ public class Application {
     }
 
     public void run() {
+        TaskManager.getInstance().submitTask(createDocumentJson("123", "c83e4f04-3fbe-4fd8-8261-6f376a40e4e0"));
+//        TaskManager.getInstance().submitTask(createConcordanceJson("123", "ludzie"));
+//       TaskManager.getInstance().submitTask(createConcordanceJson("546", "samolot"));
+//        TaskManager.getInstance().submitTask(createConcordanceJson("6543", "partie"));
+//        TaskManager.getInstance().submitTask(createConcordanceJson("14545", "czerwony"));
+//        TaskManager.getInstance().submitTask(createConcordanceJson("54555", "armia"));
+//        TaskManager.getInstance().submitTask(createConcordanceJson("4543", "robić"));
+//        TaskManager.getInstance().submitTask(createConcordanceJson("222123", "palic"));
+//
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//          TaskManager.getInstance().submitTask(createConcordanceJson("1455555", "czerwony"));
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        TaskManager.getInstance().submitTask(createConcordanceJson("1423455", "ludzie"));
 
-        TaskManager.getInstance().submitTask(createConcordanceJson("123", "ludzie"));
-        TaskManager.getInstance().submitTask(createConcordanceJson("546", "samolot"));
-        TaskManager.getInstance().submitTask(createConcordanceJson("6543", "partie"));
-        TaskManager.getInstance().submitTask(createConcordanceJson("14545", "czerwony"));
-        TaskManager.getInstance().submitTask(createConcordanceJson("54555", "armia"));
-        TaskManager.getInstance().submitTask(createConcordanceJson("4543", "robić"));
-        TaskManager.getInstance().submitTask(createConcordanceJson("222123", "palic"));
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-          TaskManager.getInstance().submitTask(createConcordanceJson("1455555", "czerwony"));
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        TaskManager.getInstance().submitTask(createConcordanceJson("1423455", "ludzie"));
-
+    }
+    public String createDocumentJson(String id, String documentId) {
+        return "" +
+                "{" +
+                "\"id\":\"" + id + "\"," +
+                "\"task_type\":\"document\"," +
+                "\"user\":\"username\"," +
+                "\"corpus\":[\"chronopress\"]," +
+                "\"metadata_filter\":[" +
+                "{\"name\":\"publication_year\",\"value\":\"1945\"}]," +
+                "\"params\":[" +
+                "{\"name\":\"document_id\",\"value\":\"" + documentId + "\"}]" +
+                "}";
     }
 
     public String createConcordanceJson(String id, String base) {

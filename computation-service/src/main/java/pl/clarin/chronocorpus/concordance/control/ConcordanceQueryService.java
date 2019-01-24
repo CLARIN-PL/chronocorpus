@@ -31,67 +31,6 @@ public class ConcordanceQueryService {
         return instance;
     }
 
-//    public JsonObject findConcordanceByOrth(String orth) {
-//
-//        Map<String, List<Sentence>> sentences = new HashMap<>();
-//
-//
-//        for (Document d : DocumentStore.getInstance().getDocuments()) {
-//
-//            List<Sentence> matching = d.getSentences()
-//                    .stream()
-//                    .filter(s -> s.getWords()
-//                            .stream()
-//                            .anyMatch(word -> word.getOrth().equals(orth)))
-//                    .collect(Collectors.toList());
-//            sentences.put(d.getId(), matching);
-//        }
-//
-//        JsonArrayBuilder concordances = Json.createArrayBuilder();
-//        sentences.forEach((k, v) -> {
-//            v.stream()
-//                    .map(s -> ConcordanceMapper
-//                            .getInstance()
-//                            .mapSentenceToConcordanceList(k, orth, s, false))
-//                    .flatMap(Collection::stream)
-//                    .forEach(cc -> concordances.add(cc.getAsJson()));
-//        });
-//
-//        return Json.createObjectBuilder()
-//                .add("rows", concordances)
-//                .build();
-//    }
-////TODO list or set?
-//    public JsonArray findConcordanceByBase(String base, List<Property> metadata) {
-//
-//        Map<String, List<Sentence>> sentences = new HashMap<>();
-//
-//        for (Document d : DocumentStore.getInstance().getDocuments()) {
-//            if(d.getMetadata().matches(metadata)){
-//
-//            List<Sentence> matching = d.getSentences()
-//                    .stream()
-//                    .filter(s -> s.getWords()
-//                            .stream()
-//                            .anyMatch(word -> word.getBase().equals(base)))
-//                    .collect(Collectors.toList());
-//            sentences.put(d.getId(), matching);
-//            }
-//        }
-//
-//        JsonArrayBuilder concordances = Json.createArrayBuilder();
-//        sentences.forEach((k, v) -> {
-//            v.stream()
-//                    .map(s -> ConcordanceMapper
-//                            .getInstance()
-//                            .mapSentenceToConcordanceList(k, base, s, true))
-//                    .flatMap(Collection::stream)
-//                    .forEach(cc -> concordances.add(cc.getAsJson()));
-//        });
-//
-//        return concordances.build();
-//    }
-
     public JsonArray findConcordance(String keyWord, List<Property> metadata, List<Property> publication, Boolean byBase) {
 
         Map<String, List<Sentence>> sentences = new HashMap<>();
@@ -107,7 +46,9 @@ public class ConcordanceQueryService {
                                     .stream()
                                     .anyMatch(word -> word.getBase().equals(keyWord)))
                             .collect(Collectors.toList());
+
                     sentences.put(d.getId(), matching);
+
                 } else {
                     List<Sentence> matching = d.getSentences()
                             .stream()
@@ -116,7 +57,10 @@ public class ConcordanceQueryService {
                                     .anyMatch(word -> word.getOrth().equals(keyWord)))
                             .collect(Collectors.toList());
                     sentences.put(d.getId(), matching);
+
                 }
+
+
 
             }
 
