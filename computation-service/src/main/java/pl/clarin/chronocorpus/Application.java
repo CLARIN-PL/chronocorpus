@@ -66,36 +66,36 @@ public class Application {
 
         public Query withBase(String base){
             Property p = new Property("base",base);
-            params.add(p.toJson());
+            params.add(p.getAsJson());
             return this;
         }
 
         public Query withOrth(String orth){
             Property p = new Property("orth",orth);
-            params.add(p.toJson());
+            params.add(p.getAsJson());
             return this;
         }
 
         public Query withDocumentId(String id){
             Property p = new Property("document_id", id);
-            params.add(p.toJson());
+            params.add(p.getAsJson());
             return this;
         }
 
         public Query withMetaPublicationYear(String year){
             Property p = new Property("publication_year", year);
-            meta.add(p.toJson());
+            meta.add(p.getAsJson());
             return this;
         }
 
         public Query withMetaPublicationMonth(String month){
             Property p = new Property("publication_month", month);
-            meta.add(p.toJson());
+            meta.add(p.getAsJson());
             return this;
         }
         public Query withMetaPublicationDay(String day){
             Property p = new Property("publication_dat", day);
-            meta.add(p.toJson());
+            meta.add(p.getAsJson());
             return this;
         }
 

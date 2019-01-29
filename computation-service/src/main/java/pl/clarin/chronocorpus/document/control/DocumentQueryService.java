@@ -1,14 +1,15 @@
 package pl.clarin.chronocorpus.document.control;
 
 import pl.clarin.chronocorpus.document.entity.Document;
-import pl.clarin.chronocorpus.document.entity.Sentence;
-import pl.clarin.chronocorpus.document.entity.Word;
+import pl.clarin.chronocorpus.document.entity.Property;
+
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import java.util.*;
-import java.util.stream.Collectors;
+import javax.json.JsonObjectBuilder;
+import java.util.List;
+
 
 public class DocumentQueryService {
 
@@ -26,26 +27,42 @@ public class DocumentQueryService {
         }
         return instance;
     }
-    public JsonArray findDocument(String id){
-
-        Document document = DocumentStore.getInstance().getDocuments().stream().filter(d -> d.getId().equals(id)).findFirst().get();
-
-        //document.getMetadata();
-
-//        for(Sentence s : sentences){
-//            System.out.println(s);
-//        }
-
-        JsonArrayBuilder documentSentences = Json.createArrayBuilder();
-
-
-        //document.getSentences().stream().forEach(sentence -> documentSentences.add(DocumentMapper.getInstance().getDocumentContent(sentence)));
-        document.getSentences()
-                .stream()
-                .map(sentence -> DocumentMapper.getInstance().getDocumentContent(sentence))
-                .forEach(documentSentences::add);
-
-        return documentSentences.build();
-        };
+    public JsonArray getDocumentSentencesById(String id){
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        findDocumentById(id).getSentences().stream().map(sentence -> DocumentMapper.getInstance().getDocumentContent(sentence)).forEach(x ->jsonArrayBuilder.add(x));
+        return jsonArrayBuilder.build();
     }
+
+
+    public JsonArray getDocumentMetadataById(String id){
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        for (Property p : findDocumentById(id).getMetadata().getProperties())
+            jsonArrayBuilder.add(p.getAsJson());
+        return jsonArrayBuilder.build();
+    }
+
+    private Document findDocumentById(String id) {
+        return DocumentStore.getInstance().getDocuments().stream().filter(d -> d.getId().equals(id)).findFirst().get();
+    }
+
+    public JsonArrayBuilder getDocumentsData(List<Property> metadata){
+        JsonArrayBuilder documentsData = Json.createArrayBuilder();
+        for (Document d : DocumentStore.getInstance().getDocuments())
+            if (d.getMetadata().matches(metadata))
+                documentsData.add(getDocumentData(d.getId()));
+        return documentsData;
+    }
+
+    JsonObjectBuilder getDocumentData(String id){
+        JsonObjectBuilder documentData = Json.createObjectBuilder();
+        documentData.add("id", id)
+                .add("metadata", getDocumentMetadataById(id))
+//                .add("text", getDocumentSentencesById(id));
+                .add("text", "sentences"); //na potrzeby testów
+        return documentData;
+
+    }
+
+}
+
 

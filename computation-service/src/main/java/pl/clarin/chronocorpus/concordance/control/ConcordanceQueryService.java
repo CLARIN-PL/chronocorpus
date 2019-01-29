@@ -31,13 +31,13 @@ public class ConcordanceQueryService {
         return instance;
     }
 
-    public JsonArray findConcordance(String keyWord, List<Property> metadata, List<Property> publication, Boolean byBase) {
+    public JsonArray findConcordance(String keyWord, List<Property> metadata, Boolean byBase) {
 
         Map<String, List<Sentence>> sentences = new HashMap<>();
 
         for (Document d : DocumentStore.getInstance().getDocuments())
 
-            if (d.getMetadata().matches(metadata, publication)) {
+            if (d.getMetadata().matches(metadata)) {
 
                 if (byBase) {
                     List<Sentence> matching = d.getSentences()
@@ -65,11 +65,11 @@ public class ConcordanceQueryService {
             }
 
         JsonArrayBuilder concordances = Json.createArrayBuilder();
-        sentences.forEach((k, v) -> {
+        sentences.forEach((docId, v) -> {
             v.stream()
                     .map(s -> ConcordanceMapper
                             .getInstance()
-                            .mapSentenceToConcordanceList(k, keyWord, s, byBase))
+                            .mapSentenceToConcordanceList(docId, keyWord, s, byBase))
                     .flatMap(Collection::stream)
                     .forEach(cc -> concordances.add(cc.getAsJson()));
         });
