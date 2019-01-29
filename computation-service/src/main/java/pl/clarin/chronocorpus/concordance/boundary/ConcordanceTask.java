@@ -17,7 +17,7 @@ public class ConcordanceTask implements Task {
     private String id;
     private Set<Property> metadata;
     private Set<Property> params;
-    private Set<Property> publication;
+    private Set<Property> publication = new HashSet<>();
 
     public ConcordanceTask(JsonObject json) {
         this.id = json.getString("id");
@@ -34,12 +34,12 @@ public class ConcordanceTask implements Task {
                 .stream()
                 .map(j -> new Property(j.getString("name"), j.getString("value")))
                 .collect(Collectors.toSet());
-
+/*
         JsonArray jsonPubdata = json.getJsonArray("publication");
         publication = jsonPubdata.getValuesAs(JsonObject.class)
                 .stream()
                 .map(j -> new Property(j.getString("name"), j.getString("value")))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet());*/
 
 //        System.out.println(jsonParams);
 //        System.out.println(jsonMetadata);
@@ -65,7 +65,8 @@ public class ConcordanceTask implements Task {
 
         return Json.createObjectBuilder()
                 .add("task_id", id)
-                .add("rows", lemma.map(l -> ConcordanceQueryService.getInstance().findConcordance(l, metadataAsList, publicationAsList, true)).
+                .add("rows", lemma.map(l -> ConcordanceQueryService.getInstance()
+                        .findConcordance(l, metadataAsList, publicationAsList, true)).
                         orElse(Json.createArrayBuilder().build())).build();
 
 //          Optional<String> lemma = properties.getValuesAs(JsonObject.class)

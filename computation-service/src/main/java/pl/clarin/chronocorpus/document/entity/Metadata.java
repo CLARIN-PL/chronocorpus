@@ -59,17 +59,21 @@ public class Metadata implements Serializable {
     }
 
     public boolean matches(List<Property> userProperties, List<Property> publication){
-        boolean collection = publication.stream().filter(mode -> "publication_mode".equals(mode.getName())).anyMatch(property -> property.getValue().equals("collection"));
+        boolean collection = publication.stream()
+                .filter(mode -> "publication_mode".equals(mode.getName()))
+                .anyMatch(property -> property.getValue().equals("collection"));
+
             if(collection) {
                 for (Property p : this.getProperties())
-                    if (!publication.stream().anyMatch(documentProperty -> documentProperty.matches(p)))
+                    if (publication.stream().noneMatch(documentProperty -> documentProperty.matches(p)))
                         return false;
             }else{
                 publication.remove(properties.stream().filter(property -> "publication_mode".equals(property.getName())));
                 userProperties.addAll(publication);
             }
             for(Property p : userProperties)
-                if (!this.getProperties().stream().anyMatch(documentProperty -> documentProperty.matches(p))) return false;
+                if (this.getProperties().stream()
+                        .noneMatch(documentProperty -> documentProperty.matches(p))) return false;
         return true;
     }
 }

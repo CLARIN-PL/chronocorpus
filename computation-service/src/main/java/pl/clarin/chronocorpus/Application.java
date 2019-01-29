@@ -1,26 +1,10 @@
 package pl.clarin.chronocorpus;
 
-import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
+import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
-import pl.clarin.chronocorpus.document.entity.Document;
-import pl.clarin.chronocorpus.document.entity.Metadata;
-import pl.clarin.chronocorpus.document.entity.Property;
-import pl.clarin.chronocorpus.document.entity.Word;
 import pl.clarin.chronocorpus.task.boundary.TaskManager;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 public class Application {
 
@@ -29,7 +13,7 @@ public class Application {
     public Application() {
         if (DocumentStore.getInstance().hasNoStoredDocuments()) {
             try {
-                DocumentStore.getInstance().setDocuments(documentsLoader());
+               DocumentStore.getInstance().setDocuments(DocumentFileLoader.getInstance().load());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -41,10 +25,10 @@ public class Application {
     }
 
     public void run() {
-        TaskManager.getInstance().submitTask(createDocumentJson("123", "c83e4f04-3fbe-4fd8-8261-6f376a40e4e0"));
-//        TaskManager.getInstance().submitTask(createConcordanceJson("123", "ludzie"));
-//       TaskManager.getInstance().submitTask(createConcordanceJson("546", "samolot"));
-//        TaskManager.getInstance().submitTask(createConcordanceJson("6543", "partie"));
+         TaskManager.getInstance().submitTask(createDocumentJson("123", "0082b083-b99c-4808-a698-87f147146804"));
+         TaskManager.getInstance().submitTask(createConcordanceJson("1232121", "śnieg"));
+         TaskManager.getInstance().submitTask(createConcordanceJson("546", "samolot"));
+         TaskManager.getInstance().submitTask(createConcordanceJson("6543", "partia"));
 //        TaskManager.getInstance().submitTask(createConcordanceJson("14545", "czerwony"));
 //        TaskManager.getInstance().submitTask(createConcordanceJson("54555", "armia"));
 //        TaskManager.getInstance().submitTask(createConcordanceJson("4543", "robić"));
@@ -65,6 +49,7 @@ public class Application {
 //        TaskManager.getInstance().submitTask(createConcordanceJson("1423455", "ludzie"));
 
     }
+
     public String createDocumentJson(String id, String documentId) {
         return "" +
                 "{" +
@@ -86,65 +71,20 @@ public class Application {
                 "\"task_type\":\"concordance\"," +
                 "\"user\":\"username\"," +
                 "\"corpus\":[\"chronopress\"]," +
-                "\"metadata_filter\":[" +
-                "{\"name\":\"publication_year\",\"value\":\"1945\"}]," +
+                "\"metadata_filter\":[]," +
+ //               "{\"name\":\"publication_year\",\"value\":\"1945\"}]," +
 //                "{\"name\":\"author\",\"value\":\"Janusz\"}]," +
-                "\"publication\":[" +
+//                "\"publication\":[" +
 //                "{\"name\":\"publication_mode\",\"value\":\"collection\"}," +
 //                "{\"name\":\"publication_year\",\"value\":\"1946\"}," +
 //                "{\"name\":\"publication_year\",\"value\":\"1945\"}]," +
 //                "{\"name\":\"publication_mode\",\"value\":\"specific\"}," +
 //                "{\"name\":\"publication_day\",\"value\":\"12\"}," +
 //                "{\"name\":\"publication_month\",\"value\":\"5\"}]," +
-                "{\"name\":\"publication_year\",\"value\":\"1945\"}]," +
+//                "{\"name\":\"publication_year\",\"value\":\"1945\"}]," +
                 "\"params\":[" +
                 "{\"name\":\"base\",\"value\":\"" + base + "\"}]" +
                 "}";
-    }
-
-    //TODO move to class
-    public Set<Document> documentsLoader() throws Exception {
-
-        LOGGER.info("Loading documents from files please wait .....");
-        long start = System.currentTimeMillis();
-        Set<Document> documents = new HashSet<>();
-
-        try (Stream<Path> paths = Files.walk(Paths.get("ccl/"))) {
-            paths.filter(Files::isRegularFile)
-                    .forEach(path -> {
-
-                        try {
-                            InputStream is = new FileInputStream(path.toFile());
-                            g419.corpus.structure.Document ccl = ReaderFactory.get().getStreamReader("url", is, "ccl")
-                                    .nextDocument();
-
-
-                            Metadata meta = new Metadata("chronopress", "apawłow", true);
-                            meta.addProperty(new Property("publication_year", "1945"));
-
-                            Document doc = new Document(UUID.randomUUID().toString(), meta);
-
-                            for (Paragraph p : ccl.getParagraphs()) {
-                                for (Sentence s : p.getSentences()) {
-                                    pl.clarin.chronocorpus.document.entity.Sentence sentence = new pl.clarin.chronocorpus.document.entity.Sentence();
-                                    for (Token t : s.getTokens()) {
-                                        t.getDisambTags().stream()
-                                                .findFirst()
-                                                .map(tag -> new Word(t.getOrth(), tag.getBase(), tag.getCtag(), t.getNoSpaceAfter()))
-                                                .ifPresent(sentence::addWord);
-                                    }
-                                    doc.addSentence(sentence);
-                                }
-                            }
-                            documents.add(doc);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
-        }
-        long time = System.currentTimeMillis() - start;
-        LOGGER.info("Loading documents took: "+ time +"ms");
-        return documents;
     }
 
 }

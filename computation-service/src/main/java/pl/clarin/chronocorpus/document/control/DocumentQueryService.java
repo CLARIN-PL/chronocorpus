@@ -40,7 +40,10 @@ public class DocumentQueryService {
 
 
         //document.getSentences().stream().forEach(sentence -> documentSentences.add(DocumentMapper.getInstance().getDocumentContent(sentence)));
-        document.getSentences().stream().map(sentence -> DocumentMapper.getInstance().getDocumentContent(sentence)).forEach(x ->documentSentences.add(x));
+        document.getSentences()
+                .stream()
+                .map(sentence -> DocumentMapper.getInstance().getDocumentContent(sentence))
+                .forEach(documentSentences::add);
 
         return documentSentences.build();
         };

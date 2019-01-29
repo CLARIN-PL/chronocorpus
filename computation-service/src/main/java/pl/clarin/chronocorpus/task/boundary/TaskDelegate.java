@@ -4,9 +4,12 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import java.io.StringReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TaskDelegate {
 
+    private static final Logger LOGGER = Logger.getLogger(TaskDelegate.class.getName());
     private TaskLookUp lookupService = new TaskLookUp();
     private Task task;
     private JsonObject taskJson;
@@ -17,7 +20,7 @@ public class TaskDelegate {
             this.taskJson = reader.readObject();
             task = lookupService.getTask(taskJson);
         } catch (Exception ex){
-            ex.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Unable to parse json", ex);
         }
     }
 
