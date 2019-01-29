@@ -1,5 +1,8 @@
 package pl.clarin.chronocorpus.document.entity;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import java.io.Serializable;
 
 public class Property implements Serializable {
@@ -30,6 +33,12 @@ public class Property implements Serializable {
 
     public String getValue() {
         return value;
+    }
+
+    public JsonObject toJson() {
+        return  Json.createObjectBuilder()
+                .add("name", name)
+                .add("value",value).build();
     }
 
     public boolean matches(Property p) {
