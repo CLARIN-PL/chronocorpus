@@ -14,6 +14,8 @@ public class Application {
 
     //TODO pobrać pliki z ws.clarin-pl.eu/public i dodać do ccl
     //TODO ch1000.zip, chronopress_metadata.zip
+    //TODO Do załadowania ch.zip VM Options -Xms4g -Xmx8g
+    //TODO Do załadowania ch.zip VM Options -Xms4g -Xmx8g
     public Application() {
         if (DocumentStore.getInstance().hasNoStoredDocuments()) {
             try {
@@ -33,7 +35,6 @@ public class Application {
                 .withDocumentId("0082b083-b99c-4808-a698-87f147146804").getJsonString());
 
         TaskManager.getInstance().submitTask(new ConcordanceQuery()
-                .withOrth("czerwony")
                 .withBase("śnieg")
                 .getJsonString());
 
@@ -44,6 +45,30 @@ public class Application {
         TaskManager.getInstance().submitTask(new DocumentQuery()
                 .withMetaPublicationYear("1940")
                 .getJsonString());
+
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        TaskManager.getInstance().submitTask(new DocumentQuery()
+                .withDocumentId("0082b083-b99c-4808-a698-87f147146804").getJsonString());
+
+        TaskManager.getInstance().submitTask(new ConcordanceQuery()
+                .withBase("śnieg")
+                .getJsonString());
+
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        TaskManager.getInstance().submitTask(new ConcordanceQuery()
+                .withBase("czerwony")
+                .getJsonString());
+
     }
 
 }

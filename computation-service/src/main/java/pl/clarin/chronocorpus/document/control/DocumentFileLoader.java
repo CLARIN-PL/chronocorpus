@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -50,13 +51,13 @@ public class DocumentFileLoader {
 
     //TODO normalizacja danych słownikowych
     private Map<String, Metadata> loadMetadata(String metadataZipFile) throws IOException {
-        LOGGER.info("Loading documents from files please wait .....");
+        LOGGER.log(Level.INFO,"Loading metadata documents from files please wait .....");
         long start = System.currentTimeMillis();
         Map<String, Metadata> metadata = new HashMap<>();
         ZipFile zipFile = new ZipFile(String.valueOf(Paths.get(metadataZipFile)));
-
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
+        AtomicInteger totalItems = new AtomicInteger();
+        AtomicInteger partItems = new AtomicInteger();
         while (entries.hasMoreElements()) {
             try {
                 ZipEntry entry = entries.nextElement();
@@ -76,7 +77,8 @@ public class DocumentFileLoader {
                         if("DATE".equals(type) && "publication_date".equals(name)){
                             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                             try {
-                                Date date = df.parse(value);                                LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                                Date date = df.parse(value);
+                                LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                                 Property year = new Property("publication_year", localDate.getYear());
                                 Property month = new Property("publication_month", localDate.getMonthValue());
                                 Property day = new Property("publication_day", localDate.getDayOfMonth());
@@ -92,39 +94,51 @@ public class DocumentFileLoader {
                         }
                     }                });
                 metadata.put(id, m);
+                partItems.getAndIncrement();
+                if(partItems.get() == 5000){
+                    totalItems.getAndAdd(partItems.get());
+                    partItems.getAndSet(0);
+                    LOGGER.info("Loaded files: " + totalItems.get() +"/"+zipFile.size());
+                }
                 is.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Loading document failed", e);
             }
         }
         zipFile.close();
         long time = System.currentTimeMillis() - start;
-        LOGGER.info("Loading documents took: " + time + "ms");
+        LOGGER.log(Level.INFO,"Loading metadata documents took: " + time + "ms");
         return metadata;
     }
 
     public Set<Document> load() throws IOException {
 
-        LOGGER.info("Loading documents from files please wait .....");
         long start = System.currentTimeMillis();
 
         Set<Document> documents = new HashSet<>();
 
         Map<String, Metadata> metadata = loadMetadata(Configuration.METADATA_ZIP_FILE);
 
+        LOGGER.info("Loading documents from files please wait .....");
         ZipFile zipFile = new ZipFile(String.valueOf(Paths.get(Configuration.DATA_ZIP_FILE)));
 
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
+        LOGGER.info("Total files in zip: " + zipFile.size());
+        AtomicInteger totalItems = new AtomicInteger();
+        AtomicInteger partItems = new AtomicInteger();
         while (entries.hasMoreElements()) {
             try {
                 ZipEntry entry = entries.nextElement();
                 InputStream is = zipFile.getInputStream(entry);
-                String id = entry.getName().replace(".txt", "");
-                g419.corpus.structure.Document ccl = ReaderFactory.get().getStreamReader("url", is, "ccl")
-                        .nextDocument();
 
-                Metadata meta = metadata.get(id);                Document doc = new Document(id, meta);
+                String id = entry.getName().replace(".txt", "");
+                g419.corpus.structure.Document ccl = ReaderFactory.get()
+                        .getStreamReader("url", is, "ccl")
+                        .nextDocument();
+                is.close();
+
+                Metadata meta = metadata.get(id);
+                Document doc = new Document(id, meta);
 
                 for (Paragraph p : ccl.getParagraphs()) {
                     for (Sentence s : p.getSentences()) {
@@ -139,9 +153,14 @@ public class DocumentFileLoader {
                     }
                 }
                 documents.add(doc);
-                is.close();
+                partItems.getAndIncrement();
+                if(partItems.get() == 5000){
+                    totalItems.getAndAdd(partItems.get());
+                    partItems.getAndSet(0);
+                    LOGGER.info("Loaded files: " + totalItems.get() +"/"+zipFile.size());
+                }
             } catch (Exception e) {
-                e.printStackTrace();
+               LOGGER.log(Level.SEVERE, "Loading document failed", e);
             }
         }
         zipFile.close();
