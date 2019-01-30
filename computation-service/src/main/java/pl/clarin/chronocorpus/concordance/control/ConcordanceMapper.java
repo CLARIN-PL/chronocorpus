@@ -33,15 +33,16 @@ public class ConcordanceMapper {
     }
 
     private String[] getSentenceString(String orth, Sentence s) {
-        return s.getWords().stream()
-                .map(Word::GetOrthWithDelimiter)
-                .collect(Collectors.joining()).split(orth);
+        return s.getSentence().split(orth);
     }
 
     public  List<Concordance> mapSentenceToConcordanceList(String docId, String keyWord, Sentence s, Boolean getByBase){
         String orth = keyWord;
         if(getByBase){
-            orth  = s.getWords().stream().filter(word -> word.getBase().equals(keyWord)).findFirst().get().getOrth();
+            orth  = s.getWords()
+                    .stream()
+                    .filter(word -> word.getBase().equals(keyWord))
+                    .findFirst().get().getOrth();
         }
 
         String[] sentence = getSentenceString(orth, s);

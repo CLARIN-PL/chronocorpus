@@ -1,5 +1,7 @@
 package pl.clarin.chronocorpus.task.boundary;
 
+import pl.clarin.chronocorpus.task.entity.Task;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;

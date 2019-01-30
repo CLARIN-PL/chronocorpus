@@ -34,7 +34,7 @@ public class Property implements Serializable {
         return value;
     }
 
-    public JsonObject getAsJson(){
+    public JsonObject toJson(){
         return Json.createObjectBuilder()
                 .add("name", name)
                 .add("value",value).build();

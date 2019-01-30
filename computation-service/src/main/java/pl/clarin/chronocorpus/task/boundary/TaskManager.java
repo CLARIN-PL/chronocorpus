@@ -1,5 +1,7 @@
 package pl.clarin.chronocorpus.task.boundary;
 
+import pl.clarin.chronocorpus.Configuration;
+
 import javax.json.JsonObject;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -9,7 +11,7 @@ public class TaskManager {
 
     private static final Logger LOGGER = Logger.getLogger(TaskManager.class.getName());
     private static final Map<String, Future<JsonObject>> activeTasks = new ConcurrentHashMap<>();
-    private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(Configuration.SCHEDULER_THREAD_POOL);
     private static final int INITIAL_DELAY = 0;
     private static final int PERIOD = 1;
 
@@ -34,6 +36,7 @@ public class TaskManager {
                     activeTasks.forEach((key, value) -> {
                         if (value.isDone()) {
                             try {
+                                //TODO wynik zadania przekazac dalej gdzie?
                                 System.out.println(value.get());
                                 activeTasks.remove(key);
                             } catch (InterruptedException | ExecutionException ee) {

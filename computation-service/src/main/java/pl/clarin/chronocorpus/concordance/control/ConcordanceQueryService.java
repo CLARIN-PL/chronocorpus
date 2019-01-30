@@ -2,15 +2,15 @@ package pl.clarin.chronocorpus.concordance.control;
 
 import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.document.entity.Document;
-import pl.clarin.chronocorpus.document.entity.Metadata;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.document.entity.Sentence;
+import pl.clarin.chronocorpus.document.entity.Word;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ConcordanceQueryService {
@@ -31,7 +31,7 @@ public class ConcordanceQueryService {
         return instance;
     }
 
-    public JsonArray findConcordance(String keyWord, List<Property> metadata, Boolean byBase) {
+    public JsonArray findConcordance(String keyWord, Set<Property> metadata, boolean byBase) {
 
         Map<String, List<Sentence>> sentences = new HashMap<>();
 
@@ -39,28 +39,14 @@ public class ConcordanceQueryService {
 
             if (d.getMetadata().matches(metadata)) {
 
-                if (byBase) {
-                    List<Sentence> matching = d.getSentences()
-                            .stream()
-                            .filter(s -> s.getWords()
-                                    .stream()
-                                    .anyMatch(word -> word.getBase().equals(keyWord)))
-                            .collect(Collectors.toList());
+                List<Sentence> matching = d.getSentences()
+                        .stream()
+                        .filter(s -> s.getWords()
+                                .stream()
+                                .anyMatch(byBase ? getBasePredicate(keyWord):getOrthPredicate(keyWord)))
+                        .collect(Collectors.toList());
 
-                    sentences.put(d.getId(), matching);
-
-                } else {
-                    List<Sentence> matching = d.getSentences()
-                            .stream()
-                            .filter(s -> s.getWords()
-                                    .stream()
-                                    .anyMatch(word -> word.getOrth().equals(keyWord)))
-                            .collect(Collectors.toList());
-                    sentences.put(d.getId(), matching);
-
-                }
-
-
+                sentences.put(d.getId(), matching);
 
             }
 
@@ -71,9 +57,17 @@ public class ConcordanceQueryService {
                             .getInstance()
                             .mapSentenceToConcordanceList(docId, keyWord, s, byBase))
                     .flatMap(Collection::stream)
-                    .forEach(cc -> concordances.add(cc.getAsJson()));
+                    .forEach(cc -> concordances.add(cc.toJson()));
         });
 
         return concordances.build();
+    }
+
+    public Predicate<Word> getOrthPredicate(String keyWord) {
+        return word -> word.getOrth().equals(keyWord);
+    }
+
+    public Predicate<Word> getBasePredicate(String keyWord) {
+        return word -> word.getBase().equals(keyWord);
     }
 }

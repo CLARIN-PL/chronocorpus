@@ -1,9 +1,12 @@
 package pl.clarin.chronocorpus.document.entity;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class Document implements Serializable {
 
@@ -27,6 +30,19 @@ public class Document implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public JsonObject toJson(){
+        return Json.createObjectBuilder()
+                .add("id", id)
+                .add("metadata", metadata.toJson())
+                .add("text", toText()).build();
+    }
+
+    private String toText(){
+        return sentences.stream()
+                .map(Sentence::getSentence)
+                .collect(Collectors.joining());
     }
 
     public Metadata getMetadata() {

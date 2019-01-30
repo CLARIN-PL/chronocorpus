@@ -82,10 +82,4 @@ public class Word implements Serializable {
         return noSpaceAfter;
     }
 
-    @Override
-    public String toString() {
-        return "Word{" +
-                "orth='" + orth + '\'' +", base='" + base + '\'' +
-                '}';
-    }
 }

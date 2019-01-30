@@ -4,6 +4,7 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
+import pl.clarin.chronocorpus.Configuration;
 import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Metadata;
 import pl.clarin.chronocorpus.document.entity.Property;
@@ -109,9 +110,9 @@ public class DocumentFileLoader {
 
         Set<Document> documents = new HashSet<>();
 
-        Map<String, Metadata> metadata = loadMetadata("ccl/chronopress_metadata.zip");
+        Map<String, Metadata> metadata = loadMetadata(Configuration.METADATA_ZIP_FILE);
 
-        ZipFile zipFile = new ZipFile(String.valueOf(Paths.get("ccl/ch1000.zip")));
+        ZipFile zipFile = new ZipFile(String.valueOf(Paths.get(Configuration.DATA_ZIP_FILE)));
 
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
 

@@ -2,6 +2,7 @@ package pl.clarin.chronocorpus.task.boundary;
 
 import pl.clarin.chronocorpus.concordance.boundary.ConcordanceTask;
 import pl.clarin.chronocorpus.document.boundary.DocumentTask;
+import pl.clarin.chronocorpus.task.entity.Task;
 
 import javax.json.JsonObject;
 

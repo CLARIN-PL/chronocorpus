@@ -39,7 +39,7 @@ public class Concordance {
         return right;
     }
 
-    public JsonObject getAsJson(){
+    public JsonObject toJson(){
         return Json.createObjectBuilder()
                 .add("document_id", documentId.toString())
                 .add("left",left)

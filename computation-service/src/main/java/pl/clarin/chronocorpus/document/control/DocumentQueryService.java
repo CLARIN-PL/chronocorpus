@@ -8,7 +8,12 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
+import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class DocumentQueryService {
@@ -27,40 +32,20 @@ public class DocumentQueryService {
         }
         return instance;
     }
-    public JsonArray getDocumentSentencesById(String id){
-        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-        findDocumentById(id).getSentences().stream().map(sentence -> DocumentMapper.getInstance().getDocumentContent(sentence)).forEach(x ->jsonArrayBuilder.add(x));
-        return jsonArrayBuilder.build();
+
+    public List<Document> findDocumentsByMetadata(Set<Property> metadata){
+        return DocumentStore.getInstance().getDocuments()
+                .stream()
+                .filter(d -> d.getMetadata().matches(metadata))
+                .collect(Collectors.toList());
     }
 
-
-    public JsonArray getDocumentMetadataById(String id){
-        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-        for (Property p : findDocumentById(id).getMetadata().getProperties())
-            jsonArrayBuilder.add(p.getAsJson());
-        return jsonArrayBuilder.build();
-    }
-
-    private Document findDocumentById(String id) {
-        return DocumentStore.getInstance().getDocuments().stream().filter(d -> d.getId().equals(id)).findFirst().get();
-    }
-
-    public JsonArrayBuilder getDocumentsData(List<Property> metadata){
-        JsonArrayBuilder documentsData = Json.createArrayBuilder();
-        for (Document d : DocumentStore.getInstance().getDocuments())
-            if (d.getMetadata().matches(metadata))
-                documentsData.add(getDocumentData(d.getId()));
-        return documentsData;
-    }
-
-    JsonObjectBuilder getDocumentData(String id){
-        JsonObjectBuilder documentData = Json.createObjectBuilder();
-        documentData.add("id", id)
-                .add("metadata", getDocumentMetadataById(id))
-//                .add("text", getDocumentSentencesById(id));
-                .add("text", "sentences"); //na potrzeby testów
-        return documentData;
-
+    public Optional<Document> findDocumentById(String id) {
+        return DocumentStore.getInstance()
+                .getDocuments()
+                .stream()
+                .filter(d -> d.getId().equals(id))
+                .findFirst();
     }
 
 }

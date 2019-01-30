@@ -3,6 +3,7 @@ package pl.clarin.chronocorpus.document.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Sentence implements Serializable {
 
@@ -19,10 +20,9 @@ public class Sentence implements Serializable {
         return words;
     }
 
-    @Override
-    public String toString() {
-        return "Sentence{" +
-                "words=" + words +
-                '}';
+    public String getSentence(){
+        return words.stream()
+                .map(Word::GetOrthWithDelimiter)
+                .collect(Collectors.joining());
     }
 }
