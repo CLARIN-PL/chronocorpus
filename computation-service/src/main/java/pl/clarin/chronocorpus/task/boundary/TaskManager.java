@@ -17,12 +17,12 @@ public class TaskManager {
 
     public static volatile TaskManager instance;
 
-    private TaskManager(){
+    private TaskManager() {
         Runnable activeTaskListener = getDefaultSchedulerTask();
         executor.scheduleAtFixedRate(activeTaskListener, INITIAL_DELAY, PERIOD, TimeUnit.SECONDS);
     }
 
-    public void submitTask(String json){
+    public void submitTask(String json) {
         TaskDelegate taskDelegate = new TaskDelegate();
         taskDelegate.setTaskString(json);
 
@@ -32,20 +32,22 @@ public class TaskManager {
 
     private Runnable getDefaultSchedulerTask() {
         return () -> {
-                if(!activeTasks.isEmpty()){
-                    activeTasks.forEach((key, value) -> {
-                        if (value.isDone()) {
-                            try {
-                                //TODO wynik zadania przekazac dalej gdzie?
-                                System.out.println(value.get());
-                                activeTasks.remove(key);
-                            } catch (InterruptedException | ExecutionException ee) {
-                                ee.printStackTrace();
-                            }
+            if (!activeTasks.isEmpty()) {
+                activeTasks.forEach((key, value) -> {
+                    if (value.isDone()) {
+                        try {
+
+                            //TODO wynik zadania przekazac dalej gdzie?
+                            System.out.println(value.get());
+
+                            activeTasks.remove(key);
+                        } catch (InterruptedException | ExecutionException ee) {
+                            ee.printStackTrace();
                         }
-                    });
-                }
-            };
+                    }
+                });
+            }
+        };
     }
 
     public static TaskManager getInstance() {

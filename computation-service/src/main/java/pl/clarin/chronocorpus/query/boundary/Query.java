@@ -32,7 +32,7 @@ public abstract class Query {
     }
 
     public Query withMetaPublicationDay(String day) {
-        Property p = new Property("publication_dat", day);
+        Property p = new Property("publication_day", day);
         meta.add(p.toJson());
         return this;
     }
