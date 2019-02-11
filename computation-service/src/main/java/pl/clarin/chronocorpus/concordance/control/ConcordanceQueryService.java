@@ -9,7 +9,7 @@ import pl.clarin.chronocorpus.document.entity.Word;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import java.util.*;
+import java.util.*; 
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -37,7 +37,7 @@ public class ConcordanceQueryService {
 
         for (Document d : DocumentStore.getInstance().getDocuments())
 
-            if (d.getMetadata().matches(metadata)) {
+            if (d.getMetadata().matches(metadata) &&  (byBase ? d.isBaseIn(keyWord):d.isOrthIn(keyWord)) ) {
 
                 List<Sentence> matching = d.getSentences()
                         .stream()

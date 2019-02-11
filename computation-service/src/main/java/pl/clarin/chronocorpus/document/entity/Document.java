@@ -4,7 +4,9 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -16,6 +18,9 @@ public class Document implements Serializable {
 
     private List<Sentence> sentences = new ArrayList<>();
 
+    private Set<String> bases=new HashSet<>();
+    private Set<String> orths=new HashSet<>();
+    
     public Document() {
     }
 
@@ -26,6 +31,11 @@ public class Document implements Serializable {
 
     public void addSentence(Sentence s){
         sentences.add(s);
+        for (Word w:s.getWords())
+        {    bases.add(w.getBase());
+             orths.add(w.getOrth());
+        }
+    
     }
 
     public String getId() {
@@ -52,5 +62,17 @@ public class Document implements Serializable {
     public List<Sentence> getSentences() {
         return sentences;
     }
+    
+    
+    public boolean isBaseIn(String word)
+    { return bases.contains(word);
+        
+    }
+    
+    public boolean isOrthIn(String word)
+    { return orths.contains(word);
+        
+    }
+
 
 }
