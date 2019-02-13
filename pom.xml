@@ -41,11 +41,14 @@
                 <artifactId>computation-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
+        
+           
         </dependencies>
     </dependencyManagement>
     <dependencies>
     </dependencies>
     <modules>
         <module>computation-service</module>
+        <module>rest-service</module>
     </modules>
 </project>

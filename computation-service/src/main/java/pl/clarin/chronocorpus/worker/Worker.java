@@ -98,7 +98,8 @@ public abstract class Worker extends Thread {
 
                     JsonReader reader = Json.createReader(new StringReader(message));
                     JsonObject input = reader.readObject();
-                    response.add("input", input);
+                    //response.add("input", input);
+                    response.add("id", input.get("id"));
                     long start = System.currentTimeMillis();
                     JsonObject res = process(input);
                     
@@ -106,7 +107,7 @@ public abstract class Worker extends Thread {
                     LOGGER.log(Level.INFO, "Finish processing of task: " + properties.getCorrelationId() + " in " + (stop - start) / 1000.0 + "s.");
                     response.add("time",  (stop - start) / 1000.0);
                     response.add("error", "");
-                    
+                    response.add("result", res);
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING, "Problems in task execution for :" + message, e);
                     response.add("error", e.getMessage());
