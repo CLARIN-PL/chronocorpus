@@ -5,6 +5,7 @@ import pl.clarin.chronocorpus.task.entity.TaskType;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.util.UUID;
 
@@ -37,10 +38,10 @@ public abstract class Query {
         return this;
     }
 
-    public String getJsonString() {
+    public JsonObject getJson() {
         json.add("metadata_filter", meta);
         json.add("params", params);
-        return json.build().toString();
+        return json.build();
     }
 }
 

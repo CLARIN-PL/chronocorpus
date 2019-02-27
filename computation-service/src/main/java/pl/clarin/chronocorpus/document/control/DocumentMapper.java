@@ -23,12 +23,8 @@ public class DocumentMapper {
     }
 
     public String getDocumentContent(Sentence s) {
-
-        String sentence = s.getWords().stream()
+      return s.getWords().stream()
                 .map(Word::GetOrthWithDelimiter)
                 .collect(Collectors.joining());
-
-        return sentence;
-
     }
 }

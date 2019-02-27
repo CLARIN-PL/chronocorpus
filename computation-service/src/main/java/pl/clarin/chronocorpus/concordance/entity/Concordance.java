@@ -11,7 +11,7 @@ public class Concordance {
     private String word;
     private String right;
 
-    public Concordance(String documentId,String lemma) {
+    public Concordance(String documentId, String lemma) {
         this.documentId = documentId;
         this.word = lemma;
     }

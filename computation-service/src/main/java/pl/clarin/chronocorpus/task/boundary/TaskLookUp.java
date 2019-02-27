@@ -5,15 +5,16 @@ import pl.clarin.chronocorpus.document.boundary.DocumentTask;
 import pl.clarin.chronocorpus.task.entity.Task;
 
 import javax.json.JsonObject;
+import java.util.Optional;
 
 public class TaskLookUp {
 
-    public Task getTask(JsonObject json){
+    public Optional<Task> getTask(JsonObject json){
 
         if(json.containsKey("task_type")){
-            if(json.getString("task_type").equalsIgnoreCase("concordance")) return new ConcordanceTask(json);
-            if(json.getString("task_type").equalsIgnoreCase("document")) return new DocumentTask(json);
+            if(json.getString("task_type").equalsIgnoreCase("concordance")) return Optional.of(new ConcordanceTask(json));
+            if(json.getString("task_type").equalsIgnoreCase("document")) return Optional.of(new DocumentTask(json));
         }
-        return null;
+        return Optional.empty();
     }
 }

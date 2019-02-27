@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 public class DocumentQueryService {
 
     public static volatile DocumentQueryService instance;

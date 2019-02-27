@@ -8,8 +8,7 @@
     </parent>
     <artifactId>rest-service</artifactId>
     <packaging>jar</packaging>
-    
-    
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>

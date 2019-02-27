@@ -41,8 +41,11 @@
                 <artifactId>computation-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
-        
-           
+            <dependency>
+                <groupId>pl.clarin</groupId>
+                <artifactId>rest-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>

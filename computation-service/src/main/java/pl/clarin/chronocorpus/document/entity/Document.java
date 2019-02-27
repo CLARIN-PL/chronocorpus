@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Document implements Serializable {
@@ -18,9 +17,9 @@ public class Document implements Serializable {
 
     private List<Sentence> sentences = new ArrayList<>();
 
-    private Set<String> bases=new HashSet<>();
-    private Set<String> orths=new HashSet<>();
-    
+    private Set<String> bases = new HashSet<>();
+    private Set<String> orths = new HashSet<>();
+
     public Document() {
     }
 
@@ -29,27 +28,29 @@ public class Document implements Serializable {
         this.metadata = metadata;
     }
 
-    public void addSentence(Sentence s){
+    public void addSentence(Sentence s) {
         sentences.add(s);
-        for (Word w:s.getWords())
-        {    bases.add(w.getBase());
-             orths.add(w.getOrth());
+        for (Word w : s.getWords()) {
+            if(!w.getCtag().equals("interp")) {
+                bases.add(w.getBase());
+                orths.add(w.getOrth());
+            }
         }
-    
+
     }
 
     public String getId() {
         return id;
     }
 
-    public JsonObject toJson(){
+    public JsonObject toJson() {
         return Json.createObjectBuilder()
                 .add("id", id)
                 .add("metadata", metadata.toJson())
                 .add("text", toText()).build();
     }
 
-    private String toText(){
+    private String toText() {
         return sentences.stream()
                 .map(Sentence::getSentence)
                 .collect(Collectors.joining());
@@ -62,16 +63,16 @@ public class Document implements Serializable {
     public List<Sentence> getSentences() {
         return sentences;
     }
-    
-    
-    public boolean isBaseIn(String word)
-    { return bases.contains(word);
-        
+
+
+    public boolean isBaseIn(String word) {
+        return bases.contains(word);
+
     }
-    
-    public boolean isOrthIn(String word)
-    { return orths.contains(word);
-        
+
+    public boolean isOrthIn(String word) {
+        return orths.contains(word);
+
     }
 
 

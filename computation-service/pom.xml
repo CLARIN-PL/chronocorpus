@@ -13,9 +13,8 @@
             <groupId>g419.corpus</groupId>
             <artifactId>io</artifactId>
             <version>1.0</version>
-            <!--
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/g419-corpus-2.5-SNAPSHOT.jar</systemPath>-->
+            <systemPath>${project.basedir}/lib/g419-corpus-2.5-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
