@@ -6,20 +6,18 @@
 package pl.clarin.chronocorpus.rest;
 
 import com.rabbitmq.client.AMQP;
-import java.io.IOException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.ini4j.Ini;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.UUID;
+
 /**
- *
  * @author twalkow
  */
 public class SendTask {
@@ -27,7 +25,7 @@ public class SendTask {
     private final String replyQueueName;
     private final String defaultQueue;
     private final Channel channel;
-    
+
 
     public static JSONObject send(String data, Connection _conn, Ini init) {
         JSONObject result = new JSONObject();
@@ -47,19 +45,19 @@ public class SendTask {
                 } catch (Exception e) {
                 }
             }
-
-        }   
+        }
 
         return result;
     }
+
     private final String queuePrefix;
 
     private SendTask(Ini init, Channel _channel) throws IOException {
         channel = _channel;
         queuePrefix = init.get("service", "queue_prefix");
         replyQueueName = queuePrefix + init.get("service", "result");
-        defaultQueue=queuePrefix + init.get("service", "default");
-                //channel.queueDeclare(taskQueueName, false, false, false, null);
+        defaultQueue = queuePrefix + init.get("service", "default");
+        //channel.queueDeclare(taskQueueName, false, false, false, null);
         //channel.basicQos(1);
     }
 
@@ -97,23 +95,23 @@ public class SendTask {
         try {
 
             try {
-            AMQP.Queue.DeclareOk ok = channel.queueDeclarePassive(taskQueueName);
+                AMQP.Queue.DeclareOk ok = channel.queueDeclarePassive(taskQueueName);
 
-        } catch (IOException io) {
-            Logger.getLogger(RESTService.class.getName()).log(Level.ERROR, "Non existing queue");
-            
-        }
-            
-            
+            } catch (IOException io) {
+                Logger.getLogger(RESTService.class.getName()).log(Level.ERROR, "Non existing queue");
+
+            }
+
+
             AMQP.BasicProperties props = new AMQP.BasicProperties.Builder()
                     .correlationId(id)
                     .replyTo(replyQueueName)
                     .build();
-            
+
             channel.basicPublish("", taskQueueName, props, message.getBytes("UTF-8"));
-            
-            Logger.getLogger(RESTService.class.getName()).log(Level.INFO, "Sending to "+taskQueueName+ " "+message);
-            
+
+            Logger.getLogger(RESTService.class.getName()).log(Level.INFO, "Sending to " + taskQueueName + " " + message);
+
         } catch (Exception e) {
             result.put("error", "Internal service problem");
             Logger.getLogger(RESTService.class.getName()).log(Level.FATAL, e);
@@ -125,7 +123,5 @@ public class SendTask {
     private String checkInput(JSONObject input) {
         return "";
     }
-
-   
 
 }

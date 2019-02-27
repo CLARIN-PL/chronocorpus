@@ -1,6 +1,5 @@
 package pl.clarin.chronocorpus;
 
-
 import org.ini4j.Ini;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;

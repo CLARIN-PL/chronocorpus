@@ -2,53 +2,44 @@ package pl.clarin.chronocorpus.rest;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import java.io.File;
-import java.io.IOException;
-
-import java.util.concurrent.TimeoutException;
-import javax.inject.Singleton;
-import javax.ws.rs.Consumes;
-
-
-
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.container.ResourceContext;
-import javax.ws.rs.core.Context;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.ini4j.Ini;
 import org.json.JSONObject;
 import pl.clarin.chronocorpus.rest.resulter.Resulter;
 
+import javax.inject.Singleton;
+import javax.ws.rs.*;
+import javax.ws.rs.container.ResourceContext;
+import javax.ws.rs.core.Context;
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 
 @Singleton
 @Path("")
 public class RESTService {
 
-    
     private Ini init;
-    private Resulter resulter=new Resulter();
-    
-    
+
+    private Resulter resulter = new Resulter();
+
     @Context
     private ResourceContext resourceContext;
+
     private Connection connection;
-    
-    
+
     @POST
     @Consumes("application/json")
     @Path("/startTask")
-    public String startTask(String data)  {
+    public String startTask(String data) {
         long start = System.currentTimeMillis();
-        JSONObject result=SendTask.send(data,connection,init);
-        Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Starting in "+(System.currentTimeMillis() - start) / 1000.0 +"s");    
-        if (result.has("id"))
-        {   resulter.started(result.getString("id"));
-            Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Task started "+result.getString("id"));
+        JSONObject result = SendTask.send(data, connection, init);
+        Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Starting in " + (System.currentTimeMillis() - start) / 1000.0 + "s");
+        if (result.has("id")) {
+            resulter.started(result.getString("id"));
+            Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Task started " + result.getString("id"));
         }
         return result.toString();
     }
@@ -57,40 +48,33 @@ public class RESTService {
     @Path("getStatus/{taskID}")
     public String getStatus(@PathParam("taskID") String taskID) {
         long start = System.currentTimeMillis();
-        
+
         JSONObject res = resulter.status(taskID);
         if ((System.currentTimeMillis() - start) / 1000.0 > 0.1) {
-        Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Status in "+(System.currentTimeMillis() - start) / 1000.0 +"s");    
+            Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Status in " + (System.currentTimeMillis() - start) / 1000.0 + "s");
         }
-        
+
         return res.toString();
     }
-    
+
     @GET
     @Path("getResult/{taskID}")
     public String getResult(@PathParam("taskID") String taskID) {
         long start = System.currentTimeMillis();
         JSONObject res = resulter.result(taskID);
         if ((System.currentTimeMillis() - start) / 1000.0 > 0.1) {
-          Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Result in "+(System.currentTimeMillis() - start) / 1000.0 +"s");    
+            Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Result in " + (System.currentTimeMillis() - start) / 1000.0 + "s");
         }
         //base.close();
         return res.toString();
     }
-         
-    
-    
+
     @GET
     @Path("/test")
     public String test() {
         return "Alive...";
     }
 
-    
-    
-   
-
-    
     private Connection initRabbit() throws IOException, TimeoutException {
         //Rabbit
         ConnectionFactory factory = new ConnectionFactory();
@@ -110,15 +94,14 @@ public class RESTService {
             return;
         }
         connection = initRabbit();
-        
-        resulter.start(connection, init.get("service","queue_prefix")+init.get("service","result"));
-        
+
+        resulter.start(connection, init.get("service", "queue_prefix") + init.get("service", "result"));
+
         Logger.getLogger(RESTApplication.class.getName()).log(Level.INFO, "Starting REST service");
 
     }
-    
-    public void close()
-    {
+
+    public void close() {
         try {
             connection.close();
         } catch (IOException ex) {
@@ -128,7 +111,6 @@ public class RESTService {
 
     public RESTService() throws Exception {
         init();
-
     }
 
 }

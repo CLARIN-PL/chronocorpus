@@ -1,34 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.clarin.chronocorpus.worker;
 
-import com.rabbitmq.client.AMQP;
-
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.*;
 import com.rabbitmq.client.AMQP.BasicProperties;
-import com.rabbitmq.client.Consumer;
-import com.rabbitmq.client.Envelope;
+import org.ini4j.Ini;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.math.BigDecimal;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
-import org.ini4j.Ini;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *
  * @author Tomasz Walkowiak
  */
 public abstract class Worker extends Thread {
@@ -81,7 +68,7 @@ public abstract class Worker extends Thread {
         channel.queueDeclare(requestQueueName, false, false, false, null);
 
         channel.basicQos(1);
-        
+
         Consumer consumer = new DefaultConsumer(channel) {
             @Override
             public void handleDelivery(
@@ -89,11 +76,11 @@ public abstract class Worker extends Thread {
                     Envelope envelope,
                     AMQP.BasicProperties properties,
                     byte[] body) throws IOException {
-                
-                
+
+
                 BasicProperties replyProps = new BasicProperties.Builder().correlationId(properties.getCorrelationId()).build();
                 JsonObjectBuilder response = Json.createObjectBuilder();
-                String message = new String(body, "UTF-8");
+                String message = new String(body, StandardCharsets.UTF_8);
                 try {
 
                     JsonReader reader = Json.createReader(new StringReader(message));
@@ -102,10 +89,10 @@ public abstract class Worker extends Thread {
                     response.add("id", input.get("id"));
                     long start = System.currentTimeMillis();
                     JsonObject res = process(input);
-                    
+
                     long stop = System.currentTimeMillis();
                     LOGGER.log(Level.INFO, "Finish processing of task: " + properties.getCorrelationId() + " in " + (stop - start) / 1000.0 + "s.");
-                    response.add("time",  (stop - start) / 1000.0);
+                    response.add("time", (stop - start) / 1000.0);
                     response.add("error", "");
                     response.add("result", res);
                 } catch (Exception e) {
@@ -113,20 +100,20 @@ public abstract class Worker extends Thread {
                     response.add("error", e.getMessage());
 
                 } finally {
-                    
-                    if (properties.getReplyTo()!=null)
-                    channel.basicPublish("", properties.getReplyTo(), replyProps, response.build().toString().getBytes("UTF-8"));
+
+                    if (properties.getReplyTo() != null)
+                        channel.basicPublish("", properties.getReplyTo(), replyProps, response.build().toString().getBytes(StandardCharsets.UTF_8));
                     channel.basicAck(envelope.getDeliveryTag(), false);
                     synchronized (monitor) {
                         monitor.notify();
                     }
-                    
+
                 }
             }
         };
-        
+
         channel.basicConsume(requestQueueName, false, consumer);
-        
+
     }
 
     final public void run() {

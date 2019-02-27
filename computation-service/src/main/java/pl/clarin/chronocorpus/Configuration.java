@@ -1,11 +1,17 @@
 package pl.clarin.chronocorpus;
 
+import org.ini4j.Ini;
+
 public class Configuration {
 
-    public static final String DATA_STORE_FILE = "store.dat";
-    public static final String METADATA_ZIP_FILE = "ccl/chronopress_metadata.zip";
-    public static final String DATA_ZIP_FILE = "ccl/ch.zip";
+    public static  String DATA_STORE_FILE;
+    public static  String METADATA_ZIP_FILE;
+    public static  String DATA_ZIP_FILE;
 
-    public static final int SCHEDULER_THREAD_POOL = 1;
-    public static final int TASK_THREAD_POOL = 1;
+    public static void init(Ini ini){
+        DATA_STORE_FILE = ini.get("configuration", "data_store_file");
+        METADATA_ZIP_FILE = ini.get("configuration", "metadata_zip_file");
+        DATA_ZIP_FILE = ini.get("configuration","data_zip_file");
+    }
+
 }
