@@ -53,9 +53,16 @@ public class FrequencyQueryService {
                 .collect(
                         toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
                                 LinkedHashMap::new))
-                .forEach((k, v) -> frequency.add(
-                Json.createObjectBuilder()
-                        .add(k, v)));
+                .forEach((k, v) -> {
+                            String[] key = k.split("__");
+                            frequency.add(
+                                    Json.createObjectBuilder()
+                                            .add("word", key[0])
+                                            .add("part_of_speech", key[1])
+                                            .add("count", v)
+                            );
+                        }
+                );
         return frequency.build();
     }
 

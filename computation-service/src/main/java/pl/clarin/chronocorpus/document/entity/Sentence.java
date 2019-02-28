@@ -33,7 +33,7 @@ public class Sentence implements Serializable {
         return words.stream()
                 .filter(w -> !"interp".equals(w.getCtag()))
                 .filter(w -> !stopList.contains(w))
-                .map(Word::getBase)
+                .map(w -> w.getBase()+"__"+w.getPos())
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 
@@ -41,7 +41,7 @@ public class Sentence implements Serializable {
         return words.stream()
                 .filter(w -> !"interp".equals(w.getCtag()))
                 .filter(w -> !stopList.contains(w))
-                .map(Word::getOrth)
+                .map(w -> w.getOrth()+"__"+w.getPos())
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 }
