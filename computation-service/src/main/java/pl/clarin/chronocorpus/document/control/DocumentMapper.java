@@ -24,7 +24,7 @@ public class DocumentMapper {
 
     public String getDocumentContent(Sentence s) {
       return s.getWords().stream()
-                .map(Word::GetOrthWithDelimiter)
+                .map(Word::getOrthWithDelimiter)
                 .collect(Collectors.joining());
     }
 }

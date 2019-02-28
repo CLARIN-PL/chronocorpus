@@ -4,6 +4,8 @@ import pl.clarin.chronocorpus.document.entity.Property;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.json.JsonString;
+import javax.json.JsonValue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,17 +13,17 @@ public abstract class Task {
 
     protected String id;
     protected Set<Property> metadata;
-    protected Set<Property> params;
+    protected Set<Property> queryParameters;
+    protected Set<String> responseParameters;
 
     public Task(JsonObject json) {
         this.id = json.getString("id");
 
-        JsonArray jsonParams = json.getJsonArray("params");
-        params = jsonParams.getValuesAs(JsonObject.class)
+        JsonArray jsonParams = json.getJsonArray("query_parameters");
+        queryParameters = jsonParams.getValuesAs(JsonObject.class)
                 .stream()
                 .map(j -> new Property(j.getString("name"), j.getString("value")))
                 .collect(Collectors.toSet());
-
 
         JsonArray jsonMetadata = json.getJsonArray("metadata_filter");
         metadata = jsonMetadata.getValuesAs(JsonObject.class)
@@ -29,10 +31,11 @@ public abstract class Task {
                 .map(j -> new Property(j.getString("name"), j.getString("value")))
                 .collect(Collectors.toSet());
 
-    }
-
-    public String getId() {
-        return id;
+        JsonArray jsonResponseParams = json.getJsonArray("response_parameters");
+        responseParameters = jsonResponseParams.getValuesAs(JsonString.class)
+                .stream()
+                .map(s -> s.getChars().toString())
+                .collect(Collectors.toSet());
     }
 
     public abstract JsonObject doTask();

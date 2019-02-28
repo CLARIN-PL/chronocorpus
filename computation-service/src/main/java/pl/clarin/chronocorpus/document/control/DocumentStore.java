@@ -72,6 +72,7 @@ public class DocumentStore {
         try {
             out = new Output(new FileOutputStream(Configuration.DATA_STORE_FILE));
             kryo.writeObject(out, documents);
+            out.flush();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Document store backup failure", e);
         } finally {

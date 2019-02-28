@@ -1,24 +1,158 @@
 = Chronocorpus api requests
 
+=== Querying documents
+Example request and respond when searching for document.
+
 `Documents Request`:
 ----
 {
+    "id":"9764f8c2-fec3-4f7f-a2e7-e4fb9167797a",
+    "task_type":"document",
+    "metadata_filter":[
+        {
+            "name":"publication_year",
+            "value":"1945"
+         }
+    ],
+    "query_parameters":[
+        {
+            "name":"document_id",
+            "value":"014f0156-68e6-418e-acfe-53fa88e2d19c"
+        }
+    ],
+    "response_parameters":[]
 }
 ----
 `Documents Response`:
 ----
 {
+    "task_id":"9764f8c2-fec3-4f7f-a2e7-e4fb9167797a",
+    "documents":[
+        {
+            "id":"014f0156-68e6-418e-acfe-53fa88e2d19c",
+            "metadata":{
+                "corpus_name":"chronopress",
+                "is_public_access":true,
+                "owner":"apawłow",
+                "properties":[
+                    {
+                        "name":"journal_title",
+                        "value":"Rzeczpospolita"
+                    },
+                    {
+                        "name":"article_title",
+                        "value":"Jeszcze jeden symbol"
+                    },
+                    {
+                        "name":"authors",
+                        "value":"ap."
+                    },
+                    {
+                        "name":"publication_year",
+                        "value":"1945"
+                    },
+                    {
+                        "name":"publication_month",
+                        "value":"9"
+                    },
+                    {
+                        "name":"publication_day",
+                        "value":"4"
+                    },
+                    {
+                        "name":"exposition",
+                        "value":"3"
+                    },
+                    {
+                        "name":"medium",
+                        "value":"Prasa drukowana"
+                    },
+                    {
+                        "name":"period",
+                        "value":"dziennik"
+                    },
+                    {
+                        "name":"status",
+                        "value":"Obieg oficjalny krajowy"
+                    },
+                    {
+                        "name":"style",
+                        "value":"język prasy"
+                    }
+                ]
+            },
+            "text":"Od paru tygodni, przechodząc al. Stalina, zauważyć można w Ośrodku Ujazdowskim przy wylocie ul. Szopena żołnierzy Czerwonej Armii przy pracy. Betonowy bunkier niemiecki rozpada się pod uderzeniami oskardów. Przez bramę wjeżdżają i wyjeżdżają ciężarowe \"Zisy\" i ciągniki. Zainteresowany podchodzę do bramy. Młoda dziewczyna z karabinem, pełniąca służbę wartowniczą przy wejściu, na pytanie moje, dotyczące wykonywanych prac skierowuje mnie do kierownika robót. Inżynier Galicyn — siedzący opodal na ławce — je właśnie obiad z żołnierskiej menażki i jednocześnie wydaje rozporządzenia otaczającym go podwładnym. — To miejsce w Ogrodzie Ujazdowskim odgrodzone drutem jest terenem budowy Pomnika Zwycięstwa Armii Radzieckiej i Polskiej nad Niemcami. Materiał z obecnie burzonego bunkra zostanie użyty jako fundament i cokół pomnika. Pomników takich stanie na ziemiach polskich sześć: w Warszawie prawo i lewobrzeżnej, w Lublinie, w Chełmie, Poznaniu i Sznajdemülle — nie wiem, jak to jest po polsku, — uśmiecha się. — Każdy oczywiście będzie inny. — Jak będzie wyglądał ten warszawski? — pytam. — Na cokole, który zostanie wyłożony granitem — stanie czołg. Będzie on odlany z metalu w... Berlinie! Patrzymy na siebie porozumiewawczo. Dobrze jest widzieć w jasny, słoneczny dzień — jak pod zgodnymi uderzeniami kilofów rozsypuje się niemiecki bunkier. Dobrze jest wiedzieć, że szczątki jego praca obróci w cokół pod pomnik chwały i braterstwa broni radziecko-polskiej — czołg odlany w pokonanej stolicy okupanta! — Przyjechaliśmy tu do Warszawy — mówi dalej inż. Galicyn — specjalnie z Niemiec, dla budowy pomnika. Nie jest nas wielu. Przeważają dziewczęta. Sporo starszych z mojej grupy zostało ostatnio zdemobilizowanych. Od dziś dnia pracuje z nami 120-u saperów Wojska Polskiego. Pracujemy bardzo intensywnie — inż. Galicyn wskazuje stojącą na ławce menażkę — nawet nie mam czasu pojechać do domu na obiad. Pierwszego listopada pomnik ma być gotowy. Od przyszłego tygodnia pracować będziemy na dwie zmiany: w dzień i w nocy. Tu na tych słupach zostaną umieszczone reflektory. Materiał z bunkra nie wystarczy na wykonanie całego cokołu. "
+        }
+    ]
 }
+
 ----
+
+=== Querying concordances
+Example request and respond when searching concordances.
+
 `Concordances Request`:
 ----
 {
+    "task_type":"concordance",
+    "metadata_filter":[
+        {
+            "name":"publication_year",
+            "value":"1946"
+        }
+    ],
+    "query_parameters":[
+        {
+            "name":"base",
+            "value":"czerwony"
+        }
+    ],
+    "response_parameters":["journal_title","publication_year"]
 }
 ----
 `Concordances Response`:
 ----
 {
+ "task_id":"c939bcc0-3fcf-49d3-a6f7-5a34b0b7b9eb",
+ "rows":[
+    {
+        "document_id":"02f4c508-23f4-4706-a943-c5a3a0b50e29",
+        "properties":[
+            {
+                "name":"journal_title","value":"Tygodnik Powszechny"
+            },
+            {
+                "name":"publication_year","value":"1946"
+            }],
+        "concordances":[
+            {
+                "left":"Natomiast obraz \"",
+                "word":"Czerwona",
+                "right":" Suknia\" jest bardzo ciekawą kompozycją. "
+            }
+        ]
+     },
+     {
+        "document_id":"02f4c508-23f4-4706-a943-c5a3a0b50e29",
+        "properties":[
+            {
+                "name":"journal_title","value":"Tygodnik Powszechny"
+            },
+            {
+                "name":"publication_year","value":"1946"
+            }
+         ],
+         "concordances":[
+            {
+                "left":"Natomiast Pignon wyszedł zdecydowanie z kubizmu, podziwiamy jego piękną \"Martwą Naturę\" z r. 1938 (specjalnie piękny koloryt), który jednak następnie bardziej upraszcza i syntetyzuje jak w \"Rybach\" (1944) i \"",
+                "word":"Czerwonym",
+                "right":" Moździerzu\". "
+             }
+         ]
+     }
+ ]
 }
+
 ----
 `Word Profiles Request`:
 ----
@@ -59,4 +193,3 @@
 ----
 {
 }
-

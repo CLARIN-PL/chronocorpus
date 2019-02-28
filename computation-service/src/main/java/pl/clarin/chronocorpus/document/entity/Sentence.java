@@ -12,7 +12,7 @@ public class Sentence implements Serializable {
     public Sentence() {
     }
 
-    public void addWord(Word word){
+    public void addWord(Word word) {
         words.add(word);
     }
 
@@ -20,9 +20,9 @@ public class Sentence implements Serializable {
         return words;
     }
 
-    public String getSentence(){
+    public String getSentence() {
         return words.stream()
-                .map(Word::GetOrthWithDelimiter)
+                .map(Word::getOrthWithDelimiter)
                 .collect(Collectors.joining());
     }
 }

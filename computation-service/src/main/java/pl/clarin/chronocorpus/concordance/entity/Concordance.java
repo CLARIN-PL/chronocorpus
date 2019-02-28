@@ -2,29 +2,17 @@ package pl.clarin.chronocorpus.concordance.entity;
 
 import javax.json.Json;
 import javax.json.JsonObject;
-import java.util.UUID;
 
 public class Concordance {
 
-    private String documentId;
     private String left;
     private String word;
     private String right;
 
-    public Concordance(String documentId, String lemma) {
-        this.documentId = documentId;
-        this.word = lemma;
-    }
-
-    public Concordance(String id, String left, String word, String right) {
-        this.documentId = id;
+    public Concordance(String left, String word, String right) {
         this.left = left;
         this.word = word;
         this.right = right;
-    }
-
-    public String getDocumentId() {
-        return documentId;
     }
 
     public String getLeft() {
@@ -39,11 +27,10 @@ public class Concordance {
         return right;
     }
 
-    public JsonObject toJson(){
+    public JsonObject toJson() {
         return Json.createObjectBuilder()
-                .add("document_id", documentId.toString())
-                .add("left",left)
+                .add("left", left)
                 .add("word", word)
-                .add("right",right).build();
+                .add("right", right).build();
     }
 }

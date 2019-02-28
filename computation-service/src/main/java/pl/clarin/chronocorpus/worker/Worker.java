@@ -3,6 +3,7 @@ package pl.clarin.chronocorpus.worker;
 import com.rabbitmq.client.*;
 import com.rabbitmq.client.AMQP.BasicProperties;
 import org.ini4j.Ini;
+import pl.clarin.chronocorpus.Configuration;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -22,36 +23,22 @@ public abstract class Worker extends Thread {
 
     private static final Logger LOGGER = Logger.getLogger(Worker.class.getName());
 
-    protected String toolname;
-
     private boolean isStopped = false;
 
     static boolean staticInitStarted = false;
 
     protected Connection connection;
     private Channel channel;
-    private String requestQueueName = "nlp_dummy";
 
-    private String host;
-    private String rabbit_user;
-    private String rabbit_password;
-
-    final public void service_init(Ini init) throws Exception {   //ini file 
-        toolname = init.get("service", "tool");
-
-        host = init.get("service", "rabbit_host");
-        rabbit_user = init.get("service", "rabbit_user");
-        rabbit_password = init.get("service", "rabbit_password");
-        requestQueueName = init.get("service", "queue_prefix") + toolname;
-
-//tool inits
+    final public void service_init(Ini init) throws Exception {
+        Configuration.init(init);
+        //tool inits
         if (!staticInitStarted) {
             staticInitStarted = true;
 
             static_init(init);
         }
         init();
-
     }
 
     final Object monitor = new Object();
@@ -59,13 +46,13 @@ public abstract class Worker extends Thread {
     protected void initRabbit() throws IOException, TimeoutException {
         //Rabbit
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(host);
-        factory.setPassword(rabbit_password);
-        factory.setUsername(rabbit_user);
+        factory.setHost(Configuration.HOST);
+        factory.setPassword(Configuration.RABBIT_PASSWORD);
+        factory.setUsername(Configuration.RABBIT_USER);
 
         connection = factory.newConnection();
         channel = connection.createChannel();
-        channel.queueDeclare(requestQueueName, false, false, false, null);
+        channel.queueDeclare(Configuration.REQUEST_QUEUE_NAME, false, false, false, null);
 
         channel.basicQos(1);
 
@@ -112,13 +99,13 @@ public abstract class Worker extends Thread {
             }
         };
 
-        channel.basicConsume(requestQueueName, false, consumer);
+        channel.basicConsume(Configuration.REQUEST_QUEUE_NAME, false, consumer);
 
     }
 
     final public void run() {
         try {
-            LOGGER.log(Level.INFO, "Starting worker for corpus: " + toolname);
+            LOGGER.log(Level.INFO, "Starting worker for corpus: " + Configuration.TOOL_NAME);
             initRabbit();
             while (!isStopped()) {
                 synchronized (monitor) {
@@ -128,7 +115,6 @@ public abstract class Worker extends Thread {
                         e.printStackTrace();
                     }
                 }
-
             }
 
             if (connection != null) {
@@ -138,7 +124,7 @@ public abstract class Worker extends Thread {
                 }
             }
 
-            LOGGER.log(Level.INFO, "Finishing worker for tool: " + toolname);
+            LOGGER.log(Level.INFO, "Finishing worker for tool: " + Configuration.TOOL_NAME);
         } catch (IOException | TimeoutException ex) {
             LOGGER.log(Level.SEVERE, "Problems with initialization of communication with Rabbit", ex);
         }
@@ -153,7 +139,6 @@ public abstract class Worker extends Thread {
         return isStopped;
     }
 
-    //
     abstract public void static_init(Ini init) throws Exception;
 
     abstract public void init() throws Exception;

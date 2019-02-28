@@ -5,6 +5,7 @@ import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.query.boundary.ConcordanceQuery;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
+import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
 import pl.clarin.chronocorpus.task.entity.Task;
 import pl.clarin.chronocorpus.worker.Service;
 import pl.clarin.chronocorpus.worker.Worker;
@@ -29,11 +30,17 @@ public class Main extends Worker {
     public JsonObject process(JsonObject input) throws Exception {
         Optional<Task> task = lookup.getTask(input);
         return task.map(Task::doTask).
-                orElseThrow(RuntimeException::new);
+                orElseThrow(UnknownTaskException::new);
     }
 
     public static void main(String[] args) {
-        System.out.println(new ConcordanceQuery().withBase("śnieg").getJson().toString());
+        System.out.println(
+                new ConcordanceQuery
+                        .Builder()
+                        .withBase("czerwony")
+                        .withMetaPublicationYear("1945")
+                        .withAdditionalResponseProperties("journal_title", "publication_year")
+                        .build().toString());
         new Service<>(Main.class);
     }
 

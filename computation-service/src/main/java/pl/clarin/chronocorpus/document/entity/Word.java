@@ -51,7 +51,7 @@ public class Word implements Serializable {
         return orth;
     }
 
-    public String GetOrthWithDelimiter(){
+    public String getOrthWithDelimiter(){
         if(isNoSpaceAfter()){
             return orth;
         }else return orth + " ";

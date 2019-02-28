@@ -2,7 +2,6 @@ package pl.clarin.chronocorpus.document.boundary;
 
 import pl.clarin.chronocorpus.document.control.DocumentQueryService;
 import pl.clarin.chronocorpus.document.entity.Property;
-import pl.clarin.chronocorpus.query.boundary.DocumentQuery;
 import pl.clarin.chronocorpus.task.entity.Task;
 
 import javax.json.Json;
@@ -18,7 +17,7 @@ public class DocumentTask extends Task {
     }
 
     private Optional<String> findDocumentIdParameter() {
-        return params.stream()
+        return queryParameters.stream()
                 .filter(p -> p.getName().equals("document_id"))
                 .map(Property::getValueAsString)
                 .findFirst();

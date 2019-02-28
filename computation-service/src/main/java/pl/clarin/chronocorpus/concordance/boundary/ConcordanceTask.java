@@ -16,14 +16,14 @@ public class ConcordanceTask extends Task {
     }
 
     private Optional<String> findBaseParameter(){
-        return params.stream()
+        return queryParameters.stream()
                 .filter(p -> p.getName().equals("base"))
                 .map(Property::getValueAsString)
                 .findFirst();
     }
 
     private Optional<String> findOrthParameter(){
-        return params.stream()
+        return queryParameters.stream()
                 .filter(p -> p.getName().equals("orth"))
                 .map(Property::getValueAsString)
                 .findFirst();
@@ -35,10 +35,10 @@ public class ConcordanceTask extends Task {
                 .add("task_id", id);
 
         findOrthParameter().ifPresent(w ->  json.add("rows", ConcordanceQueryService.getInstance()
-                .findConcordance(w, metadata, false)));
+                .findConcordance(w, responseParameters, metadata, false)));
 
         findBaseParameter().ifPresent(w ->  json.add("rows", ConcordanceQueryService.getInstance()
-                .findConcordance(w, metadata, true)));
+                .findConcordance(w, responseParameters, metadata, true)));
 
         return json.build();
     }
