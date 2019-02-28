@@ -10,7 +10,7 @@ public class Word implements Serializable {
 
     private String ctag;
 
-    private short letterCount;
+    private int pos;
 
     private short syllableCount;
 
@@ -20,27 +20,14 @@ public class Word implements Serializable {
 
     public Word(){}
 
-    public Word(String orth, String base, String ctag, boolean noSpaceAfter) {
+    public Word(String orth, String base, String ctag, int pos, boolean noSpaceAfter) {
         this.base = base;
         this.orth = orth;
         this.ctag = ctag;
+        this.pos = pos;
         this.noSpaceAfter = noSpaceAfter;
     }
 
-    public Word withLetterCount(short cnt){
-        this.letterCount = cnt;
-        return this;
-    }
-
-    public Word withSyllableCount(short cnt){
-        this.letterCount = cnt;
-        return this;
-    }
-
-    public Word withPhonemCount(short cnt){
-        this.letterCount = cnt;
-        return this;
-    }
     public String getBase() {
 
         return base;
@@ -66,8 +53,8 @@ public class Word implements Serializable {
         return ctag;
     }
 
-    public short getLetterCount() {
-        return letterCount;
+    public int getBaseLetterCount() {
+        return base.length();
     }
 
     public short getSyllableCount() {
@@ -82,4 +69,7 @@ public class Word implements Serializable {
         return noSpaceAfter;
     }
 
+    public int getPos() {
+        return pos;
+    }
 }

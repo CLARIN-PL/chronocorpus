@@ -3,11 +3,11 @@ package pl.clarin.chronocorpus.document.entity;
 import javax.json.Json;
 import javax.json.JsonObject;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summingLong;
 
 public class Document implements Serializable {
 
@@ -64,7 +64,6 @@ public class Document implements Serializable {
         return sentences;
     }
 
-
     public boolean isBaseIn(String word) {
         return bases.contains(word);
 
@@ -75,5 +74,16 @@ public class Document implements Serializable {
 
     }
 
+    public Map<String, Long> documentBaseFrequency(Set<String> stopList){
+        return sentences.stream()
+                .flatMap(m -> m.sentenceBaseFrequency(stopList).entrySet().stream())
+                .collect(groupingBy(Map.Entry::getKey, summingLong(Map.Entry::getValue)));
+    }
+
+    public Map<String, Long> documentOrthFrequency(Set<String> stopList){
+        return sentences.stream()
+                .flatMap(m -> m.sentenceOrthFrequency(stopList).entrySet().stream())
+                .collect(groupingBy(Map.Entry::getKey, summingLong(Map.Entry::getValue)));
+    }
 
 }

@@ -146,7 +146,12 @@ public class DocumentFileLoader {
                         for (Token t : s.getTokens()) {
                             t.getDisambTags().stream()
                                     .findFirst()
-                                    .map(tag -> new Word(t.getOrth(), tag.getBase(), tag.getCtag(), t.getNoSpaceAfter()))
+                                    .map(tag -> new Word(
+                                            t.getOrth(),
+                                            tag.getBase(),
+                                            tag.getCtag(),
+                                            PartOfSpeechMapper.getInstance().getPartOfSpeech(tag.getPos()),
+                                            t.getNoSpaceAfter()))
                                     .ifPresent(sentence::addWord);
                         }
                         doc.addSentence(sentence);

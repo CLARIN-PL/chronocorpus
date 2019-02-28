@@ -17,7 +17,13 @@ public class Property implements Serializable {
         this.name = name;
         this.value = value;
     }
+
     public Property(String name, int value) {
+        this.name = name;
+        this.value = String.valueOf(value);
+    }
+
+    public Property(String name, boolean value) {
         this.name = name;
         this.value = String.valueOf(value);
     }

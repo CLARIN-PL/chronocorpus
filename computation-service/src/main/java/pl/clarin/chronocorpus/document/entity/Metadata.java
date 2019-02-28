@@ -61,7 +61,6 @@ public class Metadata implements Serializable {
     }
 
     public boolean matches(Set<Property> userProperties){
-        //sprawdza tylko czy dany parametr jest zgodny
         for (Property p : userProperties)
             if(this.getProperties().stream()
                     .noneMatch(tp -> tp.matches(p))) return false;

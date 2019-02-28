@@ -5,6 +5,7 @@ import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.query.boundary.ConcordanceQuery;
 import pl.clarin.chronocorpus.query.boundary.DocumentQuery;
+import pl.clarin.chronocorpus.query.boundary.FrequencyQuery;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
 import pl.clarin.chronocorpus.task.entity.Task;
@@ -25,24 +26,13 @@ public class Application {
     public static void main(String... args) {
         Application app = new Application();
 
-        ConcordanceQuery query1 = new ConcordanceQuery
-                .Builder()
-                .withAdditionalResponseProperties("journal_title", "publication_year")
-                .withBase("śnieg")
+        FrequencyQuery frq = new FrequencyQuery.Builder()
+                .countByBase(true)
                 .build();
 
-        JsonObject j = query1.getJson();
+        JsonObject j = frq.getJson();
         System.out.println(j.toString());
         System.out.println(app.process(j));
-
-        DocumentQuery query2 = new DocumentQuery.Builder()
-                .withDocumentId("014f0156-68e6-418e-acfe-53fa88e2d19c")
-                .build();
-
-        j = query2.getJson();
-        System.out.println(j.toString());
-        System.out.println(app.process(j));
-
     }
 
     public Application() {
