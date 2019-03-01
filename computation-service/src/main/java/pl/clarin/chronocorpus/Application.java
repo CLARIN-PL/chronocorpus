@@ -1,9 +1,11 @@
 package pl.clarin.chronocorpus;
 
 import org.ini4j.Ini;
+import pl.clarin.chronocorpus.dictionaries.control.DictionaryQueryService;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.query.boundary.ConcordanceQuery;
+import pl.clarin.chronocorpus.query.boundary.DictionaryQuery;
 import pl.clarin.chronocorpus.query.boundary.FrequencyQuery;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
@@ -25,43 +27,13 @@ public class Application {
     public static void main(String... args) {
         Application app = new Application();
 
-        FrequencyQuery frq = new FrequencyQuery.Builder()
-                .countByBase(true)
+        DictionaryQuery dic = new DictionaryQuery.Builder()
+                .propertyValueList("journal_title")
                 .build();
-
-        JsonObject j = frq.getJson();
-        long start = System.currentTimeMillis();
-        app.process(j);
-        long time = System.currentTimeMillis() - start;
-        LOGGER.log(Level.INFO, "Task execution took: " + time + "ms");
-
-        long start2 = System.currentTimeMillis();
-        app.process(j);
-        long time2 = System.currentTimeMillis() - start2;
-        LOGGER.log(Level.INFO, "Task execution took: " + time2 + "ms");
-
-        long start3 = System.currentTimeMillis();
-        System.out.println(app.process(j));
-        long time3 = System.currentTimeMillis() - start3;
-        LOGGER.log(Level.INFO, "Task execution took: " + time3 + "ms");
-
-        frq = new FrequencyQuery.Builder()
-                .countByBase(false)
-                .build();
-
-        j = frq.getJson();
-        long start4 = System.currentTimeMillis();
-        app.process(j);
-        long time4 = System.currentTimeMillis() - start4;
-        LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
-
-        ConcordanceQuery concord = new ConcordanceQuery.Builder()
-                .withOrth("Armia")
-                .build();
-
-        j = concord.getJson();
+        JsonObject j = dic.getJson();
         System.out.println(j.toString());
         System.out.println(app.process(j));
+
     }
 
     public Application() {

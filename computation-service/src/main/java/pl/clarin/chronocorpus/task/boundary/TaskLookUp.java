@@ -1,6 +1,7 @@
 package pl.clarin.chronocorpus.task.boundary;
 
 import pl.clarin.chronocorpus.concordance.boundary.ConcordanceTask;
+import pl.clarin.chronocorpus.dictionaries.boundary.DictionariesTask;
 import pl.clarin.chronocorpus.document.boundary.DocumentTask;
 import pl.clarin.chronocorpus.frequency.boundary.FrequencyTask;
 import pl.clarin.chronocorpus.task.entity.Task;
@@ -16,6 +17,7 @@ public class TaskLookUp {
             if(json.getString("task_type").equalsIgnoreCase("concordance")) return Optional.of(new ConcordanceTask(json));
             if(json.getString("task_type").equalsIgnoreCase("document")) return Optional.of(new DocumentTask(json));
             if(json.getString("task_type").equalsIgnoreCase("frequency")) return Optional.of(new FrequencyTask(json));
+            if(json.getString("task_type").equalsIgnoreCase("dictionaries")) return Optional.of(new DictionariesTask(json));
         }
         return Optional.empty();
     }

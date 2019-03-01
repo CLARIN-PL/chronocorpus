@@ -6,7 +6,6 @@ Example request and respond when searching for document.
 `Documents Request`:
 ----
 {
-    "id":"9764f8c2-fec3-4f7f-a2e7-e4fb9167797a",
     "task_type":"document",
     "metadata_filter":[
         {
@@ -170,7 +169,6 @@ Example request and respond calculating frequency.
 `Frequency List Request`:
 ----
 {
-    "id":"0890a9dc-a83e-4b85-8123-6a6d4be8f844",
     "task_type":"frequency",
     "metadata_filter":[],
     "query_parameters":[
@@ -239,3 +237,99 @@ Example request and respond calculating frequency.
 ----
 {
 }
+----
+`Time series Request`:
+----
+{
+}
+----
+`Time series Response`:
+----
+{
+}
+----
+=== Querying dictionaries
+Example request and response fetching dictionary values or property lists
+
+`Dictionaries Request`:
+----
+{
+    "task_type":"dictionaries",
+    "query_parameters":[{"name":"dictionaries","value":"true"}]
+}
+----
+`Dictionaries Response`:
+----
+{
+    "task_id":"c820b060-34d4-4038-8da4-a150b63b5da2",
+    "dictionaries": {
+        "parts_of_speech":[
+            {
+                "id":0,
+                "value":"unknown"
+            },
+            {
+                "id":1,
+                "value":"verb"
+            },
+            {
+                "id":2,
+                "value":"noun"
+            },
+            {
+                "id":3,
+                "value":"adverb"
+            },
+            {
+                "id":4,
+                "value":"adjective"
+            }
+        ],
+        "exposition":[
+            {
+                "id":1,
+                "value":"first page"
+            },
+            {
+                "id":2,
+                "value":"middle page"
+            },
+            {
+                "id":3,
+                "value":"last page"
+            }
+        ],
+        "property_names":[
+                "article_title","authors","exposition",
+                "journal_title","medium","period","publication_day",
+                "publication_month","publication_year","status","style"
+        ]
+    }
+}
+----
+`Property Value List Request`:
+----
+{
+    "task_type":"dictionaries",
+    "query_parameters":[
+        {
+            "name":"property_value_list",
+            "value":"journal_title"
+        }
+    ]
+}
+----
+`Property Value List Response`:
+----
+{
+    "task_id":"d2fd4270-1a06-4eac-bbaf-dccdf00fe2e9",
+    "journal_title":[
+        "Chłopi","Chłopska Droga","Dziennik Polski","Dziś i Jutro","Gazeta Lubelska",
+        "Gazeta Robotnicza","Gromada","Gromada Rolnik Polski","Głos Ludu","Moda i Życie Praktyczne",
+        "Orzeł Biały","Pionier","Pokolenie","Polska Kronika Filmowa","Polska Zbrojna",
+        "Przegląd Sportowy","Przekroj","Przekrój","Przyjaciółka","Przyjaciółka, Unita",
+        "Robotnik","Rolnik Polski","Rzeczpospolita","Rzeczpospolita i Dziennik Gospodarczy",
+        "Sztandar Młodych","Żołnierz Wolności","Życie Warszawy"
+    ]
+}
+----

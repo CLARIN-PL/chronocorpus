@@ -17,7 +17,7 @@ public class ConcordanceQuery extends Query {
         }
 
         public Builder withBase(String base) {
-            Property p = new Property("base", base);
+            Property p = new Property("base", base.toLowerCase());
             withQueryProperty(p);
             return this;
         }
