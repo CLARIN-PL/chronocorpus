@@ -164,14 +164,60 @@ Example request and respond when searching concordances.
 {
 }
 ----
+=== Querying frequency
+Example request and respond calculating frequency.
+
 `Frequency List Request`:
 ----
 {
+    "id":"0890a9dc-a83e-4b85-8123-6a6d4be8f844",
+    "task_type":"frequency",
+    "metadata_filter":[],
+    "query_parameters":[
+        {
+            "name":"count_by_base",
+            "value":"true"
+        }
+    ],
+    "response_parameters":[]
 }
 ----
 `Frequency List Response`:
 ----
 {
+    "task_id":"0890a9dc-a83e-4b85-8123-6a6d4be8f844",
+    "rows":[
+        {
+            "word":"w",
+            "part_of_speech":"0",
+            "count":9321
+        },
+        {
+            "word":"rok",
+            "part_of_speech":"2",
+            "count":1080
+        },
+        {
+            "word":"praca",
+            "part_of_speech":"2",
+            "count":1010
+        },
+        {
+            "word":"być",
+            "part_of_speech":"0",
+            "count":995
+        },
+        {
+            "word":"swój",
+            "part_of_speech":"4",
+            "count":990
+        },
+        {
+            "word":"cel",
+            "part_of_speech":"2",
+            "count":187
+        }
+    ]
 }
 ----
 `Quantity analysis Request`:
