@@ -32,7 +32,7 @@ public class Sentence implements Serializable {
     public Map<String, Long> sentenceBaseFrequency(Set<String> stopList){
         return words.stream()
                 .filter(w -> !"interp".equals(w.getCtag()))
-                .filter(w -> !stopList.contains(w))
+                .filter(w -> !stopList.contains(w.getBase()))
                 .map(w -> w.getBase()+"__"+w.getPos())
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
@@ -40,7 +40,7 @@ public class Sentence implements Serializable {
     public Map<String, Long> sentenceOrthFrequency(Set<String> stopList){
         return words.stream()
                 .filter(w -> !"interp".equals(w.getCtag()))
-                .filter(w -> !stopList.contains(w))
+                .filter(w -> !stopList.contains(w.getBase()))
                 .map(w -> w.getOrth()+"__"+w.getPos())
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }

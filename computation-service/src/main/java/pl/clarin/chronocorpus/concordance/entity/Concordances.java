@@ -32,7 +32,8 @@ public class Concordances {
         return Json.createObjectBuilder()
                 .add("document_id", documentId)
                 .add("properties", prop)
-                .add("concordances", conc).build();
+                .add("concordances", conc)
+                .build();
     }
 
 }

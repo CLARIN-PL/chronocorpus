@@ -32,7 +32,18 @@ public class Application {
 
         JsonObject j = frq.getJson();
         System.out.println(j.toString());
+        long start = System.currentTimeMillis();
         System.out.println(app.process(j));
+        long time = System.currentTimeMillis() - start;
+        LOGGER.log(Level.INFO,"Task execution took: " + time + "ms");
+/*
+        ConcordanceQuery concord = new ConcordanceQuery.Builder()
+                .withOrth("Armia Czerwona")
+                .build();
+
+        j = concord.getJson();
+        System.out.println(j.toString());
+        System.out.println(app.process(j));*/
     }
 
     public Application() {
