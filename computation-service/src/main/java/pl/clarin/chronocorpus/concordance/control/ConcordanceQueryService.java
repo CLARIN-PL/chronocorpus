@@ -40,7 +40,7 @@ public class ConcordanceQueryService {
 
         Map<Pair<String, Set<Property>>, List<Sentence>> sentences = new HashMap<>();
 
-        for (Document d : DocumentStore.getInstance().getDocuments())
+        for (Document d : DocumentStore.getInstance().getDocuments()) {
 
             if (d.getMetadata().matches(metadata) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
 
@@ -59,6 +59,7 @@ public class ConcordanceQueryService {
 
                 sentences.put(new Pair<>(d.getId(), responseProperty), matching);
             }
+        }
 
         JsonArrayBuilder concordances = Json.createArrayBuilder();
         sentences.forEach((doc, v) ->

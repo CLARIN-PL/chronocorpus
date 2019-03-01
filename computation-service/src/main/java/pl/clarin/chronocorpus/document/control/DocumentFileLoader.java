@@ -14,11 +14,8 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import javax.json.stream.JsonParser;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -51,7 +48,7 @@ public class DocumentFileLoader {
 
     //TODO normalizacja danych słownikowych
     private Map<String, Metadata> loadMetadata(String metadataZipFile) throws IOException {
-        LOGGER.log(Level.INFO,"Loading metadata documents from files please wait .....");
+        LOGGER.log(Level.INFO, "Loading metadata documents from files please wait .....");
         long start = System.currentTimeMillis();
         Map<String, Metadata> metadata = new HashMap<>();
         ZipFile zipFile = new ZipFile(String.valueOf(Paths.get(metadataZipFile)));
@@ -70,11 +67,11 @@ public class DocumentFileLoader {
 
                 Metadata m = new Metadata("chronopress", "apawłow", true);
                 properties.forEach(jsonValue -> {
-                    if(jsonValue instanceof JsonObject) {
+                    if (jsonValue instanceof JsonObject) {
                         String name = ((JsonObject) jsonValue).getString("name");
                         String value = ((JsonObject) jsonValue).getString("value");
                         String type = ((JsonObject) jsonValue).getString("type");
-                        if("DATE".equals(type) && "publication_date".equals(name)){
+                        if ("DATE".equals(type) && "publication_date".equals(name)) {
                             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                             try {
                                 Date date = df.parse(value);
@@ -86,19 +83,20 @@ public class DocumentFileLoader {
                                 m.addProperty(month);
                                 m.addProperty(day);
                             } catch (ParseException e) {
-                                LOGGER.log(Level.SEVERE,"Unable to parse publication date", e);
+                                LOGGER.log(Level.SEVERE, "Unable to parse publication date", e);
                             }
-                        }else {
+                        } else {
                             Property p = new Property(name, value);
                             m.addProperty(p);
                         }
-                    }                });
+                    }
+                });
                 metadata.put(id, m);
                 partItems.getAndIncrement();
-                if(partItems.get() == 5000){
+                if (partItems.get() == 5000) {
                     totalItems.getAndAdd(partItems.get());
                     partItems.getAndSet(0);
-                    LOGGER.info("Loaded files: " + totalItems.get() +"/"+zipFile.size());
+                    LOGGER.info("Loaded files: " + totalItems.get() + "/" + zipFile.size());
                 }
                 is.close();
             } catch (Exception e) {
@@ -107,7 +105,7 @@ public class DocumentFileLoader {
         }
         zipFile.close();
         long time = System.currentTimeMillis() - start;
-        LOGGER.log(Level.INFO,"Loading metadata documents took: " + time + "ms");
+        LOGGER.log(Level.INFO, "Loading metadata documents took: " + time + "ms");
         return metadata;
     }
 
@@ -159,13 +157,13 @@ public class DocumentFileLoader {
                 }
                 documents.add(doc);
                 partItems.getAndIncrement();
-                if(partItems.get() == 5000){
+                if (partItems.get() == 5000) {
                     totalItems.getAndAdd(partItems.get());
                     partItems.getAndSet(0);
-                    LOGGER.info("Loaded files: " + totalItems.get() +"/"+zipFile.size());
+                    LOGGER.info("Loaded files: " + totalItems.get() + "/" + zipFile.size());
                 }
             } catch (Exception e) {
-               LOGGER.log(Level.SEVERE, "Loading document failed", e);
+                LOGGER.log(Level.SEVERE, "Loading document failed", e);
             }
         }
         zipFile.close();

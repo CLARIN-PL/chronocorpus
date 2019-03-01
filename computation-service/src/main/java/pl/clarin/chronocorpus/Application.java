@@ -4,7 +4,6 @@ import org.ini4j.Ini;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.query.boundary.ConcordanceQuery;
-import pl.clarin.chronocorpus.query.boundary.DocumentQuery;
 import pl.clarin.chronocorpus.query.boundary.FrequencyQuery;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
@@ -31,19 +30,38 @@ public class Application {
                 .build();
 
         JsonObject j = frq.getJson();
-        System.out.println(j.toString());
         long start = System.currentTimeMillis();
-        System.out.println(app.process(j));
+        app.process(j);
         long time = System.currentTimeMillis() - start;
-        LOGGER.log(Level.INFO,"Task execution took: " + time + "ms");
-/*
+        LOGGER.log(Level.INFO, "Task execution took: " + time + "ms");
+
+        long start2 = System.currentTimeMillis();
+        app.process(j);
+        long time2 = System.currentTimeMillis() - start2;
+        LOGGER.log(Level.INFO, "Task execution took: " + time2 + "ms");
+
+        long start3 = System.currentTimeMillis();
+        System.out.println(app.process(j));
+        long time3 = System.currentTimeMillis() - start3;
+        LOGGER.log(Level.INFO, "Task execution took: " + time3 + "ms");
+
+        frq = new FrequencyQuery.Builder()
+                .countByBase(false)
+                .build();
+
+        j = frq.getJson();
+        long start4 = System.currentTimeMillis();
+        app.process(j);
+        long time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
+
         ConcordanceQuery concord = new ConcordanceQuery.Builder()
-                .withOrth("Armia Czerwona")
+                .withOrth("Armia")
                 .build();
 
         j = concord.getJson();
         System.out.println(j.toString());
-        System.out.println(app.process(j));*/
+        System.out.println(app.process(j));
     }
 
     public Application() {
