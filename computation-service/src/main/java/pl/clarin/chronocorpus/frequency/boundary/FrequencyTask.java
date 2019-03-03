@@ -8,7 +8,6 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,8 +34,8 @@ public class FrequencyTask extends Task {
 
     @Override
     public JsonObject doTask() {
-        Set<String> stopList = Stream.of("w","i","to","z","na","że","po",
-                "który","być","się","nie","do","o","on","ten","a","też")
+        Set<String> stopList = Stream.of("w", "i", "to", "z", "na", "że", "po",
+                "który", "być", "się", "nie", "do", "o", "on", "ten", "a", "też")
                 .collect(Collectors.toSet());
 
         JsonArray frequency = FrequencyQueryService.getInstance()
