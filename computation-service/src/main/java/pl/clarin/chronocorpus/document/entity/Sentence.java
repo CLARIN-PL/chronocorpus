@@ -38,7 +38,7 @@ public class Sentence implements Serializable {
        for(int i = 0; i < words.size(); i++ ){
            if(words.get(i).getBase().equals(word)){
                 if(i - windowSize >=0){
-                    String prof =
+
                 }
            }
        }
