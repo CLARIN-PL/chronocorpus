@@ -21,6 +21,42 @@ import java.util.concurrent.TimeoutException;
 @Path("")
 public class RESTService {
 
+@POST
+    @Consumes("application/json")
+    @Path("/process")
+    public String process(String data) throws InterruptedException  {
+        long start = System.currentTimeMillis();
+        JSONObject result=SendTask.send(data,connection,init);
+        Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Starting in "+(System.currentTimeMillis() - start) / 1000.0 +"s");    
+        if (result.has("id"))
+        {   String id=result.getString("id");
+            resulter.started(id);
+            Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Task started "+result.getString("id"));
+            int number=0;
+            int delay=100;
+            while (number<200)
+            {   Thread.sleep(delay);
+                JSONObject status=resulter.status(id);
+                if (status.getString("status").equals("ERROR"))
+                { 
+                    return resulter.result(id).toString();
+                }                
+                if (status.getString("status").equals("DONE"))
+                {    
+                    return resulter.result(id).toString();
+                }  
+                delay=delay+200;
+                if (delay>1000) delay=1000;
+                number++;
+            }
+        }
+        
+        
+        
+        return result.toString();
+    }
+    
+        
     private Ini init;
 
     private Resulter resulter = new Resulter();

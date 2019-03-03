@@ -164,7 +164,7 @@ public class Resulter implements Runnable{
         else
             finished(input);
         
-        Logger.getLogger(Resulter.class.getName()).log(Level.DEBUG, "Finished '"+function+"' for " + id);
+        
         
         return result;
     }
