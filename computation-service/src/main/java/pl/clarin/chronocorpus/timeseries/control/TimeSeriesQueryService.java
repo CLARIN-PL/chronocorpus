@@ -3,11 +3,14 @@ package pl.clarin.chronocorpus.timeseries.control;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Property;
-import pl.clarin.chronocorpus.document.entity.Word;
+import pl.clarin.chronocorpus.timeseries.entity.TimeSeries;
+import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
 
-import javax.json.JsonArray;
+import javax.json.JsonObject;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 
 public class TimeSeriesQueryService {
 
@@ -28,25 +31,46 @@ public class TimeSeriesQueryService {
     }
 
     //TODO needs solution for multi word expressions like Armia Czerwona
-    //TODO process years array [1945,1950,1951]
-    //TODO grouping by unit month or year
-    public JsonArray findTimeSeries(String keyWord, Set<Property> metadata, boolean byBase) {
+    public JsonObject findTimeSeries(String keyWord, Optional<Integer> pos, Optional<TimeUnit> unit, Set<Property> metadata, boolean byBase) {
+
+        Map<String, Long> result = new HashMap<>();
 
         for (Document d : DocumentStore.getInstance().getDocuments()) {
 
             if (d.getMetadata().matches(metadata) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
-
+                unit.ifPresent(u -> {
+                    if (TimeUnit.year.equals(u)) {
+                        pos.ifPresent(p -> {
+                            String year = d.getMetadata().getProperty("publication_year");
+                            Long count = byBase ? d.documentBaseFrequency().get(keyWord).get(p) :
+                                    d.documentOrthFrequency().get(keyWord).get(p);
+                            if (!result.containsKey(year)) {
+                                result.put(year, count);
+                            } else {
+                                Long val = result.get("year");
+                                result.replace("year", val + count);
+                            }
+                        });
+                    } else if (TimeUnit.month.equals(u)) {
+                        pos.ifPresent(p -> {
+                            String year = d.getMetadata().getProperty("publication_year");
+                            String month = d.getMetadata().getProperty("publication_month");
+                            String key = month + "-" + year;
+                            Long count = byBase ? d.documentBaseFrequency().get(keyWord).get(p) :
+                                    d.documentOrthFrequency().get(keyWord).get(p);
+                            if (!result.containsKey(key)) {
+                                result.put(key, count);
+                            } else {
+                                Long val = result.get("key");
+                                result.replace("key", val + count);
+                            }
+                        });
+                    }
+                });
             }
         }
 
-        return null;
+        return new TimeSeries(keyWord, result).toJson();
     }
 
-    public Predicate<Word> getOrthPredicate(String keyWord) {
-        return word -> word.getOrth().equals(keyWord);
-    }
-
-    public Predicate<Word> getBasePredicate(String keyWord) {
-        return word -> word.getBase().equals(keyWord);
-    }
 }

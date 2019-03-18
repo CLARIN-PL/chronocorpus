@@ -26,21 +26,4 @@ public class Sentence implements Serializable {
                 .map(Word::getOrthWithDelimiter)
                 .collect(Collectors.joining());
     }
-
-    public void test(String word, int pos, int windowSize){
-       Map<String, Integer> res = new HashMap<>();
-
-        IntStream.range(0 , words.size())
-                .forEach(i -> {
-
-                });
-
-       for(int i = 0; i < words.size(); i++ ){
-           if(words.get(i).getBase().equals(word)){
-                if(i - windowSize >=0){
-
-                }
-           }
-       }
-    }
 }

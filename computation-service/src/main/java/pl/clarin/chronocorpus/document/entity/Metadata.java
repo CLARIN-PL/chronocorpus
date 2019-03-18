@@ -28,32 +28,18 @@ public class Metadata implements Serializable {
         this.publicAccess = publicAccess;
     }
 
+    public String getProperty(String name){
+        return properties.stream()
+                .filter(p -> p.getName().equals(name))
+                .map(Property::getValueAsString)
+                .findFirst().orElse(null);
+    }
     public void addProperty(Property p){
         properties.add(p);
     }
 
-    public String getCorpusName() {
-        return corpusName;
-    }
-
-    public void setCorpusName(String corpusName) {
-        this.corpusName = corpusName;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
     public boolean isPublicAccess() {
         return publicAccess;
-    }
-
-    public void setPublicAccess(boolean publicAccess) {
-        this.publicAccess = publicAccess;
     }
 
     public List<Property> getProperties() {
@@ -76,33 +62,6 @@ public class Metadata implements Serializable {
                 .add("owner",owner)
                 .add("properties", props)
                 .build();
-    }
-    private boolean matchByDatesCollection(List<Property> properties, List<Property> publication){
-        if(!getPropertiesByName(publication, "publication_year").isEmpty() &&
-                getPropertiesByName(publication, "publication_year").
-                        stream()
-                        .noneMatch(p -> p.includesIn(properties))){
-            return false;
-        }
-        if(!getPropertiesByName(publication, "publication_month").isEmpty() &&
-                getPropertiesByName(publication, "publication_month")
-                        .stream()
-                        .noneMatch(p -> p.includesIn(properties))){
-            return false;
-        }
-        if(!getPropertiesByName(publication, "publication_day").isEmpty() &&
-                getPropertiesByName(publication, "publication_day")
-                        .stream()
-                        .noneMatch(p -> p.includesIn(properties))){
-            return false;
-        }
-        return true;
-    }
-
-    public List<Property> getPropertiesByName(List<Property> l, String name){
-        return l.stream()
-                .filter(property -> property.getName().equals(name))
-                .collect(Collectors.toList());
     }
 
 }

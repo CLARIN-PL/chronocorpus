@@ -1,15 +1,16 @@
 package pl.clarin.chronocorpus;
 
 import org.ini4j.Ini;
-import pl.clarin.chronocorpus.dictionaries.control.DictionaryQueryService;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.query.boundary.ConcordanceQuery;
 import pl.clarin.chronocorpus.query.boundary.DictionaryQuery;
 import pl.clarin.chronocorpus.query.boundary.FrequencyQuery;
+import pl.clarin.chronocorpus.query.boundary.TimeSeriesQuery;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
 import pl.clarin.chronocorpus.task.entity.Task;
+import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
 
 import javax.json.JsonObject;
 import java.io.File;
@@ -27,9 +28,13 @@ public class Application {
     public static void main(String... args) {
         Application app = new Application();
 
-        DictionaryQuery dic = new DictionaryQuery.Builder()
-                .propertyValueList("journal_title")
+        TimeSeriesQuery dic = new TimeSeriesQuery.Builder()
+                .withOrth("czerwony")
+                .withMetaPublicationYear("1954;1955")
+                .withPartOfSpeech("4")
+                .withUnit(TimeUnit.month)
                 .build();
+
         JsonObject j = dic.getJson();
         System.out.println(j.toString());
         System.out.println(app.process(j));

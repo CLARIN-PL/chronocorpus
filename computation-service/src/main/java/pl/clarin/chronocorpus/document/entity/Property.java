@@ -3,6 +3,7 @@ package pl.clarin.chronocorpus.document.entity;
 import javax.json.Json;
 import javax.json.JsonObject;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 public class Property implements Serializable {
@@ -46,9 +47,13 @@ public class Property implements Serializable {
                 .add("value",value).build();
     }
     public boolean matches(Property p) {
-        return this.name.equals(p.getName()) && getValueAsString().equals(p.getValueAsString());
+        if(this.name.equals(p.getName())){
+            if(p.getValueAsString().contains(";")){
+                return Arrays.asList(p.getValueAsString().split(";")).contains(getValueAsString());
+            }
+            return getValueAsString().equals(p.getValueAsString());
+        }
+        return false;
     }
-    public boolean includesIn(List<Property> propertyList){
-        return propertyList.stream().anyMatch(p -> p.matches(this));
-    }
+
 }

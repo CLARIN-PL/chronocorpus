@@ -17,6 +17,7 @@ public class Document implements Serializable {
 
     private List<Sentence> sentences = new ArrayList<>();
 
+    // Word, part of speech, frequency
     private Map<String, Map<Integer, Long>> bases = new HashMap<>();
     private Map<String, Map<Integer, Long>> orths = new HashMap<>();
 

@@ -238,14 +238,45 @@ Example request and respond calculating frequency.
 {
 }
 ----
+=== Querying time series
+Example request and response fetching time series
+Available time units [month, year]
+
 `Time series Request`:
 ----
+
 {
+    "id":"78713b92-8428-40e1-9885-86ec6d66a09b",
+    "task_type":"time_series",
+    "metadata_filter":[
+        {
+            "name":"publication_year",
+            "value":"1954;1955"
+         }],
+    "query_parameters":[
+        {
+            "name":"orth",
+            "value":"czerwony"
+        },
+        {
+            "name":"part_of_speech",
+            "value":"4"
+        },
+        {
+            "name":"time_unit",
+            "value":"month"
+        }],
+    "response_parameters":[]
 }
 ----
 `Time series Response`:
 ----
 {
+    "word":"czerwony",
+    "series":[
+        {"2-1954":1},
+        {"7-1955":1}
+    ]
 }
 ----
 === Querying dictionaries

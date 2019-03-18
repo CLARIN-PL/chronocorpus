@@ -8,6 +8,7 @@ import pl.clarin.chronocorpus.document.entity.Word;
 
 import javax.json.JsonArray;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -30,8 +31,11 @@ public class WordProfileQueryService {
         return instance;
     }
 
-
-    public JsonArray findWordProfile(String keyWord, Set<Property> metadata, boolean byBase) {
+    public JsonArray findWordProfile(String keyWord,
+                                     Optional<Integer> leftWindowSize,
+                                     Optional<Integer> rightWindowSize,
+                                     Optional<Integer> partOfSpeech,
+                                     Set<Property> metadata, boolean byBase) {
 
         for (Document d : DocumentStore.getInstance().getDocuments()) {
 
