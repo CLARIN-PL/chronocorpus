@@ -39,6 +39,17 @@ public class Application {
         System.out.println(j.toString());
         System.out.println(app.process(j));
 
+        FrequencyQuery frq = new FrequencyQuery.Builder()
+                .countByBase(true)
+                .build();
+
+        j = frq.getJson();
+        long start4 = System.currentTimeMillis();
+        System.out.println(j.toString());
+        System.out.println(app.process(j));
+        long time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
+
     }
 
     public Application() {
