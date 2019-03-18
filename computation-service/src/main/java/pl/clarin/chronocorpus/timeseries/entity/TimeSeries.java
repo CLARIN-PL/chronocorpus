@@ -9,16 +9,22 @@ import java.util.Map;
 public class TimeSeries {
 
     private String word;
+    private boolean isBaseForm;
+    private Integer pos;
     private Map<String, Long> series;
 
-    public TimeSeries(String word, Map<String, Long> series) {
+    public TimeSeries(String word, boolean isBaseForm, Integer pos, Map<String, Long> series) {
         this.word = word;
         this.series = series;
+        this.pos = pos;
+        this.isBaseForm = isBaseForm;
     }
 
     public JsonObject toJson(){
         JsonObjectBuilder b = Json.createObjectBuilder();
         b.add("word", word);
+        b.add("is_base_form", isBaseForm);
+        b.add("part_of_speech", pos);
         JsonArrayBuilder s = Json.createArrayBuilder();
         series.forEach((k,v) -> s.add(Json.createObjectBuilder().add(k,v)));
         b.add("series", s);

@@ -70,7 +70,7 @@ public class TimeSeriesQueryService {
             }
         }
 
-        return new TimeSeries(keyWord, result).toJson();
+        return new TimeSeries(keyWord, byBase, pos.orElse(0), result).toJson();
     }
 
 }
