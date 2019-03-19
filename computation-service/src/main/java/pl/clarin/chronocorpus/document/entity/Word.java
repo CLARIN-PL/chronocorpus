@@ -10,7 +10,7 @@ public class Word implements Serializable {
 
     private String ctag;
 
-    private int pos;
+    private byte pos;
 
     private short syllableCount;
 
@@ -20,7 +20,7 @@ public class Word implements Serializable {
 
     public Word(){}
 
-    public Word(String orth, String base, String ctag, int pos, boolean noSpaceAfter) {
+    public Word(String orth, String base, String ctag, byte pos, boolean noSpaceAfter) {
         this.base = base;
         this.orth = orth;
         this.ctag = ctag;
@@ -69,7 +69,7 @@ public class Word implements Serializable {
         return noSpaceAfter;
     }
 
-    public int getPos() {
+    public byte getPos() {
         return pos;
     }
 }

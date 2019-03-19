@@ -19,19 +19,19 @@ public class ConcordanceMapperTest {
 
         Sentence s = new Sentence();
 
-        s.addWord(new Word("Dziś", "", "", 1, false));
-        s.addWord(new Word("padało", "", "", 1, false));
-        s.addWord(new Word("dużo", "", "",1, false));
-        s.addWord(new Word("śniegu", "", "",1, true));
-        s.addWord(new Word(",", "", "", 1,false));
-        s.addWord(new Word("bo", "", "", 1,false));
-        s.addWord(new Word("wieczorem", "", "", 1,false));
-        s.addWord(new Word("spadł", "", "", 1,false));
-        s.addWord(new Word("śnieg", "", "", 1,false));
-        s.addWord(new Word("i", "", "", 1,false));
-        s.addWord(new Word("było", "", "", 1,false));
-        s.addWord(new Word("zimno", "", "", 1,true));
-        s.addWord(new Word(".", "", "", 1,true));
+        s.addWord(new Word("Dziś", "", "", (byte) 1, false));
+        s.addWord(new Word("padało", "", "", (byte) 1, false));
+        s.addWord(new Word("dużo", "", "", (byte) 1, false));
+        s.addWord(new Word("śniegu", "", "", (byte) 1, true));
+        s.addWord(new Word(",", "", "", (byte) 1,false));
+        s.addWord(new Word("bo", "", "", (byte) 1,false));
+        s.addWord(new Word("wieczorem", "", "", (byte) 1,false));
+        s.addWord(new Word("spadł", "", "", (byte) 1,false));
+        s.addWord(new Word("śnieg", "", "", (byte) 1,false));
+        s.addWord(new Word("i", "", "", (byte) 1,false));
+        s.addWord(new Word("było", "", "", (byte) 1,false));
+        s.addWord(new Word("zimno", "", "", (byte) 1,true));
+        s.addWord(new Word(".", "", "", (byte) 1,true));
 
         List<String> test = (Arrays.asList(ConcordanceMapper.getInstance()
                 .getSentenceString("śnieg", s)));
@@ -46,16 +46,16 @@ public class ConcordanceMapperTest {
 
         Sentence s = new Sentence();
 
-        s.addWord(new Word("Dziś", "", "",1, false));
-        s.addWord(new Word("był", "", "",1, false));
-        s.addWord(new Word("śnieg", "", "",1, false));
-        s.addWord(new Word("do", "", "", 1,false));
-        s.addWord(new Word("pasa", "", "",1, false));
-        s.addWord(new Word("a", "", "",1, false));
-        s.addWord(new Word("wieczorem", "", "",1, false));
-        s.addWord(new Word("śnieg", "", "", 1,false));
-        s.addWord(new Word("stopniał", "", "",1, true));
-        s.addWord(new Word(".", "", "",1, false));
+        s.addWord(new Word("Dziś", "", "", (byte) 1, false));
+        s.addWord(new Word("był", "", "", (byte) 1, false));
+        s.addWord(new Word("śnieg", "", "", (byte) 1, false));
+        s.addWord(new Word("do", "", "", (byte) 1,false));
+        s.addWord(new Word("pasa", "", "", (byte) 1, false));
+        s.addWord(new Word("a", "", "", (byte) 1, false));
+        s.addWord(new Word("wieczorem", "", "", (byte) 1, false));
+        s.addWord(new Word("śnieg", "", "", (byte) 1,false));
+        s.addWord(new Word("stopniał", "", "", (byte) 1, true));
+        s.addWord(new Word(".", "", "", (byte) 1, false));
 
         List<String> test = (Arrays.asList(ConcordanceMapper.getInstance()
                 .getSentenceString("śnieg", s)));

@@ -6,20 +6,20 @@ import javax.json.JsonObject;
 public class FrequencyItem {
 
     private String word;
-    private Integer pos;
-    private Long frequency;
+    private Byte pos;
+    private int frequency;
 
-    public FrequencyItem(String word, Integer pos, Long frequency) {
+    public FrequencyItem(String word, Byte pos, int frequency) {
         this.word = word;
         this.pos = pos;
         this.frequency = frequency;
     }
 
-    public Integer getPos() {
+    public Byte getPos() {
         return pos;
     }
 
-    public Long getFrequency() {
+    public int getFrequency() {
         return frequency;
     }
 
@@ -27,7 +27,7 @@ public class FrequencyItem {
         return word;
     }
 
-    public void setFrequency(Long frequency) {
+    public void setFrequency(int frequency) {
         this.frequency = frequency;
     }
 

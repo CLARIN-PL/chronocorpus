@@ -1,5 +1,6 @@
 package pl.clarin.chronocorpus.timeseries.control;
 
+import org.omg.PortableInterceptor.INACTIVE;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Property;
@@ -33,7 +34,7 @@ public class TimeSeriesQueryService {
     //TODO needs solution for multi word expressions like Armia Czerwona
     public JsonObject findTimeSeries(String keyWord, Optional<Integer> pos, Optional<TimeUnit> unit, Set<Property> metadata, boolean byBase) {
 
-        Map<String, Long> result = new HashMap<>();
+        Map<String, Integer> result = new HashMap<>();
 
         for (Document d : DocumentStore.getInstance().getDocuments()) {
 
@@ -42,12 +43,12 @@ public class TimeSeriesQueryService {
                     if (TimeUnit.year.equals(u)) {
                         pos.ifPresent(p -> {
                             String year = d.getMetadata().getProperty("publication_year");
-                            Long count = byBase ? d.documentBaseFrequency().get(keyWord).get(p) :
-                                    d.documentOrthFrequency().get(keyWord).get(p);
+                            Integer count = byBase ? d.documentBaseFrequency().get(keyWord).getValue(p) :
+                                    d.documentOrthFrequency().get(keyWord).getValue(p);
                             if (!result.containsKey(year)) {
                                 result.put(year, count);
                             } else {
-                                Long val = result.get("year");
+                                Integer val = result.get("year");
                                 result.replace("year", val + count);
                             }
                         });
@@ -56,12 +57,12 @@ public class TimeSeriesQueryService {
                             String year = d.getMetadata().getProperty("publication_year");
                             String month = d.getMetadata().getProperty("publication_month");
                             String key = month + "-" + year;
-                            Long count = byBase ? d.documentBaseFrequency().get(keyWord).get(p) :
-                                    d.documentOrthFrequency().get(keyWord).get(p);
+                            Integer count = byBase ? d.documentBaseFrequency().get(keyWord).getValue(p) :
+                                    d.documentOrthFrequency().get(keyWord).getValue(p);
                             if (!result.containsKey(key)) {
                                 result.put(key, count);
                             } else {
-                                Long val = result.get("key");
+                                Integer val = result.get("key");
                                 result.replace("key", val + count);
                             }
                         });

@@ -12,6 +12,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,7 @@ public class WordProfileQueryService {
                         .collect(Collectors.toList());
 
                 matching.forEach(s -> {
-                     s.getWordProfile(keyWord, byBase, partOfSpeech, leftWindowSize, rightWindowSize)
+                        getWordProfile(s.getWords(), keyWord, byBase, partOfSpeech, leftWindowSize, rightWindowSize)
                              .forEach((k,v)->{
                                  if(!result.containsKey(k)){
                                      result.put(k, v);
@@ -76,6 +77,58 @@ public class WordProfileQueryService {
         items.stream().map(WordProfile::toJson).forEach(frequency::add);
 
         return frequency.build();
+    }
+    public Map<WordProfile, Long> getWordProfile(List<Word> words, String word, boolean byBase, Integer pos, Integer leftWindowSize, Integer rightWindowSize) {
+        List<WordProfile> tmp = new ArrayList<>();
+        for (int i = 0; i < words.size(); i++) {
+            if (byBase) {
+                if (words.get(i).getBase().equals(word)) {
+                    tmp.addAll(findLeftWindow(words,words.get(i).getBase(),i,pos,leftWindowSize));
+                    tmp.addAll(findRightWindow(words, words.get(i).getBase(),i,pos,rightWindowSize));
+                }
+            } else {
+                if (words.get(i).getOrth().equals(word)) {
+                    tmp.addAll(findLeftWindow(words, words.get(i).getOrth(),i,pos,leftWindowSize));
+                    tmp.addAll(findRightWindow(words, words.get(i).getOrth(),i,pos,rightWindowSize));
+                }
+            }
+        }
+        return tmp.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+    }
+
+    private List<WordProfile> findRightWindow(List<Word> words,String word, int i, Integer pos, Integer rightWindowSize) {
+        List<WordProfile> result = new ArrayList<>();
+        if (rightWindowSize != null && rightWindowSize > 0) {
+            int steps = (i + rightWindowSize) > words.size()-1 ? words.size()-1 : (i + rightWindowSize);
+            for (int z = i + 1; z <= steps; z++) {
+                if(words.get(z).getCtag().equals("interp") &&
+                        (words.get(z).getOrth().equals(",") || (words.get(z).getOrth().equals(".")))){
+                    break;
+                }
+                if (words.get(z).getPos() == pos) {
+                    result.add(new WordProfile(null, word, words.get(z).getOrth()));
+                }
+            }
+        }
+        return result;
+    }
+
+    private List<WordProfile> findLeftWindow(List<Word> words,String word, int i, Integer pos, Integer leftWindowSize) {
+        List<WordProfile> result = new ArrayList<>();
+        if (leftWindowSize != null && leftWindowSize > 0) {
+            int steps = (i - leftWindowSize) < 0 ? 0 : (i - leftWindowSize);
+            for (int z = steps; z < i; z++) {
+                if(words.get(z).getCtag().equals("interp") &&
+                        (words.get(z).getOrth().equals(",") || (words.get(z).getOrth().equals(".")))){
+                    break;
+                }
+                if (words.get(z).getPos() == pos) {
+                    result.add(new WordProfile(words.get(z).getOrth(), word, null ));
+                }
+            }
+        }
+        return result;
     }
     private void reMapValues(Map<WordProfile, Long> result){
         result.forEach(WordProfile::setFrequency);

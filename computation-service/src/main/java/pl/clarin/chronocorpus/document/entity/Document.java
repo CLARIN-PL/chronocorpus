@@ -17,9 +17,8 @@ public class Document implements Serializable {
 
     private List<Sentence> sentences = new ArrayList<>();
 
-    // Word, part of speech, frequency
-    private Map<String, Map<Integer, Long>> bases = new HashMap<>();
-    private Map<String, Map<Integer, Long>> orths = new HashMap<>();
+    private Map<String, Statistic> bases = new HashMap<>();
+    private Map<String, Statistic> orths = new HashMap<>();
 
     public Document() {
     }
@@ -39,16 +38,15 @@ public class Document implements Serializable {
         }
     }
 
-    private void map(Word w, String key, Map<String, Map<Integer, Long>> bases) {
+    private void map(Word w, String key, Map<String, Statistic> bases) {
         if (!bases.containsKey(key)) {
-            Map<Integer, Long> sub = new HashMap<>();
-            sub.put(w.getPos(), 1L);
-            bases.put(key, sub);
+            Statistic s = new Statistic();
+            s.addValue(w.getPos(),1);
+            bases.put(key, s);
         } else {
-            if(!bases.get(key).containsKey(w.getPos())){
-                bases.get(key).put(w.getPos(), 1L);
-            }
-            bases.get(key).merge(w.getPos(), bases.get(key).get(w.getPos()), (aLong, aLong2) -> aLong + 1L);
+            Statistic old = bases.get(key);
+            old.addValue(w.getPos(),1);
+            bases.replace(key, old);
         }
     }
 
@@ -87,11 +85,11 @@ public class Document implements Serializable {
 
     }
 
-    public Map<String, Map<Integer, Long>> documentBaseFrequency() {
+    public Map<String, Statistic> documentBaseFrequency() {
         return bases;
     }
 
-    public Map<String, Map<Integer, Long>> documentOrthFrequency() {
+    public Map<String, Statistic> documentOrthFrequency() {
         return orths;
     }
 

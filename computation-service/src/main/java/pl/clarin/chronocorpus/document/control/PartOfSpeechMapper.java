@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class PartOfSpeechMapper {
 
-    private  Map<String, Integer> partsOfSpeech = new HashMap();
+    private  Map<String, Byte> partsOfSpeech = new HashMap();
 
     public static volatile PartOfSpeechMapper instance;
 
@@ -23,37 +23,37 @@ public class PartOfSpeechMapper {
 
     private PartOfSpeechMapper() {
         //verbs
-        partsOfSpeech.put("fin", 1);
-        partsOfSpeech.put("bedzie", 1);
-        partsOfSpeech.put("praet", 1);
-        partsOfSpeech.put("impt", 1);
-        partsOfSpeech.put("inf", 1);
-        partsOfSpeech.put("pcon", 1);
-        partsOfSpeech.put("pant", 1);
-        partsOfSpeech.put("imps", 1);
-        partsOfSpeech.put("winien", 1);
-        partsOfSpeech.put("pred", 1);
-        partsOfSpeech.put("pact", 1);
-        partsOfSpeech.put("ppas", 1);
+        partsOfSpeech.put("fin", (byte) 1);
+        partsOfSpeech.put("bedzie", (byte) 1);
+        partsOfSpeech.put("praet", (byte) 1);
+        partsOfSpeech.put("impt", (byte) 1);
+        partsOfSpeech.put("inf", (byte) 1);
+        partsOfSpeech.put("pcon", (byte) 1);
+        partsOfSpeech.put("pant", (byte) 1);
+        partsOfSpeech.put("imps", (byte) 1);
+        partsOfSpeech.put("winien", (byte) 1);
+        partsOfSpeech.put("pred", (byte) 1);
+        partsOfSpeech.put("pact", (byte) 1);
+        partsOfSpeech.put("ppas", (byte) 1);
 
         //nouns
-        partsOfSpeech.put("subst", 2);
-        partsOfSpeech.put("depr", 2);
-        partsOfSpeech.put("ger", 2);
-        partsOfSpeech.put("brev", 2);
+        partsOfSpeech.put("subst", (byte) 2);
+        partsOfSpeech.put("depr", (byte) 2);
+        partsOfSpeech.put("ger", (byte) 2);
+        partsOfSpeech.put("brev", (byte) 2);
 
         //adjectives
-        partsOfSpeech.put("adj", 4);
-        partsOfSpeech.put("adja", 4);
-        partsOfSpeech.put("adjp", 4);
-        partsOfSpeech.put("adjc", 4);
+        partsOfSpeech.put("adj", (byte) 4);
+        partsOfSpeech.put("adja", (byte) 4);
+        partsOfSpeech.put("adjp", (byte) 4);
+        partsOfSpeech.put("adjc", (byte) 4);
 
         //adverbs
-        partsOfSpeech.put("adv", 3);
+        partsOfSpeech.put("adv", (byte) 3);
     }
 
-    public int getPartOfSpeech(String pos){
-        return partsOfSpeech.getOrDefault(pos, 0);
+    public byte getPartOfSpeech(String pos){
+        return partsOfSpeech.getOrDefault(pos,(byte) 0);
     }
 
 }

@@ -35,6 +35,26 @@ public class DocumentFileLoader {
 
     private static volatile DocumentFileLoader instance;
 
+    private static Map<String, Word> wordCache = new HashMap<>();
+    private static Map<String, Property> propertyCache = new HashMap<>();
+
+    public static Word createWord(final String orth, final String base, final String ctag, final byte pos, final boolean spaceAfter) {
+        return wordCache.computeIfAbsent(wordParametersAsString(orth, base, ctag, pos, spaceAfter), newParams -> new Word(orth, base, ctag, pos, spaceAfter));
+    }
+
+    public static Property createProperty(final String name, final String value) {
+        return propertyCache.computeIfAbsent(propertyParameterAsString(name, value), newParams ->
+                new Property(name, value));
+    }
+
+    private static String wordParametersAsString(String orth, String base, String ctag, int pos, boolean spaceAfter) {
+        return orth + "_" + base + "_" + ctag + "_" + pos + "_" + spaceAfter;
+    }
+
+    private static String propertyParameterAsString(String name, String value){
+        return name+"_"+value;
+    }
+
     public static DocumentFileLoader getInstance() {
         if (instance == null) {
             synchronized (DocumentFileLoader.class) {
@@ -76,18 +96,14 @@ public class DocumentFileLoader {
                             try {
                                 Date date = df.parse(value);
                                 LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                                Property year = new Property("publication_year", localDate.getYear());
-                                Property month = new Property("publication_month", localDate.getMonthValue());
-                                Property day = new Property("publication_day", localDate.getDayOfMonth());
-                                m.addProperty(year);
-                                m.addProperty(month);
-                                m.addProperty(day);
+                                m.addProperty(createProperty("publication_year", String.valueOf(localDate.getYear())));
+                                m.addProperty(createProperty("publication_month", String.valueOf(localDate.getMonthValue())));
+                                m.addProperty(createProperty("publication_day", String.valueOf(localDate.getDayOfMonth())));
                             } catch (ParseException e) {
                                 LOGGER.log(Level.SEVERE, "Unable to parse publication date", e);
                             }
                         } else {
-                            Property p = new Property(name, value);
-                            m.addProperty(p);
+                            m.addProperty(createProperty(name, value));
                         }
                     }
                 });
@@ -144,7 +160,7 @@ public class DocumentFileLoader {
                         for (Token t : s.getTokens()) {
                             t.getDisambTags().stream()
                                     .findFirst()
-                                    .map(tag -> new Word(
+                                    .map(tag -> createWord(
                                             t.getOrth(),
                                             tag.getBase(),
                                             tag.getCtag(),

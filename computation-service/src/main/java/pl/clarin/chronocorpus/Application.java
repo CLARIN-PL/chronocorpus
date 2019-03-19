@@ -3,7 +3,7 @@ package pl.clarin.chronocorpus;
 import org.ini4j.Ini;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
-import pl.clarin.chronocorpus.query.boundary.WordProfileQuery;
+import pl.clarin.chronocorpus.query.boundary.FrequencyQuery;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
 import pl.clarin.chronocorpus.task.entity.Task;
@@ -24,16 +24,15 @@ public class Application {
     public static void main(String... args) {
         Application app = new Application();
 
-        WordProfileQuery prof = new WordProfileQuery.Builder()
-                .withOrth("Polska")
-                .withPartOfSpeech("2")
-                .withLeftWindowSize("3")
-                .withRightWindowSize("1")
+        FrequencyQuery frq = new FrequencyQuery.Builder()
+                .countByBase(true)
                 .build();
 
-        JsonObject j = prof.getJson();
-        System.out.println(j.toString());
+        JsonObject j = frq.getJson();
+        long start4 = System.currentTimeMillis();
         System.out.println(app.process(j));
+        long time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
 
     }
 

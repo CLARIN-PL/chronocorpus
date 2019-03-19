@@ -11,9 +11,9 @@ public class TimeSeries {
     private String word;
     private boolean isBaseForm;
     private Integer pos;
-    private Map<String, Long> series;
+    private Map<String, Integer> series;
 
-    public TimeSeries(String word, boolean isBaseForm, Integer pos, Map<String, Long> series) {
+    public TimeSeries(String word, boolean isBaseForm, Integer pos, Map<String, Integer> series) {
         this.word = word;
         this.series = series;
         this.pos = pos;
