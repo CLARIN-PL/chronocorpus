@@ -5,7 +5,9 @@ import pl.clarin.chronocorpus.task.entity.Task;
 import pl.clarin.chronocorpus.timeseries.control.TimeSeriesQueryService;
 import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
 
+import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -55,6 +57,10 @@ public class TimeSeriesTask extends Task {
                 jsonObject.set(TimeSeriesQueryService.getInstance()
                         .findTimeSeries(w, findPartOfSpeechParameter(), findTimeUnit(), metadata, true)));
 
-        return jsonObject.get();
+        JsonObjectBuilder json = Json.createObjectBuilder()
+                .add("task_id", id)
+                .add("rows", Json.createArrayBuilder().add(jsonObject.get()));
+
+        return json.build();
     }
 }

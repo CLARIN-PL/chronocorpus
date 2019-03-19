@@ -153,14 +153,56 @@ Example request and respond when searching concordances.
 }
 
 ----
+=== Querying word profile
+Example request and respond getting word profile frequency.
+
 `Word Profiles Request`:
 ----
 {
-}
+    "task_type":"word_profile",
+    "metadata_filter":[],
+    "query_parameters":[
+        {
+            "name":"orth",
+            "value":"Polska"
+        },
+        {
+            "name":"part_of_speech",
+            "value":"2"
+        },
+        {
+            "name":"left_window_size",
+            "value":"3"
+        },
+        {
+            "name":"right_window_size",
+            "value":"1"
+        }
+    ],
+    "response_parameters":[]}
 ----
 `Word Profiles Response`:
 ----
 {
+    "task_id":"7910de51-4ca9-4769-80c5-839fa4f358a4",
+    "rows":[
+        {
+            "profile":"Polska Partia",
+            "frequency":5
+        },
+        {
+            "profile":"Związku Polska",
+            "frequency":2
+        },
+        {
+            "profile":"niewoli Polska",
+            "frequency":2
+        },
+        {
+            "profile":"Armia Polska",
+            "frequency":2
+        }
+    ]
 }
 ----
 === Querying frequency
@@ -246,7 +288,6 @@ Available time units [month, year]
 ----
 
 {
-    "id":"78713b92-8428-40e1-9885-86ec6d66a09b",
     "task_type":"time_series",
     "metadata_filter":[
         {
@@ -272,12 +313,17 @@ Available time units [month, year]
 `Time series Response`:
 ----
 {
-    "word":"czerwony",
-    "is_base_form":false,
-    "part_of_speech":4,
-    "series":[
-        {"2-1954":1},
-        {"7-1955":1}
+    "task_id":"38a4f1be-bcd0-4ab3-99d4-0d55d53c36fc",
+    "rows":[
+        {
+            "word":"czerwony",
+            "is_base_form":false,
+            "part_of_speech":4,
+            "series":[
+                {"2-1954":1},
+                {"7-1955":1}
+            ]
+        }
     ]
 }
 ----

@@ -34,7 +34,7 @@ public class FrequencyTask extends Task {
 
     @Override
     public JsonObject doTask() {
-        Set<String> stopList = Stream.of("w", "i", "to", "z", "na", "że", "po",
+        Set<String> stopList = Stream.of("w", "i", "to", "z", "na", "że", "po","pod","za",
                 "który", "być", "się", "nie", "do", "o", "on", "ten", "a", "też")
                 .collect(Collectors.toSet());
 

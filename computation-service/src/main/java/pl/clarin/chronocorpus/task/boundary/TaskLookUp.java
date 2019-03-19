@@ -6,6 +6,7 @@ import pl.clarin.chronocorpus.document.boundary.DocumentTask;
 import pl.clarin.chronocorpus.frequency.boundary.FrequencyTask;
 import pl.clarin.chronocorpus.task.entity.Task;
 import pl.clarin.chronocorpus.timeseries.boundary.TimeSeriesTask;
+import pl.clarin.chronocorpus.wordprofile.boundary.WordProfileTask;
 
 import javax.json.JsonObject;
 import java.util.Optional;
@@ -20,6 +21,7 @@ public class TaskLookUp {
             if(json.getString("task_type").equalsIgnoreCase("frequency")) return Optional.of(new FrequencyTask(json));
             if(json.getString("task_type").equalsIgnoreCase("dictionaries")) return Optional.of(new DictionariesTask(json));
             if(json.getString("task_type").equalsIgnoreCase("time_series")) return Optional.of(new TimeSeriesTask(json));
+            if(json.getString("task_type").equalsIgnoreCase("word_profile")) return Optional.of(new WordProfileTask(json));
         }
         return Optional.empty();
     }

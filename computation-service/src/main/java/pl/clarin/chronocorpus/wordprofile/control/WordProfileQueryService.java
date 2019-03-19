@@ -5,11 +5,13 @@ import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.document.entity.Sentence;
 import pl.clarin.chronocorpus.document.entity.Word;
+import pl.clarin.chronocorpus.frequency.entity.FrequencyItem;
+import pl.clarin.chronocorpus.wordprofile.entity.WordProfile;
 
+import javax.json.Json;
 import javax.json.JsonArray;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import javax.json.JsonArrayBuilder;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -32,10 +34,12 @@ public class WordProfileQueryService {
     }
 
     public JsonArray findWordProfile(String keyWord,
-                                     Optional<Integer> leftWindowSize,
-                                     Optional<Integer> rightWindowSize,
-                                     Optional<Integer> partOfSpeech,
+                                     Integer leftWindowSize,
+                                     Integer rightWindowSize,
+                                     Integer partOfSpeech,
                                      Set<Property> metadata, boolean byBase) {
+
+        Map<WordProfile,Long> result = new HashMap<>();
 
         for (Document d : DocumentStore.getInstance().getDocuments()) {
 
@@ -48,11 +52,33 @@ public class WordProfileQueryService {
                                 .anyMatch(byBase ? getBasePredicate(keyWord) : getOrthPredicate(keyWord)))
                         .collect(Collectors.toList());
 
-
+                matching.forEach(s -> {
+                     s.getWordProfile(keyWord, byBase, partOfSpeech, leftWindowSize, rightWindowSize)
+                             .forEach((k,v)->{
+                                 if(!result.containsKey(k)){
+                                     result.put(k, v);
+                                 }else{
+                                     Long val = result.get(k) + v;
+                                     result.replace(k, val);
+                                 }
+                             });
+                });
             }
         }
 
-        return null;
+        reMapValues(result);
+
+        List<WordProfile> items = result.keySet().stream()
+                .sorted(Comparator.comparing(WordProfile::getFrequency).reversed())
+                .collect(Collectors.toList());
+
+        JsonArrayBuilder frequency = Json.createArrayBuilder();
+        items.stream().map(WordProfile::toJson).forEach(frequency::add);
+
+        return frequency.build();
+    }
+    private void reMapValues(Map<WordProfile, Long> result){
+        result.forEach(WordProfile::setFrequency);
     }
 
     public Predicate<Word> getOrthPredicate(String keyWord) {
