@@ -1,1 +1,1 @@
-[Api guidelines for this project](chronocorpus.adoc)
+[Api guidelines for this service](chronocorpus.adoc)
