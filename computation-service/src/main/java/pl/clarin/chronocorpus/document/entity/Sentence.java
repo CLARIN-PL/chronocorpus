@@ -7,49 +7,49 @@ import java.util.stream.Collectors;
 
 public class Sentence implements Serializable {
 
-    private List<Word> words = new ArrayList<Word>();
+    private List<Token> tokens = new ArrayList<Token>();
 
     public Sentence() {
     }
 
-    public void addWord(Word word) {
-        words.add(word);
+    public void addWord(Token token) {
+        tokens.add(token);
     }
 
-    public List<Word> getWords() {
-        return words;
+    public List<Token> getTokens() {
+        return tokens;
     }
 
     public String getSentence() {
-        return words.stream()
-                .map(Word::getOrthWithDelimiter)
+        return tokens.stream()
+                .map(Token::getOrthWithDelimiter)
                 .collect(Collectors.joining());
     }
 
     public Long getSentenceWordCount(){
-        return words.stream()
-                .filter(w -> !"interp".equals(w.getCtag()))
+        return tokens.stream()
+                .filter(w -> !w.isInterp())
                 .count();
     }
 
     public Long getSentenceLetterCount(){
-        return words.stream()
-                .filter(w -> !"interp".equals(w.getCtag()))
+        return tokens.stream()
+                .filter(w -> !w.isInterp())
                 .mapToLong(w -> w.getOrth().length())
                 .sum();
     }
 
-    public Long getSentenceSyllabeCount(){
-        return words.stream()
-                .filter(w -> !"interp".equals(w.getCtag()))
-                .mapToLong(Word::getSyllableCount)
+    public Long getSentenceSyllableCount(){
+        return tokens.stream()
+                .filter(w -> !w.isInterp())
+                .mapToLong(Token::getSyllableCount)
                 .sum();
     }
 
     public Long getSentencePhonemeCount(){
-        return words.stream()
-                .filter(w -> !"interp".equals(w.getCtag()))
-                .mapToLong(Word::getPhonemeCount)
+        return tokens.stream()
+                .filter(w -> !w.isInterp())
+                .mapToLong(Token::getPhonemeCount)
                 .sum();
     }
 }

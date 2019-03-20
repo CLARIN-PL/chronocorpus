@@ -4,7 +4,6 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
 import pl.clarin.chronocorpus.Configuration;
 import pl.clarin.chronocorpus.document.entity.*;
 
@@ -33,12 +32,12 @@ public class DocumentFileLoader {
 
     private static volatile DocumentFileLoader instance;
 
-    private static Map<String, Word> wordCache = new HashMap<>();
+    private static Map<String, Token> wordCache = new HashMap<>();
     private static Map<String, Property> propertyCache = new HashMap<>();
     private static Map<String, ProperName> properNameCache = new HashMap<>();
 
-    public static Word createWord(final String orth, final String base, final String ctag, final byte pos, final boolean spaceAfter) {
-        return wordCache.computeIfAbsent(wordParametersAsString(orth, base, ctag, pos, spaceAfter), newParams -> new Word(orth, base, ctag, pos, spaceAfter));
+    public static Token createWord(final String orth, final String base, final String ctag, final byte pos, final boolean spaceAfter) {
+        return wordCache.computeIfAbsent(wordParametersAsString(orth, base, ctag, pos, spaceAfter), newParams -> new Token(orth, base, ctag, pos, spaceAfter));
     }
 
     public static Property createProperty(final String name, final String value) {
@@ -168,7 +167,7 @@ public class DocumentFileLoader {
                     for (Sentence s : p.getSentences()) {
 
                         pl.clarin.chronocorpus.document.entity.Sentence sentence = new pl.clarin.chronocorpus.document.entity.Sentence();
-                        for (Token t : s.getTokens()) {
+                        for (g419.corpus.structure.Token t : s.getTokens()) {
                             t.getDisambTags().stream()
                                     .findFirst()
                                     .map(tag -> createWord(

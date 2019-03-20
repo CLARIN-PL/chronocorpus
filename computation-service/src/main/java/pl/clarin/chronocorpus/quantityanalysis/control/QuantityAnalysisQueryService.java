@@ -3,7 +3,7 @@ package pl.clarin.chronocorpus.quantityanalysis.control;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Property;
-import pl.clarin.chronocorpus.document.entity.Word;
+import pl.clarin.chronocorpus.document.entity.Token;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationUnit;
@@ -45,7 +45,7 @@ public class QuantityAnalysisQueryService {
                         count.add(s.getSentenceLetterCount());
                     }
                     if (CalculationUnit.syllable.equals(unit)) {
-                        count.add(s.getSentenceSyllabeCount());
+                        count.add(s.getSentenceSyllableCount());
                     }
                     if (CalculationUnit.phoneme.equals(unit)) {
                         count.add(s.getSentencePhonemeCount());
@@ -62,8 +62,8 @@ public class QuantityAnalysisQueryService {
         for (Document d : DocumentStore.getInstance().getDocuments()) {
             if (d.getMetadata().matches(metadata)) {
                 d.getSentences().forEach(s -> {
-                    for (Word w : s.getWords()) {
-                        if (!"interp".equals(w.getCtag())) {
+                    for (Token w : s.getTokens()) {
+                        if (!w.isInterp()) {
                             if (!pos.isEmpty()) {
                                 if (pos.contains(w.getPos())) {
                                     if (CalculationUnit.letter.equals(unit)) {

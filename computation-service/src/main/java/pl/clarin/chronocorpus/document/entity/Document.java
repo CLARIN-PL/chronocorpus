@@ -32,15 +32,15 @@ public class Document implements Serializable {
 
     public void addSentence(Sentence s) {
         sentences.add(s);
-        for (Word w : s.getWords()) {
-            if (!w.getCtag().equals("interp")) {
+        for (Token w : s.getTokens()) {
+            if (!w.isInterp()) {
                 map(w, w.getBase(), bases);
                 map(w, w.getOrth(), orths);
             }
         }
     }
 
-    private void map(Word w, String key, Map<String, Statistic> bases) {
+    private void map(Token w, String key, Map<String, Statistic> bases) {
         if (!bases.containsKey(key)) {
             Statistic s = new Statistic();
             s.addValue(w.getPos(),1);

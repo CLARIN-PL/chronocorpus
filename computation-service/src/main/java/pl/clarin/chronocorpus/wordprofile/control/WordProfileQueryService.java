@@ -4,8 +4,7 @@ import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.document.entity.Sentence;
-import pl.clarin.chronocorpus.document.entity.Word;
-import pl.clarin.chronocorpus.frequency.entity.FrequencyItem;
+import pl.clarin.chronocorpus.document.entity.Token;
 import pl.clarin.chronocorpus.wordprofile.entity.WordProfile;
 
 import javax.json.Json;
@@ -48,13 +47,13 @@ public class WordProfileQueryService {
 
                 List<Sentence> matching = d.getSentences()
                         .stream()
-                        .filter(s -> s.getWords()
+                        .filter(s -> s.getTokens()
                                 .stream()
                                 .anyMatch(byBase ? getBasePredicate(keyWord) : getOrthPredicate(keyWord)))
                         .collect(Collectors.toList());
 
                 matching.forEach(s -> {
-                        getWordProfile(s.getWords(), keyWord, byBase, partOfSpeech, leftWindowSize, rightWindowSize)
+                        getWordProfile(s.getTokens(), keyWord, byBase, partOfSpeech, leftWindowSize, rightWindowSize)
                              .forEach((k,v)->{
                                  if(!result.containsKey(k)){
                                      result.put(k, v);
@@ -78,18 +77,18 @@ public class WordProfileQueryService {
 
         return frequency.build();
     }
-    public Map<WordProfile, Long> getWordProfile(List<Word> words, String word, boolean byBase, Integer pos, Integer leftWindowSize, Integer rightWindowSize) {
+    public Map<WordProfile, Long> getWordProfile(List<Token> tokens, String word, boolean byBase, Integer pos, Integer leftWindowSize, Integer rightWindowSize) {
         List<WordProfile> tmp = new ArrayList<>();
-        for (int i = 0; i < words.size(); i++) {
+        for (int i = 0; i < tokens.size(); i++) {
             if (byBase) {
-                if (words.get(i).getBase().equals(word)) {
-                    tmp.addAll(findLeftWindow(words,words.get(i).getBase(),i,pos,leftWindowSize));
-                    tmp.addAll(findRightWindow(words, words.get(i).getBase(),i,pos,rightWindowSize));
+                if (tokens.get(i).getBase().equals(word)) {
+                    tmp.addAll(findLeftWindow(tokens, tokens.get(i).getBase(),i,pos,leftWindowSize));
+                    tmp.addAll(findRightWindow(tokens, tokens.get(i).getBase(),i,pos,rightWindowSize));
                 }
             } else {
-                if (words.get(i).getOrth().equals(word)) {
-                    tmp.addAll(findLeftWindow(words, words.get(i).getOrth(),i,pos,leftWindowSize));
-                    tmp.addAll(findRightWindow(words, words.get(i).getOrth(),i,pos,rightWindowSize));
+                if (tokens.get(i).getOrth().equals(word)) {
+                    tmp.addAll(findLeftWindow(tokens, tokens.get(i).getOrth(),i,pos,leftWindowSize));
+                    tmp.addAll(findRightWindow(tokens, tokens.get(i).getOrth(),i,pos,rightWindowSize));
                 }
             }
         }
@@ -97,34 +96,34 @@ public class WordProfileQueryService {
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 
-    private List<WordProfile> findRightWindow(List<Word> words,String word, int i, Integer pos, Integer rightWindowSize) {
+    private List<WordProfile> findRightWindow(List<Token> tokens, String word, int i, Integer pos, Integer rightWindowSize) {
         List<WordProfile> result = new ArrayList<>();
         if (rightWindowSize != null && rightWindowSize > 0) {
-            int steps = (i + rightWindowSize) > words.size()-1 ? words.size()-1 : (i + rightWindowSize);
+            int steps = (i + rightWindowSize) > tokens.size()-1 ? tokens.size()-1 : (i + rightWindowSize);
             for (int z = i + 1; z <= steps; z++) {
-                if(words.get(z).getCtag().equals("interp") &&
-                        (words.get(z).getOrth().equals(",") || (words.get(z).getOrth().equals(".")))){
+                if(tokens.get(z).isInterp() &&
+                        (tokens.get(z).getOrth().equals(",") || (tokens.get(z).getOrth().equals(".")))){
                     break;
                 }
-                if (words.get(z).getPos() == pos) {
-                    result.add(new WordProfile(null, word, words.get(z).getOrth()));
+                if (tokens.get(z).getPos() == pos) {
+                    result.add(new WordProfile(null, word, tokens.get(z).getOrth()));
                 }
             }
         }
         return result;
     }
 
-    private List<WordProfile> findLeftWindow(List<Word> words,String word, int i, Integer pos, Integer leftWindowSize) {
+    private List<WordProfile> findLeftWindow(List<Token> tokens, String word, int i, Integer pos, Integer leftWindowSize) {
         List<WordProfile> result = new ArrayList<>();
         if (leftWindowSize != null && leftWindowSize > 0) {
             int steps = (i - leftWindowSize) < 0 ? 0 : (i - leftWindowSize);
             for (int z = steps; z < i; z++) {
-                if(words.get(z).getCtag().equals("interp") &&
-                        (words.get(z).getOrth().equals(",") || (words.get(z).getOrth().equals(".")))){
+                if(tokens.get(z).isInterp() &&
+                        (tokens.get(z).getOrth().equals(",") || (tokens.get(z).getOrth().equals(".")))){
                     break;
                 }
-                if (words.get(z).getPos() == pos) {
-                    result.add(new WordProfile(words.get(z).getOrth(), word, null ));
+                if (tokens.get(z).getPos() == pos) {
+                    result.add(new WordProfile(tokens.get(z).getOrth(), word, null ));
                 }
             }
         }
@@ -134,11 +133,11 @@ public class WordProfileQueryService {
         result.forEach(WordProfile::setFrequency);
     }
 
-    public Predicate<Word> getOrthPredicate(String keyWord) {
+    public Predicate<Token> getOrthPredicate(String keyWord) {
         return word -> word.getOrth().equals(keyWord);
     }
 
-    public Predicate<Word> getBasePredicate(String keyWord) {
+    public Predicate<Token> getBasePredicate(String keyWord) {
         return word -> word.getBase().equals(keyWord);
     }
 }

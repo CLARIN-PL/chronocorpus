@@ -3,11 +3,9 @@ package pl.clarin.chronocorpus;
 import org.ini4j.Ini;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
-import pl.clarin.chronocorpus.geographicalpropernames.control.GeographicalQueryService;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationUnit;
-import pl.clarin.chronocorpus.query.boundary.FrequencyQuery;
 import pl.clarin.chronocorpus.query.boundary.GeoNamesQuery;
 import pl.clarin.chronocorpus.query.boundary.QuantityAnalysisQuery;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
@@ -52,6 +50,32 @@ public class Application {
         System.out.println(app.process(j));
         time4 = System.currentTimeMillis() - start4;
         LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
+
+        QuantityAnalysisQuery z = new QuantityAnalysisQuery.Builder()
+                .calculationObject(CalculationObject.word)
+                .calculationType(CalculationType.zipf_histogram)
+                .calculationUnit(CalculationUnit.letter)
+                .build();
+        j = z.getJson();
+        System.out.println(j);
+        start4 = System.currentTimeMillis();
+        System.out.println(app.process(j));
+        time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
+
+
+        QuantityAnalysisQuery s = new QuantityAnalysisQuery.Builder()
+                .calculationObject(CalculationObject.sentence)
+                .calculationType(CalculationType.average)
+                .calculationUnit(CalculationUnit.letter)
+                .build();
+        j = s.getJson();
+        System.out.println(j);
+        start4 = System.currentTimeMillis();
+        System.out.println(app.process(j));
+        time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
+
 
     }
 

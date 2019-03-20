@@ -4,7 +4,7 @@ package pl.clarin.chronocorpus.concordance.control;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import pl.clarin.chronocorpus.document.entity.Sentence;
-import pl.clarin.chronocorpus.document.entity.Word;
+import pl.clarin.chronocorpus.document.entity.Token;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,19 +19,19 @@ public class ConcordanceMapperTest {
 
         Sentence s = new Sentence();
 
-        s.addWord(new Word("Dziś", "", "", (byte) 1, false));
-        s.addWord(new Word("padało", "", "", (byte) 1, false));
-        s.addWord(new Word("dużo", "", "", (byte) 1, false));
-        s.addWord(new Word("śniegu", "", "", (byte) 1, true));
-        s.addWord(new Word(",", "", "", (byte) 1,false));
-        s.addWord(new Word("bo", "", "", (byte) 1,false));
-        s.addWord(new Word("wieczorem", "", "", (byte) 1,false));
-        s.addWord(new Word("spadł", "", "", (byte) 1,false));
-        s.addWord(new Word("śnieg", "", "", (byte) 1,false));
-        s.addWord(new Word("i", "", "", (byte) 1,false));
-        s.addWord(new Word("było", "", "", (byte) 1,false));
-        s.addWord(new Word("zimno", "", "", (byte) 1,true));
-        s.addWord(new Word(".", "", "", (byte) 1,true));
+        s.addWord(new Token("Dziś", "", "", (byte) 1, false));
+        s.addWord(new Token("padało", "", "", (byte) 1, false));
+        s.addWord(new Token("dużo", "", "", (byte) 1, false));
+        s.addWord(new Token("śniegu", "", "", (byte) 1, true));
+        s.addWord(new Token(",", "", "", (byte) 1,false));
+        s.addWord(new Token("bo", "", "", (byte) 1,false));
+        s.addWord(new Token("wieczorem", "", "", (byte) 1,false));
+        s.addWord(new Token("spadł", "", "", (byte) 1,false));
+        s.addWord(new Token("śnieg", "", "", (byte) 1,false));
+        s.addWord(new Token("i", "", "", (byte) 1,false));
+        s.addWord(new Token("było", "", "", (byte) 1,false));
+        s.addWord(new Token("zimno", "", "", (byte) 1,true));
+        s.addWord(new Token(".", "", "", (byte) 1,true));
 
         List<String> test = (Arrays.asList(ConcordanceMapper.getInstance()
                 .getSentenceString("śnieg", s)));
@@ -46,16 +46,16 @@ public class ConcordanceMapperTest {
 
         Sentence s = new Sentence();
 
-        s.addWord(new Word("Dziś", "", "", (byte) 1, false));
-        s.addWord(new Word("był", "", "", (byte) 1, false));
-        s.addWord(new Word("śnieg", "", "", (byte) 1, false));
-        s.addWord(new Word("do", "", "", (byte) 1,false));
-        s.addWord(new Word("pasa", "", "", (byte) 1, false));
-        s.addWord(new Word("a", "", "", (byte) 1, false));
-        s.addWord(new Word("wieczorem", "", "", (byte) 1, false));
-        s.addWord(new Word("śnieg", "", "", (byte) 1,false));
-        s.addWord(new Word("stopniał", "", "", (byte) 1, true));
-        s.addWord(new Word(".", "", "", (byte) 1, false));
+        s.addWord(new Token("Dziś", "", "", (byte) 1, false));
+        s.addWord(new Token("był", "", "", (byte) 1, false));
+        s.addWord(new Token("śnieg", "", "", (byte) 1, false));
+        s.addWord(new Token("do", "", "", (byte) 1,false));
+        s.addWord(new Token("pasa", "", "", (byte) 1, false));
+        s.addWord(new Token("a", "", "", (byte) 1, false));
+        s.addWord(new Token("wieczorem", "", "", (byte) 1, false));
+        s.addWord(new Token("śnieg", "", "", (byte) 1,false));
+        s.addWord(new Token("stopniał", "", "", (byte) 1, true));
+        s.addWord(new Token(".", "", "", (byte) 1, false));
 
         List<String> test = (Arrays.asList(ConcordanceMapper.getInstance()
                 .getSentenceString("śnieg", s)));

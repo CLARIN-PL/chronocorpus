@@ -5,7 +5,7 @@ import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.document.entity.Sentence;
-import pl.clarin.chronocorpus.document.entity.Word;
+import pl.clarin.chronocorpus.document.entity.Token;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -46,7 +46,7 @@ public class ConcordanceQueryService {
 
                 List<Sentence> matching = d.getSentences()
                         .stream()
-                        .filter(s -> s.getWords()
+                        .filter(s -> s.getTokens()
                                 .stream()
                                 .anyMatch(byBase ? getBasePredicate(keyWord) : getOrthPredicate(keyWord)))
                         .collect(Collectors.toList());
@@ -72,11 +72,11 @@ public class ConcordanceQueryService {
         return concordances.build();
     }
 
-    public Predicate<Word> getOrthPredicate(String keyWord) {
+    public Predicate<Token> getOrthPredicate(String keyWord) {
         return word -> word.getOrth().equals(keyWord);
     }
 
-    public Predicate<Word> getBasePredicate(String keyWord) {
+    public Predicate<Token> getBasePredicate(String keyWord) {
         return word -> word.getBase().equals(keyWord);
     }
 }

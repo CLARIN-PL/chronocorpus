@@ -30,7 +30,6 @@ public class FrequencyQueryService {
         return instance;
     }
 
-    //TODO poor performance all documents 9s
     public JsonArray calculateFrequency(Set<Property> metadata, Set<String> stopList, Boolean byBase) {
 
         Map<FrequencyItem, Integer> result = new HashMap<>();

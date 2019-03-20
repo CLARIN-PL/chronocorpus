@@ -5,7 +5,7 @@ import pl.clarin.chronocorpus.concordance.entity.Concordance;
 import pl.clarin.chronocorpus.concordance.entity.Concordances;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.document.entity.Sentence;
-import pl.clarin.chronocorpus.document.entity.Word;
+import pl.clarin.chronocorpus.document.entity.Token;
 
 import java.util.*;
 
@@ -33,7 +33,7 @@ public class ConcordanceMapper {
     public String[] getSentenceString(String orth, Sentence s) {
         List<String> items = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
-        for (Word w : s.getWords()) {
+        for (Token w : s.getTokens()) {
             if (orth.equals(w.getOrth())) {
                 items.add(sb.toString().trim());
                 sb = new StringBuilder();
@@ -49,10 +49,10 @@ public class ConcordanceMapper {
         Set<String> orth = new HashSet<>();
         orth.add(keyWord);
         if(getByBase){
-            orth  = s.getWords()
+            orth  = s.getTokens()
                     .stream()
                     .filter(word -> word.getBase().equals(keyWord))
-                    .map(Word::getOrth)
+                    .map(Token::getOrth)
                     .collect(Collectors.toSet());
         }
 
