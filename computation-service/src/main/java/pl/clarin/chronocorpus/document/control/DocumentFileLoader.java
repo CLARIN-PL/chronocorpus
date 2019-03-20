@@ -1,14 +1,12 @@
 package pl.clarin.chronocorpus.document.control;
 
 import g419.corpus.io.reader.ReaderFactory;
+import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import pl.clarin.chronocorpus.Configuration;
-import pl.clarin.chronocorpus.document.entity.Document;
-import pl.clarin.chronocorpus.document.entity.Metadata;
-import pl.clarin.chronocorpus.document.entity.Property;
-import pl.clarin.chronocorpus.document.entity.Word;
+import pl.clarin.chronocorpus.document.entity.*;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -37,6 +35,7 @@ public class DocumentFileLoader {
 
     private static Map<String, Word> wordCache = new HashMap<>();
     private static Map<String, Property> propertyCache = new HashMap<>();
+    private static Map<String, ProperName> properNameCache = new HashMap<>();
 
     public static Word createWord(final String orth, final String base, final String ctag, final byte pos, final boolean spaceAfter) {
         return wordCache.computeIfAbsent(wordParametersAsString(orth, base, ctag, pos, spaceAfter), newParams -> new Word(orth, base, ctag, pos, spaceAfter));
@@ -45,6 +44,11 @@ public class DocumentFileLoader {
     public static Property createProperty(final String name, final String value) {
         return propertyCache.computeIfAbsent(propertyParameterAsString(name, value), newParams ->
                 new Property(name, value));
+    }
+
+    public static ProperName createProperName(final String type, final String value) {
+        return properNameCache.computeIfAbsent(propertyParameterAsString(type, value), newParams ->
+                new ProperName(type, value));
     }
 
     private static String wordParametersAsString(String orth, String base, String ctag, int pos, boolean spaceAfter) {
@@ -154,8 +158,15 @@ public class DocumentFileLoader {
                 Metadata meta = metadata.get(id);
                 Document doc = new Document(id, meta);
 
+                for(Annotation a : ccl.getAnnotations()){
+                    if(a.getType().startsWith("nam")){
+                        doc.getProperNames().add(createProperName(a.getType(), a.getText()));
+                    }
+                }
+
                 for (Paragraph p : ccl.getParagraphs()) {
                     for (Sentence s : p.getSentences()) {
+
                         pl.clarin.chronocorpus.document.entity.Sentence sentence = new pl.clarin.chronocorpus.document.entity.Sentence();
                         for (Token t : s.getTokens()) {
                             t.getDisambTags().stream()

@@ -1,6 +1,5 @@
 package pl.clarin.chronocorpus.timeseries.control;
 
-import org.omg.PortableInterceptor.INACTIVE;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Property;

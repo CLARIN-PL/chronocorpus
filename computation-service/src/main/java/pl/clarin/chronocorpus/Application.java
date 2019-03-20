@@ -3,7 +3,12 @@ package pl.clarin.chronocorpus;
 import org.ini4j.Ini;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
+import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
+import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
+import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationUnit;
 import pl.clarin.chronocorpus.query.boundary.FrequencyQuery;
+import pl.clarin.chronocorpus.query.boundary.GeoNamesQuery;
+import pl.clarin.chronocorpus.query.boundary.QuantityAnalysisQuery;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
 import pl.clarin.chronocorpus.task.entity.Task;
@@ -24,11 +29,14 @@ public class Application {
     public static void main(String... args) {
         Application app = new Application();
 
-        FrequencyQuery frq = new FrequencyQuery.Builder()
-                .countByBase(true)
+        QuantityAnalysisQuery anal = new QuantityAnalysisQuery.Builder()
+                .calculationObject(CalculationObject.word)
+                .calculationType(CalculationType.average)
+                .calculationUnit(CalculationUnit.letter)
                 .build();
 
-        JsonObject j = frq.getJson();
+        JsonObject j = anal.getJson();
+        System.out.println(j);
         long start4 = System.currentTimeMillis();
         System.out.println(app.process(j));
         long time4 = System.currentTimeMillis() - start4;

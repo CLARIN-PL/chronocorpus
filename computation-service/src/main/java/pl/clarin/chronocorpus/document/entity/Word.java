@@ -14,7 +14,7 @@ public class Word implements Serializable {
 
     private short syllableCount;
 
-    private short phonemCount;
+    private short phonemeCount;
 
     private boolean noSpaceAfter;
 
@@ -61,8 +61,8 @@ public class Word implements Serializable {
         return syllableCount;
     }
 
-    public short getPhonemCount() {
-        return phonemCount;
+    public short getPhonemeCount() {
+        return phonemeCount;
     }
 
     public boolean isNoSpaceAfter() {

@@ -20,6 +20,8 @@ public class Document implements Serializable {
     private Map<String, Statistic> bases = new HashMap<>();
     private Map<String, Statistic> orths = new HashMap<>();
 
+    private List<ProperName> properNames = new ArrayList<>();
+
     public Document() {
     }
 
@@ -93,4 +95,7 @@ public class Document implements Serializable {
         return orths;
     }
 
+    public List<ProperName> getProperNames() {
+        return properNames;
+    }
 }
