@@ -260,29 +260,124 @@ Example request and respond calculating frequency.
     ]
 }
 ----
+=== Querying quantity analysis
+Example request and response quantity analysis
+Parameters:
+    calculation_object = [word, sentence]
+    calculation_type = [average, zipf_histogram]
+    calculation_unit = [word, letter, syllable, phoneme]
+    parts_of_speech = [1;2;3;4]
+
 `Quantity analysis Request`:
 ----
 {
+    "task_type":"quantity_analysis",
+    "metadata_filter":[],
+    "query_parameters":[
+        {
+            "name":"calculation_object",
+            "value":"word"
+        },
+        {
+            "name":"calculation_type",
+            "value":"average"
+        },
+        {
+            "name":"calculation_unit",
+            "value":"letter"}],
+        "response_parameters":[]
 }
 ----
 `Quantity analysis Response`:
 ----
 {
+    "task_id":"1f90a5e6-9d0d-48d2-8f57-7c84e04ebdb6",
+    "rows":[
+        {
+            "calculation_object":"word",
+            "calculation_type":"average",
+            "calculation_unit":"letter",
+            "average_length":5.964997536362166,
+            "standard_deviation":3.393446437827068,
+            "coefficient_of_variation":0.5688931834658573,
+            "skewness":-0.030944172197025322,
+            "kurtosis":-0.346673743989399,
+            "chart":[
+                {"1":27430},{"2":22888},{"3":24921},{"4":20546},{"5":28422},
+                {"6":29011},{"7":27916},{"8":22867},{"9":19790},{"10":14769},
+                {"11":10992},{"12":7291},{"13":4026},{"14":2367},{"15":1399},
+                {"16":694},{"17":354},{"18":117},{"19":35},{"20":17},
+                {"21":10},{"22":4},{"23":1}
+            ]
+         }
+    ]
 }
 ----
+=== Querying Geo proper names
+Example request and response fetching geo proper names
+
 `Geographical Proper Names Request`:
 ----
 {
+    "task_type":"geo_proper_names",
+    "metadata_filter":[],
+    "query_parameters":[],
+    "response_parameters":[]
 }
 ----
 `Geographical Proper Names Response`:
 ----
 {
+    "task_id":"ce3d49b8-4685-43b9-9e29-8fa6347ddcbb",
+    "rows":[
+        {
+            "name":"Żywiec",
+            "type":"nam_loc_gpe_city",
+            "frequency":1,
+            "lon":96.48948056576336,
+            "lan":-28.445762616873772
+        },
+        {
+            "name":"Wartą",
+            "type":"nam_loc_land_continent",
+            "frequency":1,
+            "lon":104.94561165238406,
+            "lan":22.20106322935797
+        },
+        {
+            "name":"Żerań","type":"nam_loc_gpe_city",
+            "frequency":1,
+            "lon":116.47194719128902,
+            "lan":0.19168138426756798
+        },
+        {
+            "name":"Maków",
+            "type":"nam_loc",
+            "frequency":1,
+            "lon":109.61959265711386,
+            "lan":-34.17749300929297
+        },
+        {
+            "name":"Azji",
+            "type":"nam_loc_gpe_city",
+            "frequency":8,
+            "lon":-52.506771057171164,
+            "lan":32.79079942802568
+        },
+        {
+            "name":"Siemianowice",
+            "type":"nam_loc",
+            "frequency":1,
+            "lon":-155.48895987238163,
+            "lan":-25.6182961319533
+        }
+    ]
 }
 ----
 === Querying time series
 Example request and response fetching time series
-Available time units [month, year]
+Parameters:
+    time_unit = [month, year]
 
 `Time series Request`:
 ----

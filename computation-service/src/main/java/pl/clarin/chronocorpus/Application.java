@@ -3,6 +3,7 @@ package pl.clarin.chronocorpus;
 import org.ini4j.Ini;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
+import pl.clarin.chronocorpus.geographicalpropernames.control.GeographicalQueryService;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationUnit;
@@ -29,17 +30,27 @@ public class Application {
     public static void main(String... args) {
         Application app = new Application();
 
+        GeoNamesQuery geo = new GeoNamesQuery.Builder()
+                .build();
+
+        JsonObject j = geo.getJson();
+        System.out.println(j);
+        long start4 = System.currentTimeMillis();
+        System.out.println(app.process(j));
+        long time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
+
         QuantityAnalysisQuery anal = new QuantityAnalysisQuery.Builder()
                 .calculationObject(CalculationObject.word)
                 .calculationType(CalculationType.average)
                 .calculationUnit(CalculationUnit.letter)
                 .build();
 
-        JsonObject j = anal.getJson();
+        j = anal.getJson();
         System.out.println(j);
-        long start4 = System.currentTimeMillis();
+        start4 = System.currentTimeMillis();
         System.out.println(app.process(j));
-        long time4 = System.currentTimeMillis() - start4;
+        time4 = System.currentTimeMillis() - start4;
         LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
 
     }
