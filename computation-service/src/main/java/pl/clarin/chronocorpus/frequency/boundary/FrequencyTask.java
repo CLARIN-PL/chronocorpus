@@ -8,6 +8,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,21 +26,29 @@ public class FrequencyTask extends Task {
                 .findFirst().orElse(null);
     }
 
-    private String findStopListParameter() {
-        return queryParameters.stream()
+    private Set<String> findStopListParameter() {
+        Set<String> stopList;
+
+        Optional<String> s = queryParameters.stream()
                 .filter(p -> p.getName().equals("stop_list"))
                 .map(Property::getValueAsString)
-                .findFirst().orElse(null);
+                .findFirst();
+        if (s.isPresent()) {
+            stopList = Stream.of(s.get().split(";")).collect(Collectors.toSet());
+        } else {
+            stopList = Stream.of("w", "i", "to", "z", "na", "że", "po", "pod", "za",
+                    "który", "być", "się", "nie", "do", "o", "on", "ten", "a", "też")
+                    .collect(Collectors.toSet());
+        }
+        return stopList;
     }
 
     @Override
     public JsonObject doTask() {
-        Set<String> stopList = Stream.of("w", "i", "to", "z", "na", "że", "po","pod","za",
-                "który", "być", "się", "nie", "do", "o", "on", "ten", "a", "też")
-                .collect(Collectors.toSet());
+
 
         JsonArray frequency = FrequencyQueryService.getInstance()
-                .calculateFrequency(metadata, stopList, findCountByBaseParameter());
+                .calculateFrequency(metadata, findStopListParameter(), findCountByBaseParameter());
 
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id)

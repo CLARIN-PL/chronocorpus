@@ -217,6 +217,10 @@ Example request and respond calculating frequency.
         {
             "name":"count_by_base",
             "value":"true"
+        },
+        {
+            "name":"stop_list",
+            "value":"być;jest;w;z;na;"
         }
     ],
     "response_parameters":[]
