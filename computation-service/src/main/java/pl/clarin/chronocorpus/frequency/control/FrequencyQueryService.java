@@ -45,7 +45,6 @@ public class FrequencyQueryService {
                 } else {
                     d.documentOrthFrequency()
                             .forEach((key, value) -> {
-                                if (!stopList.contains(key))
                                     calculateFrequency(result, key, value);
                             });
                 }
