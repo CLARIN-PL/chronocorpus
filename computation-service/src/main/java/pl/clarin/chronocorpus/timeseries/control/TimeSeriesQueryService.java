@@ -47,7 +47,7 @@ public class TimeSeriesQueryService {
                             if (!result.containsKey(year)) {
                                 result.put(year, count);
                             } else {
-                                Integer val = result.get("year");
+                                Integer val = result.get(year);
                                 result.replace(year, val + count);
                             }
                         });
