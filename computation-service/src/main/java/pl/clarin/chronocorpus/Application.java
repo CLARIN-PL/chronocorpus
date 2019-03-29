@@ -28,27 +28,17 @@ public class Application {
     public static void main(String... args) {
         Application app = new Application();
 
-        GeoNamesQuery geo = new GeoNamesQuery.Builder()
-                .build();
-
-        JsonObject j = geo.getJson();
-        System.out.println(j);
-        long start4 = System.currentTimeMillis();
-        System.out.println(app.process(j));
-        long time4 = System.currentTimeMillis() - start4;
-        LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
-
         QuantityAnalysisQuery anal = new QuantityAnalysisQuery.Builder()
                 .calculationObject(CalculationObject.word)
                 .calculationType(CalculationType.average)
                 .calculationUnit(CalculationUnit.letter)
                 .build();
 
-        j = anal.getJson();
+        JsonObject j = anal.getJson();
         System.out.println(j);
-        start4 = System.currentTimeMillis();
+        long start4 = System.currentTimeMillis();
         System.out.println(app.process(j));
-        time4 = System.currentTimeMillis() - start4;
+        long time4 = System.currentTimeMillis() - start4;
         LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
 
         QuantityAnalysisQuery z = new QuantityAnalysisQuery.Builder()
@@ -57,20 +47,6 @@ public class Application {
                 .calculationUnit(CalculationUnit.letter)
                 .build();
         j = z.getJson();
-        System.out.println(j);
-        start4 = System.currentTimeMillis();
-        System.out.println(app.process(j));
-        time4 = System.currentTimeMillis() - start4;
-        LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
-
-
-        QuantityAnalysisQuery s = new QuantityAnalysisQuery.Builder()
-                .calculationObject(CalculationObject.sentence)
-                .calculationType(CalculationType.average)
-                .calculationUnit(CalculationUnit.letter)
-                .build();
-        j = s.getJson();
-        System.out.println(j);
         start4 = System.currentTimeMillis();
         System.out.println(app.process(j));
         time4 = System.currentTimeMillis() - start4;

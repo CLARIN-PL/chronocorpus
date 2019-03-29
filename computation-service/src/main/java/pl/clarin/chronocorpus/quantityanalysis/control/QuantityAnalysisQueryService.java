@@ -13,6 +13,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class QuantityAnalysisQueryService {
@@ -122,6 +123,7 @@ public class QuantityAnalysisQueryService {
         }
 
         if (CalculationObject.word.equals(calculationObject) && CalculationType.zipf_histogram.equals(calculationType)) {
+
             List<Long> lengths = getCalculateWordLengths(pos, calculationUnit, metadata);
 
             Map<Long, Long> freq = frequencyCalculations(lengths);
@@ -152,7 +154,7 @@ public class QuantityAnalysisQueryService {
 
     public Map<Long, Long> frequencyCalculations(final Collection<Long> list) {
         Map<Long, Long> map = list.stream()
-                .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         return sortByLongKey(map);
     }
 
