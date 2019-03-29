@@ -48,7 +48,7 @@ public class TimeSeriesQueryService {
                                 result.put(year, count);
                             } else {
                                 Integer val = result.get("year");
-                                result.replace("year", val + count);
+                                result.replace(year, val + count);
                             }
                         });
                     } else if (TimeUnit.month.equals(u)) {

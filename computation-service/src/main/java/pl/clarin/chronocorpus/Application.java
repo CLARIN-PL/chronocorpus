@@ -6,11 +6,14 @@ import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationUnit;
+import pl.clarin.chronocorpus.query.boundary.FrequencyQuery;
 import pl.clarin.chronocorpus.query.boundary.GeoNamesQuery;
 import pl.clarin.chronocorpus.query.boundary.QuantityAnalysisQuery;
+import pl.clarin.chronocorpus.query.boundary.TimeSeriesQuery;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
 import pl.clarin.chronocorpus.task.entity.Task;
+import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
 
 import javax.json.JsonObject;
 import java.io.File;
@@ -28,31 +31,45 @@ public class Application {
     public static void main(String... args) {
         Application app = new Application();
 
-        QuantityAnalysisQuery anal = new QuantityAnalysisQuery.Builder()
-                .calculationObject(CalculationObject.word)
-                .calculationType(CalculationType.average)
-                .calculationUnit(CalculationUnit.letter)
+        TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
+                .withOrth("czerwony")
+                .withPartOfSpeech("4")
+                .withUnit(TimeUnit.year)
+                .withMetaPublicationYear("1945")
                 .build();
 
-        JsonObject j = anal.getJson();
+        JsonObject j = ana1l.getJson();
         System.out.println(j);
         long start4 = System.currentTimeMillis();
         System.out.println(app.process(j));
         long time4 = System.currentTimeMillis() - start4;
         LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
 
-        QuantityAnalysisQuery z = new QuantityAnalysisQuery.Builder()
+        QuantityAnalysisQuery anal = new QuantityAnalysisQuery.Builder()
                 .calculationObject(CalculationObject.word)
-                .calculationType(CalculationType.zipf_histogram)
+                .calculationType(CalculationType.average)
                 .calculationUnit(CalculationUnit.letter)
                 .build();
-        j = z.getJson();
+
+        j = anal.getJson();
+        System.out.println(j);
         start4 = System.currentTimeMillis();
         System.out.println(app.process(j));
         time4 = System.currentTimeMillis() - start4;
         LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
 
 
+
+        FrequencyQuery grq = new FrequencyQuery.Builder()
+                .countByBase(false)
+                .build();
+
+        j = grq.getJson();
+        System.out.println(j);
+        start4 = System.currentTimeMillis();
+        app.process(j);
+        time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, "Freq Task execution took frq: " + time4 + "ms");
     }
 
     public Application() {
