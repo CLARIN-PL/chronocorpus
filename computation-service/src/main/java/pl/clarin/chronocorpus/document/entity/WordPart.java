@@ -10,9 +10,9 @@ public class WordPart implements Serializable {
 
     private byte pos;
 
-    private short syllableCount;
+    private short syllableCount = 0;
 
-    private short phonemeCount;
+    private short phonemeCount = 0;
 
     public WordPart() {
     }

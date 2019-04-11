@@ -1,8 +1,8 @@
 package pl.clarin.chronocorpus.quantityanalysis.control;
 
 import pl.clarin.chronocorpus.document.control.DocumentStore;
-import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Property;
+import pl.clarin.chronocorpus.document.entity.Sentence;
 import pl.clarin.chronocorpus.document.entity.Token;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
@@ -13,6 +13,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class QuantityAnalysisQueryService {
@@ -34,68 +35,59 @@ public class QuantityAnalysisQueryService {
     }
 
     public List<Long> getCalculateSentenceLengths(CalculationUnit unit, Set<Property> metadata) {
-        List<Long> count = new ArrayList<>();
-        for (Document d : DocumentStore.getInstance().getDocuments()) {
-            if (d.getMetadata().matches(metadata)) {
-                d.getSentences().forEach(s -> {
-                    if (CalculationUnit.word.equals(unit)) {
-                        count.add(s.getSentenceWordCount());
-                    }
-                    if (CalculationUnit.letter.equals(unit)) {
-                        count.add(s.getSentenceLetterCount());
-                    }
-                    if (CalculationUnit.syllable.equals(unit)) {
-                        count.add(s.getSentenceSyllableCount());
-                    }
-                    if (CalculationUnit.phoneme.equals(unit)) {
-                        count.add(s.getSentencePhonemeCount());
-                    }
-                });
-
-            }
-        }
-        return count;
+        return DocumentStore.getInstance().getDocuments()
+                .parallelStream()
+                .filter(d -> d.getMetadata().matches(metadata))
+                .flatMap(d -> d.getSentences().stream())
+                .map(s -> getSentenceCount(s, unit))
+                .collect(Collectors.toList());
     }
 
     public List<Long> getCalculateWordLengths(List<Byte> pos, CalculationUnit unit, Set<Property> metadata) {
-        List<Long> count = new ArrayList<>();
-        for (Document d : DocumentStore.getInstance().getDocuments()) {
-            if (d.getMetadata().matches(metadata)) {
-                d.getSentences().forEach(s -> {
-                    for (Token w : s.getTokens()) {
-                        if (!w.isInterp()) {
-                            if (!pos.isEmpty()) {
-                                if (pos.contains(w.getPos())) {
-                                    if (CalculationUnit.letter.equals(unit)) {
-                                        count.add((long) w.getOrth().length());
-                                    }
-                                    if (CalculationUnit.phoneme.equals(unit)) {
-                                        count.add((long) w.getPhonemeCount());
-                                    }
-                                    if (CalculationUnit.syllable.equals(unit)) {
-                                        count.add((long) w.getSyllableCount());
-                                    }
-                                }
-                            } else {
-                                if (CalculationUnit.letter.equals(unit)) {
-                                    count.add((long) w.getOrth().length());
-                                }
-                                if (CalculationUnit.phoneme.equals(unit)) {
-                                    count.add((long) w.getPhonemeCount());
-                                }
-                                if (CalculationUnit.syllable.equals(unit)) {
-                                    count.add((long) w.getSyllableCount());
-                                }
-                            }
-                        }
-
-                    }
-                });
-            }
-        }
-        return count;
+        return DocumentStore.getInstance().getDocuments()
+                .parallelStream()
+                .filter(d -> d.getMetadata().matches(metadata))
+                .flatMap(d -> d.getSentences().stream())
+                .flatMap(s -> s.getTokens().stream())
+                .filter(getTokenPredicate(pos))
+                .map(w -> getWordCount(w, unit))
+                .collect(Collectors.toList());
     }
 
+    private Predicate<Token> getTokenPredicate(List<Byte> pos) {
+        if (pos.isEmpty()) {
+            return w -> !Objects.isNull(w) && !w.isInterp();
+        }
+        return w -> !Objects.isNull(w) && !w.isInterp() && pos.contains(w.getPos());
+    }
+
+    private Long getSentenceCount(Sentence s, CalculationUnit unit) {
+        switch (unit) {
+            case word:
+                return s.getSentenceWordCount();
+            case letter:
+                return s.getSentenceLetterCount();
+            case phoneme:
+                return s.getSentencePhonemeCount();
+            case syllable:
+                return s.getSentenceSyllableCount();
+            default:
+                return 0L;
+        }
+    }
+
+    private Long getWordCount(Token t, CalculationUnit unit) {
+        switch (unit) {
+            case letter:
+                return (long) t.getOrth().length();
+            case syllable:
+                return (long) t.getSyllableCount();
+            case phoneme:
+                return (long) t.getPhonemeCount();
+            default:
+                return 0L;
+        }
+    }
 
     public JsonObject calculate(List<Byte> pos, CalculationUnit calculationUnit, CalculationObject calculationObject,
                                 CalculationType calculationType, Set<Property> metadata) {

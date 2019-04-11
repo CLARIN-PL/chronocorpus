@@ -26,7 +26,9 @@ public class Token implements Serializable {
     }
 
     public String getBase() {
-        return word.getBase();
+        if(word != null)
+            return word.getBase();
+        return null;
     }
 
     public String getOrth() {

@@ -10,10 +10,7 @@ import pl.clarin.chronocorpus.document.entity.Token;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -40,26 +37,24 @@ public class ConcordanceQueryService {
 
         Map<Pair<String, Set<Property>>, List<Sentence>> sentences = new HashMap<>();
 
-        for (Document d : DocumentStore.getInstance().getDocuments()) {
+        DocumentStore.getInstance().getDocuments().parallelStream()
+                .filter(d -> d.getMetadata().matches(metadata) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord)))
+                .forEach(d -> {
+                    List<Sentence> matching = d.getSentences()
+                            .stream()
+                            .filter(s -> s.getTokens()
+                                    .stream()
+                                    .anyMatch(byBase ? getBasePredicate(keyWord) : getOrthPredicate(keyWord)))
+                            .collect(Collectors.toList());
 
-            if (d.getMetadata().matches(metadata) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
+                    Set<Property> responseProperty = d.getMetadata()
+                            .getProperties()
+                            .stream()
+                            .filter(p -> responseParams.contains(p.getName()))
+                            .collect(Collectors.toSet());
 
-                List<Sentence> matching = d.getSentences()
-                        .stream()
-                        .filter(s -> s.getTokens()
-                                .stream()
-                                .anyMatch(byBase ? getBasePredicate(keyWord) : getOrthPredicate(keyWord)))
-                        .collect(Collectors.toList());
-
-                Set<Property> responseProperty = d.getMetadata()
-                        .getProperties()
-                        .stream()
-                        .filter(p -> responseParams.contains(p.getName()))
-                        .collect(Collectors.toSet());
-
-                sentences.put(new Pair<>(d.getId(), responseProperty), matching);
-            }
-        }
+                    sentences.put(new Pair<>(d.getId(), responseProperty), matching);
+                });
 
         JsonArrayBuilder concordances = Json.createArrayBuilder();
         sentences.forEach((doc, v) ->
@@ -77,6 +72,6 @@ public class ConcordanceQueryService {
     }
 
     public Predicate<Token> getBasePredicate(String keyWord) {
-        return word -> word.getBase().equals(keyWord);
+        return word -> word.getBase() != null && word.getBase().equals(keyWord);
     }
 }

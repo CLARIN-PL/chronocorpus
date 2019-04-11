@@ -56,8 +56,8 @@ public class AverageLongCalulator implements LongConsumer {
 
     public double getMedian() {
         Collections.sort(elements);
-        double median = 0;
-        double centralElementsAverage = 0.0;
+        double median;
+        double centralElementsAverage;
 
         if (elements.size() % 2 == 0) {
             centralElementsAverage = elements.get(elements.size() / 2) + elements.get((elements.size() / 2) - 1);

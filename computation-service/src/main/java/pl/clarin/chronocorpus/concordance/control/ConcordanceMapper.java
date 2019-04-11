@@ -51,30 +51,22 @@ public class ConcordanceMapper {
         if(getByBase){
             orth  = s.getTokens()
                     .stream()
-                    .filter(word -> word.getBase().equals(keyWord))
+                    .filter(word -> word.getBase() != null && word.getBase().equals(keyWord))
                     .map(Token::getOrth)
                     .collect(Collectors.toSet());
         }
 
         Set<Concordance> concordances = new HashSet<>();
-
-        orth.forEach(o -> {
-            String[] sentence = getSentenceString(o, s);
-            concordances.addAll(getConcordances(o, sentence));
-        });
+        orth.forEach(o -> concordances.addAll(getConcordances(o, getSentenceString(o, s))));
 
         return new Concordances(doc ,concordances);
     }
 
 
     private Set<Concordance> getConcordances(String orth, String[] sentence) {
-        Set<Concordance> crd = new HashSet<>();
-        IntStream.range(0, sentence.length-1)
-                .forEach(i -> {
-                    Concordance c = new Concordance(sentence[i], orth, sentence[i+1]);
-                    crd.add(c);
-                });
-        return crd;
+        return IntStream.range(0, sentence.length-1)
+                .mapToObj(i -> new Concordance(sentence[i], orth, sentence[i+1]))
+                .collect(Collectors.toSet());
     }
 
 }

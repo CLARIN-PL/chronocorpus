@@ -44,11 +44,13 @@ public class TimeSeriesQueryService {
                             String year = d.getMetadata().getProperty("publication_year");
                             Integer count = byBase ? d.documentBaseFrequency().get(keyWord).getValue(p) :
                                     d.documentOrthFrequency().get(keyWord).getValue(p);
-                            if (!result.containsKey(year)) {
-                                result.put(year, count);
-                            } else {
-                                Integer val = result.get(year);
-                                result.replace(year, val + count);
+                            if(year != null) {
+                                if (!result.containsKey(year)) {
+                                    result.put(year, count);
+                                } else {
+                                    Integer val = result.get(year);
+                                    result.replace(year, val + count);
+                                }
                             }
                         });
                     } else if (TimeUnit.month.equals(u)) {

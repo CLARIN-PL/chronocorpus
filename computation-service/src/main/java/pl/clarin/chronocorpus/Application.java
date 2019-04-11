@@ -6,10 +6,7 @@ import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationUnit;
-import pl.clarin.chronocorpus.query.boundary.FrequencyQuery;
-import pl.clarin.chronocorpus.query.boundary.GeoNamesQuery;
-import pl.clarin.chronocorpus.query.boundary.QuantityAnalysisQuery;
-import pl.clarin.chronocorpus.query.boundary.TimeSeriesQuery;
+import pl.clarin.chronocorpus.query.boundary.*;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
 import pl.clarin.chronocorpus.task.entity.Task;
@@ -31,6 +28,18 @@ public class Application {
     public static void main(String... args) {
         Application app = new Application();
 
+
+        ConcordanceQuery con = new ConcordanceQuery.Builder()
+                .withBase("partia")
+                .build();
+
+        JsonObject j = con.getJson();
+        System.out.println(j);
+        long start4 = System.currentTimeMillis();
+        System.out.println(app.process(j));
+        long time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, "Concord execution took: " + time4 + "ms");
+
         TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
                 .withOrth("czerwony")
                 .withPartOfSpeech("4")
@@ -38,12 +47,12 @@ public class Application {
                 .withMetaPublicationYear("1945")
                 .build();
 
-        JsonObject j = ana1l.getJson();
+        j = ana1l.getJson();
         System.out.println(j);
-        long start4 = System.currentTimeMillis();
+        start4 = System.currentTimeMillis();
         System.out.println(app.process(j));
-        long time4 = System.currentTimeMillis() - start4;
-        LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
+        time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, "TimeSeries execution took: " + time4 + "ms");
 
         QuantityAnalysisQuery anal = new QuantityAnalysisQuery.Builder()
                 .calculationObject(CalculationObject.word)
@@ -56,7 +65,7 @@ public class Application {
         start4 = System.currentTimeMillis();
         System.out.println(app.process(j));
         time4 = System.currentTimeMillis() - start4;
-        LOGGER.log(Level.INFO, "Task execution took: " + time4 + "ms");
+        LOGGER.log(Level.INFO, "QuantityAnalysis execution took: " + time4 + "ms");
 
 
 
