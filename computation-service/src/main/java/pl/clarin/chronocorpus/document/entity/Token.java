@@ -59,6 +59,8 @@ public class Token implements Serializable {
     }
 
     public byte getPos() {
-        return word.getPos();
+        if(word != null)
+            return word.getPos();
+        return 0;
     }
 }

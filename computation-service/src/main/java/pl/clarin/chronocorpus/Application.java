@@ -54,6 +54,22 @@ public class Application {
         time4 = System.currentTimeMillis() - start4;
         LOGGER.log(Level.INFO, "TimeSeries execution took: " + time4 + "ms");
 
+
+        WordProfileQuery wp = new WordProfileQuery.Builder()
+                .withOrth("czerwony")
+                .withPartOfSpeech("4")
+                .withLeftWindowSize("2")
+                .withRightWindowSize("2")
+                .build();
+
+        j = wp.getJson();
+        System.out.println(j);
+        start4 = System.currentTimeMillis();
+        System.out.println(app.process(j));
+        time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, "Word profile execution took: " + time4 + "ms");
+
+
         QuantityAnalysisQuery anal = new QuantityAnalysisQuery.Builder()
                 .calculationObject(CalculationObject.word)
                 .calculationType(CalculationType.average)
