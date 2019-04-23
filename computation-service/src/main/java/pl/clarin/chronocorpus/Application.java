@@ -43,7 +43,7 @@ public class Application {
         TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
                 .withOrth("czerwony")
                 .withPartOfSpeech("4")
-                .withUnit(TimeUnit.year)
+                .withUnit(TimeUnit.month)
                 .withMetaPublicationYear("1945")
                 .build();
 
@@ -53,36 +53,6 @@ public class Application {
         System.out.println(app.process(j));
         time4 = System.currentTimeMillis() - start4;
         LOGGER.log(Level.INFO, "TimeSeries execution took: " + time4 + "ms");
-
-
-        WordProfileQuery wp = new WordProfileQuery.Builder()
-                .withOrth("czerwony")
-                .withPartOfSpeech("4")
-                .withLeftWindowSize("2")
-                .withRightWindowSize("2")
-                .build();
-
-        j = wp.getJson();
-        System.out.println(j);
-        start4 = System.currentTimeMillis();
-        System.out.println(app.process(j));
-        time4 = System.currentTimeMillis() - start4;
-        LOGGER.log(Level.INFO, "Word profile execution took: " + time4 + "ms");
-
-
-        QuantityAnalysisQuery anal = new QuantityAnalysisQuery.Builder()
-                .calculationObject(CalculationObject.word)
-                .calculationType(CalculationType.average)
-                .calculationUnit(CalculationUnit.letter)
-                .build();
-
-        j = anal.getJson();
-        System.out.println(j);
-        start4 = System.currentTimeMillis();
-        System.out.println(app.process(j));
-        time4 = System.currentTimeMillis() - start4;
-        LOGGER.log(Level.INFO, "QuantityAnalysis execution took: " + time4 + "ms");
-
 
 
         FrequencyQuery grq = new FrequencyQuery.Builder()

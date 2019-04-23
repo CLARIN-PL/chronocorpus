@@ -56,6 +56,10 @@ public class ConcordanceQueryService {
                     sentences.put(new Pair<>(d.getId(), responseProperty), matching);
                 });
 
+        return buildJsonResponse(keyWord, byBase, sentences);
+    }
+
+    private JsonArray buildJsonResponse(String keyWord, boolean byBase, Map<Pair<String, Set<Property>>, List<Sentence>> sentences) {
         JsonArrayBuilder concordances = Json.createArrayBuilder();
         sentences.forEach((doc, v) ->
                 v.stream()
@@ -63,7 +67,6 @@ public class ConcordanceQueryService {
                                 .getInstance()
                                 .mapSentenceToConcordances(doc, keyWord, s, byBase))
                         .forEach(cc -> concordances.add(cc.toJson())));
-
         return concordances.build();
     }
 

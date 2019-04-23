@@ -63,8 +63,8 @@ public class TimeSeriesQueryService {
                             if (!result.containsKey(key)) {
                                 result.put(key, count);
                             } else {
-                                Integer val = result.get("key");
-                                result.replace("key", val + count);
+                                Integer val = result.get(key);
+                                result.replace(key, val + count);
                             }
                         });
                     }
