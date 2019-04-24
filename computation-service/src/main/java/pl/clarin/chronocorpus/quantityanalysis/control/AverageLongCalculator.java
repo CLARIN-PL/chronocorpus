@@ -3,23 +3,23 @@ package pl.clarin.chronocorpus.quantityanalysis.control;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
-public class AverageIntegerCalulator implements IntConsumer {
+public class AverageLongCalculator implements LongConsumer {
 
     private long elementSum = 0;
     private long elementSquareSum = 0;
     private long total = 0;
-    private List<Integer> elements = new ArrayList<>();
+    private List<Long> elements = new ArrayList<>();
 
-    public void accept(int i) {
+    public void accept(long i) {
         elementSum += i;
         elementSquareSum += i * i;
         total++;
         elements.add(i);
     }
 
-    public void combine(AverageIntegerCalulator other) {
+    public void combine(AverageLongCalculator other) {
         elementSum += other.elementSum;
         elementSquareSum += other.elementSquareSum;
         total += other.total;
@@ -55,9 +55,8 @@ public class AverageIntegerCalulator implements IntConsumer {
 
     public double getMedian() {
         Collections.sort(elements);
-        if(elements.size() == 0) return 0;
-        double median = 0;
-        double centralElementsAverage = 0.0;
+        double median;
+        double centralElementsAverage;
 
         if (elements.size() % 2 == 0) {
             centralElementsAverage = elements.get(elements.size() / 2) + elements.get((elements.size() / 2) - 1);
@@ -70,10 +69,14 @@ public class AverageIntegerCalulator implements IntConsumer {
     }
 
     public double getSkewness() {
+        if(getStandardDeviation() == 0.0) return 0.0;
         return (3 * (getAverage() - getMedian())) / getStandardDeviation();
     }
 
     public double getKurtoze() {
-        return getFourthCentralMoment() / Math.pow(getStandardDeviation(), 4) - 3;
+        double moment = getFourthCentralMoment();
+        double sqrt = Math.pow(getStandardDeviation(), 4) - 3;
+        if(moment == 0.0 || sqrt == 0.0) return 0.0;
+        return moment / sqrt ;
     }
 }

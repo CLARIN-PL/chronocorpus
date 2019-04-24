@@ -92,14 +92,14 @@ public class QuantityAnalysisQueryService {
     public JsonObject calculate(List<Byte> pos, CalculationUnit calculationUnit, CalculationObject calculationObject,
                                 CalculationType calculationType, Set<Property> metadata) {
 
-        AverageLongCalulator cal = null;
+        AverageLongCalculator cal = null;
         Map<Long, Long> chart = null;
 
         if (CalculationObject.sentence.equals(calculationObject) && CalculationType.average.equals(calculationType)) {
             List<Long> lengths = getCalculateSentenceLengths(calculationUnit, metadata);
 
-            cal = lengths.stream().collect(AverageLongCalulator::new,
-                    AverageLongCalulator::accept, AverageLongCalulator::combine);
+            cal = lengths.stream().collect(AverageLongCalculator::new,
+                    AverageLongCalculator::accept, AverageLongCalculator::combine);
 
             chart = frequencyCalculations(lengths);
         }
@@ -107,8 +107,8 @@ public class QuantityAnalysisQueryService {
         if (CalculationObject.word.equals(calculationObject) && CalculationType.average.equals(calculationType)) {
             List<Long> lengths = getCalculateWordLengths(pos, calculationUnit, metadata);
 
-            cal = lengths.stream().collect(AverageLongCalulator::new,
-                    AverageLongCalulator::accept, AverageLongCalulator::combine);
+            cal = lengths.stream().collect(AverageLongCalculator::new,
+                    AverageLongCalculator::accept, AverageLongCalculator::combine);
 
             chart = frequencyCalculations(lengths);
         }

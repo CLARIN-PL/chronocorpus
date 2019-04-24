@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class WordProfileQueryService {
 
@@ -79,7 +80,7 @@ public class WordProfileQueryService {
     }
     public Map<WordProfile, Long> getWordProfile(List<Token> tokens, String word, boolean byBase, Integer pos, Integer leftWindowSize, Integer rightWindowSize) {
         List<WordProfile> tmp = new ArrayList<>();
-        for (int i = 0; i < tokens.size(); i++) {
+        IntStream.range(0,tokens.size()).forEach(i -> {
             if (byBase) {
                 if (tokens.get(i).getBase().equals(word)) {
                     tmp.addAll(findLeftWindow(tokens, tokens.get(i).getBase(),i,pos,leftWindowSize));
@@ -91,7 +92,7 @@ public class WordProfileQueryService {
                     tmp.addAll(findRightWindow(tokens, tokens.get(i).getOrth(),i,pos,rightWindowSize));
                 }
             }
-        }
+        });
         return tmp.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }

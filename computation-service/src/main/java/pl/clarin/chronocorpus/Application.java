@@ -43,7 +43,7 @@ public class Application {
         TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
                 .withOrth("czerwony")
                 .withPartOfSpeech("4")
-                .withUnit(TimeUnit.month)
+                .withUnit(TimeUnit.year)
                 .withMetaPublicationYear("1945")
                 .build();
 
@@ -53,6 +53,21 @@ public class Application {
         System.out.println(app.process(j));
         time4 = System.currentTimeMillis() - start4;
         LOGGER.log(Level.INFO, "TimeSeries execution took: " + time4 + "ms");
+
+
+        QuantityAnalysisQuery anal = new QuantityAnalysisQuery.Builder()
+                .calculationObject(CalculationObject.word)
+                .calculationType(CalculationType.average)
+                .calculationUnit(CalculationUnit.syllable)
+                .build();
+
+        j = anal.getJson();
+        System.out.println(j);
+        start4 = System.currentTimeMillis();
+        System.out.println(app.process(j));
+        time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, "QuantityAnalysis execution took: " + time4 + "ms");
+
 
 
         FrequencyQuery grq = new FrequencyQuery.Builder()
