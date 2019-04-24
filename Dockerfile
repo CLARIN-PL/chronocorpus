@@ -18,7 +18,4 @@ RUN mvn install
 WORKDIR /home/install/chronocorpus/rest-service
 RUN mvn clean install
 
-RUN mkdir /home/install/chronocorpus/computation-service/target/ccl
-COPY ccl/ /home/install/chronocorpus/computation-service/target/ccl
-
 
