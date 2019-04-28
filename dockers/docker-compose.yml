@@ -1,0 +1,50 @@
+version: '3.7'
+services:
+  base:
+    image: chronocorpus
+    build: ./chronocorpus
+  chronopress:    
+    container_name: chrono-chronopress
+    build: ./chronopress
+    depends_on:
+      - base
+    volumes:
+        - ./chronopress/config.ini:/home/worker/config.ini
+        - ./chronopress/chronopress:/home/worker/ccl    
+        - ./chronopress/data:/home/worker/data
+    working_dir: /home/worker/    
+    entrypoint:
+         - java
+         - -Xms4g 
+         - -Xmx24g  
+         - -jar 
+         - chronocorpus.jar
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    
+         
+  rest:
+    container_name: chrono-rest
+    build: ./rest
+    ports:
+        - "8080:8080"
+    volumes:
+        - ./rest/config.ini:/home/worker/config.ini
+    working_dir: /home/worker/    
+    depends_on:
+      - base
+    entrypoint:
+         - java
+         - -jar 
+         - RESTchronocorpus.jar       
+    deploy:  
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    
