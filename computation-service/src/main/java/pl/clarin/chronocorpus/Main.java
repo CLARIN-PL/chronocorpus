@@ -12,6 +12,7 @@ import pl.clarin.chronocorpus.worker.Worker;
 
 import javax.json.JsonObject;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  */
 public class Main extends Worker {
     private static final Logger LOGGER = Logger.getLogger(Worker.class.getName());
-    private TaskLookUp lookup;
+    private TaskLookUp lookup; 
 
     @Override
     public void init() throws Exception {
@@ -28,7 +29,14 @@ public class Main extends Worker {
 
     @Override
     public JsonObject process(JsonObject input) throws Exception {
-        Optional<Task> task = lookup.getTask(input);
+        Optional<Task> task;
+        try {
+        task = lookup.getTask(input);
+        } catch(RuntimeException e)
+        {
+            LOGGER.log(Level.FINE,"Error in code", e);
+            throw  new Exception("Internal error");
+        }
         return task.map(Task::doTask).
                 orElseThrow(UnknownTaskException::new);
     }
