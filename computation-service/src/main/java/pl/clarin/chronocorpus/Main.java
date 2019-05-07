@@ -12,6 +12,7 @@ import pl.clarin.chronocorpus.worker.Worker;
 
 import javax.json.JsonObject;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -34,13 +35,6 @@ public class Main extends Worker {
     }
 
     public static void main(String[] args) {
-        System.out.println(
-                new ConcordanceQuery
-                        .Builder()
-                        .withBase("czerwony")
-                        .withMetaPublicationYear("1945")
-                        .withAdditionalResponseProperties("journal_title", "publication_year")
-                        .build().toString());
         new Service<>(Main.class);
     }
 
@@ -50,7 +44,7 @@ public class Main extends Worker {
             try {
                 DocumentStore.getInstance().setDocuments(DocumentFileLoader.getInstance().load());
             } catch (Exception e) {
-                e.printStackTrace();
+               LOGGER.log(Level.SEVERE, "Error while loading documents", e);
             }
         }
     }

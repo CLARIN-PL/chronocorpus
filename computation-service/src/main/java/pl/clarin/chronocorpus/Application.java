@@ -3,6 +3,8 @@ package pl.clarin.chronocorpus;
 import org.ini4j.Ini;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
+import pl.clarin.chronocorpus.document.entity.Token;
+import pl.clarin.chronocorpus.document.entity.WordPart;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationUnit;
@@ -16,8 +18,10 @@ import javax.json.JsonObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class Application {
 
@@ -29,8 +33,8 @@ public class Application {
         Application app = new Application();
 
 
-        ConcordanceQuery con = new ConcordanceQuery.Builder()
-                .withBase("partia")
+     ConcordanceQuery con = new ConcordanceQuery.Builder()
+                .withOrth("czerwony")
                 .build();
 
         JsonObject j = con.getJson();
@@ -39,7 +43,7 @@ public class Application {
         System.out.println(app.process(j));
         long time4 = System.currentTimeMillis() - start4;
         LOGGER.log(Level.INFO, "Concord execution took: " + time4 + "ms");
-
+/*
         TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
                 .withOrth("czerwony")
                 .withPartOfSpeech("4")
@@ -79,7 +83,7 @@ public class Application {
         start4 = System.currentTimeMillis();
         app.process(j);
         time4 = System.currentTimeMillis() - start4;
-        LOGGER.log(Level.INFO, "Freq Task execution took frq: " + time4 + "ms");
+        LOGGER.log(Level.INFO, "Freq Task execution took frq: " + time4 + "ms");*/
     }
 
     public Application() {

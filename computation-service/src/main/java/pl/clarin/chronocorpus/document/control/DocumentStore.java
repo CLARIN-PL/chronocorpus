@@ -70,9 +70,13 @@ public class DocumentStore {
         Kryo kryo = new Kryo();
         Output out = null;
         try {
+            LOGGER.info("Backing up documents ...");
+            long start = System.currentTimeMillis();
             out = new Output(new FileOutputStream(Configuration.DATA_STORE_FILE));
             kryo.writeObject(out, documents);
             out.flush();
+            long time = System.currentTimeMillis() - start;
+            LOGGER.info("Backing up documents took: "+ time +"ms");
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Document store backup failure", e);
         } finally {

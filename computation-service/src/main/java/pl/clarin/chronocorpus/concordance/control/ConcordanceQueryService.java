@@ -70,11 +70,11 @@ public class ConcordanceQueryService {
         return concordances.build();
     }
 
-    public Predicate<Token> getOrthPredicate(String keyWord) {
+    private Predicate<Token> getOrthPredicate(String keyWord) {
         return word -> word.getOrth().equals(keyWord);
     }
 
-    public Predicate<Token> getBasePredicate(String keyWord) {
+    private Predicate<Token> getBasePredicate(String keyWord) {
         return word -> word.getBase() != null && word.getBase().equals(keyWord);
     }
 }

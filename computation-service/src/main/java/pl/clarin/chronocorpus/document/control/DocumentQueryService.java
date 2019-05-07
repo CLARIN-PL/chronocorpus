@@ -21,6 +21,7 @@ public class DocumentQueryService {
 
     private DocumentQueryService() {
     }
+
     public static DocumentQueryService getInstance() {
         if (instance == null) {
             synchronized (DocumentStore.class) {
