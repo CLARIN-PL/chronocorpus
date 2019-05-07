@@ -1,0 +1,1 @@
+svn co http://svn.clarin-pl.eu/svn/chronocorpus/chronopress
