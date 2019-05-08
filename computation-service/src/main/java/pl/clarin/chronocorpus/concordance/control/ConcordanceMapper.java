@@ -45,7 +45,7 @@ public class ConcordanceMapper {
         return items.toArray(new String[0]);
     }
 
-    public Concordances mapSentenceToConcordances(Pair<String, Set<Property>> doc, String keyWord, Sentence s, Boolean getByBase){
+    public Concordances mapSentenceToConcordances(Pair<Integer, Set<Property>> doc, String keyWord, Sentence s, Boolean getByBase){
         Set<String> orth = new HashSet<>();
         orth.add(keyWord);
         if(getByBase){

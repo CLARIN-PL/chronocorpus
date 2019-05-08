@@ -46,6 +46,7 @@ public class Property implements Serializable {
                 .add("name", name)
                 .add("value",value).build();
     }
+
     public boolean matches(Property p) {
         if(this.name.equals(p.getName())){
             if(p.getValueAsString().contains(";")){

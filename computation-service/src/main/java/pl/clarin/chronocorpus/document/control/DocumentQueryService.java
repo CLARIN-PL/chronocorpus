@@ -40,11 +40,11 @@ public class DocumentQueryService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Document> findDocumentById(String id) {
+    public Optional<Document> findDocumentById(int id) {
         return DocumentStore.getInstance()
                 .getDocuments()
                 .stream()
-                .filter(d -> d.getId().equals(id))
+                .filter(d -> d.getId() == id)
                 .findFirst();
     }
 

@@ -1,25 +1,48 @@
 package pl.clarin.chronocorpus.document.entity;
 
-public class Statistic {
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import java.io.Serializable;
 
-    private int verbCount = 0;
-    private int adjCount = 0;
-    private int advCount = 0;
-    private int nounCount = 0;
+public class Statistic implements Serializable {
 
-    public int getVerbCount() {
-        return verbCount;
+    private int verbs = 0;
+    private int adjectives = 0;
+    private int adverbs = 0;
+    private int nouns = 0;
+
+    public int getVerbs() {
+        return verbs;
+    }
+
+    public JsonObject toJson() {
+        JsonObjectBuilder b = Json.createObjectBuilder();
+
+        if (verbs > 0) {
+            b.add("v", verbs);
+        }
+        if (nouns > 0) {
+            b.add("n", nouns);
+        }
+        if (adjectives > 0) {
+            b.add("adj", adjectives);
+        }
+        if (adverbs > 0) {
+            b.add("adv", adverbs);
+        }
+        return b.build();
     }
 
     public int getValue(int pos) {
         if (pos == 1)
-            return verbCount;
+            return verbs;
         if (pos == 2)
-            return nounCount;
+            return nouns;
         if (pos == 3)
-            return advCount;
+            return adverbs;
         if (pos == 4)
-            return adjCount;
+            return adjectives;
         return 0;
     }
 
@@ -43,46 +66,31 @@ public class Statistic {
     }
 
     private void addVerb(int v) {
-        this.verbCount = verbCount + v;
+        this.verbs = verbs + v;
     }
 
     private void addAdj(int v) {
-        this.adjCount = adjCount + v;
+        this.adjectives = adjectives + v;
     }
 
     private void addAdv(int v) {
-        this.advCount = advCount + v;
+        this.adverbs = adverbs + v;
     }
 
     private void addNoun(int v) {
-        this.nounCount = nounCount + v;
+        this.nouns = nouns + v;
     }
 
-    public void setVerbCount(int verbCount) {
-        this.verbCount = verbCount;
+    public int getAdjectives() {
+        return adjectives;
     }
 
-    public int getAdjCount() {
-        return adjCount;
+    public int getAdverbs() {
+        return adverbs;
     }
 
-    public void setAdjCount(int adjCount) {
-        this.adjCount = adjCount;
+    public int getNouns() {
+        return nouns;
     }
 
-    public int getAdvCount() {
-        return advCount;
-    }
-
-    public void setAdvCount(int advCount) {
-        this.advCount = advCount;
-    }
-
-    public int getNounCount() {
-        return nounCount;
-    }
-
-    public void setNounCount(int nounCount) {
-        this.nounCount = nounCount;
-    }
 }

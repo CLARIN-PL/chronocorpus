@@ -17,7 +17,7 @@ public class Token implements Serializable {
         this.noSpaceAfter = noSpaceAfter;
 
         if(!"interp".equals(ctag)){
-            word = new WordPart(base, ctag, pos);
+            word = new WordPart(base, pos);
         }
     }
 
@@ -39,11 +39,6 @@ public class Token implements Serializable {
         if(isNoSpaceAfter()){
             return orth;
         }else return orth + " ";
-    }
-
-
-    public String getCtag() {
-        return word.getCtag();
     }
 
     public short getSyllableCount() {

@@ -34,7 +34,7 @@ public class DocumentTask extends Task {
         findDocumentIdParameter()
                 .ifPresent(docId ->
                         DocumentQueryService.getInstance()
-                                .findDocumentById(docId)
+                                .findDocumentById(Integer.parseInt(docId))
                                 .ifPresent(d -> documents.add(d.toJson())));
 
         if (!metadata.isEmpty()) {

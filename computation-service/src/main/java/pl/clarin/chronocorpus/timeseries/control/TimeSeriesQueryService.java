@@ -4,13 +4,12 @@ import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.timeseries.entity.TimeSeries;
+import pl.clarin.chronocorpus.timeseries.entity.TimeSeriesRow;
 import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
 
 import javax.json.JsonObject;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TimeSeriesQueryService {
 
@@ -33,7 +32,7 @@ public class TimeSeriesQueryService {
     //TODO needs solution for multi word expressions like Armia Czerwona
     public JsonObject findTimeSeries(String keyWord, Optional<Integer> pos, Optional<TimeUnit> unit, Set<Property> metadata, boolean byBase) {
 
-        Map<String, Integer> result = new HashMap<>();
+        Map<TimeSeriesRow, TimeSeriesRow> result = new HashMap<>();
 
         for (Document d : DocumentStore.getInstance().getDocuments()) {
 
@@ -45,11 +44,11 @@ public class TimeSeriesQueryService {
                             Integer count = byBase ? d.documentBaseFrequency().get(keyWord).getValue(p) :
                                     d.documentOrthFrequency().get(keyWord).getValue(p);
                             if(year != null) {
-                                if (!result.containsKey(year)) {
-                                    result.put(year, count);
+                                TimeSeriesRow row = new TimeSeriesRow(Integer.parseInt(year),0, count);
+                                if(!result.containsKey(row)){
+                                    result.put(row, row);
                                 } else {
-                                    Integer val = result.get(year);
-                                    result.replace(year, val + count);
+                                    result.get(row).addCount(row.getCount());
                                 }
                             }
                         });
@@ -57,14 +56,13 @@ public class TimeSeriesQueryService {
                         pos.ifPresent(p -> {
                             String year = d.getMetadata().getProperty("publication_year");
                             String month = d.getMetadata().getProperty("publication_month");
-                            String key = month + "-" + year;
                             Integer count = byBase ? d.documentBaseFrequency().get(keyWord).getValue(p) :
                                     d.documentOrthFrequency().get(keyWord).getValue(p);
-                            if (!result.containsKey(key)) {
-                                result.put(key, count);
+                            TimeSeriesRow row = new TimeSeriesRow(Integer.parseInt(year),Integer.parseInt(month), count);
+                            if(!result.containsKey(row)){
+                                result.put(row, row);
                             } else {
-                                Integer val = result.get(key);
-                                result.replace(key, val + count);
+                                result.get(row).addCount(row.getCount());
                             }
                         });
                     }
@@ -72,7 +70,10 @@ public class TimeSeriesQueryService {
             }
         }
 
-        return new TimeSeries(keyWord, byBase, pos.orElse(0), result).toJson();
+        List<TimeSeriesRow> r = new ArrayList<>(result.values());
+        r.sort(Comparator.comparing(TimeSeriesRow::getYear).thenComparing(TimeSeriesRow::getMonth));
+
+        return new TimeSeries(keyWord, byBase, pos.orElse(0), r).toJson();
     }
 
 }

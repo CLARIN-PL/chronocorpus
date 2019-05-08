@@ -1,6 +1,8 @@
 package pl.clarin.chronocorpus.document.entity;
 
 import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class Document implements Serializable {
 
-    private String id;
+    private int id;
 
     private Metadata metadata;
 
@@ -25,7 +27,7 @@ public class Document implements Serializable {
     public Document() {
     }
 
-    public Document(String id, Metadata metadata) {
+    public Document(int id, Metadata metadata) {
         this.id = id;
         this.metadata = metadata;
     }
@@ -43,16 +45,16 @@ public class Document implements Serializable {
     private void map(Token w, String key, Map<String, Statistic> bases) {
         if (!bases.containsKey(key)) {
             Statistic s = new Statistic();
-            s.addValue(w.getPos(),1);
+            s.addValue(w.getPos(), 1);
             bases.put(key, s);
         } else {
             Statistic old = bases.get(key);
-            old.addValue(w.getPos(),1);
+            old.addValue(w.getPos(), 1);
             bases.replace(key, old);
         }
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -84,7 +86,6 @@ public class Document implements Serializable {
 
     public boolean isOrthIn(String word) {
         return orths.containsKey(word);
-
     }
 
     public Map<String, Statistic> documentBaseFrequency() {

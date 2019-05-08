@@ -36,16 +36,17 @@ public class DocumentFileLoader {
     private static Map<String, Property> propertyCache = new HashMap<>();
     private static Map<String, ProperName> properNameCache = new HashMap<>();
 
-    public static Token createWord(final String orth, final String base, final String ctag, final byte pos, final boolean spaceAfter) {
-        return wordCache.computeIfAbsent(wordParametersAsString(orth, base, ctag, pos, spaceAfter), newParams -> new Token(orth, base, ctag, pos, spaceAfter));
+    private static Token createWord(final String orth, final String base, final String ctag, final byte pos, final boolean spaceAfter) {
+        return wordCache.computeIfAbsent(wordParametersAsString(orth, base, ctag, pos, spaceAfter), newParams ->
+                new Token(orth, base, ctag, pos, spaceAfter));
     }
 
-    public static Property createProperty(final String name, final String value) {
+    private static Property createProperty(final String name, final String value) {
         return propertyCache.computeIfAbsent(propertyParameterAsString(name, value), newParams ->
                 new Property(name, value));
     }
 
-    public static ProperName createProperName(final String type, final String value) {
+    private static ProperName createProperName(final String type, final String value) {
         return properNameCache.computeIfAbsent(propertyParameterAsString(type, value), newParams ->
                 new ProperName(type, value));
     }
@@ -143,6 +144,7 @@ public class DocumentFileLoader {
         LOGGER.info("Total files in zip: " + zipFile.size());
         AtomicInteger totalItems = new AtomicInteger();
         AtomicInteger partItems = new AtomicInteger();
+        AtomicInteger documentId = new AtomicInteger(1);
         while (entries.hasMoreElements()) {
             try {
                 ZipEntry entry = entries.nextElement();
@@ -155,7 +157,7 @@ public class DocumentFileLoader {
                 is.close();
 
                 Metadata meta = metadata.get(id);
-                Document doc = new Document(id, meta);
+                Document doc = new Document(documentId.getAndIncrement(), meta);
 
                 for(Annotation a : ccl.getAnnotations()){
                     if(a.getType().startsWith("nam")){

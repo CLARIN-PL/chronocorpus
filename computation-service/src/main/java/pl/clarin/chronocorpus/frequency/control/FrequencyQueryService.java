@@ -9,7 +9,6 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,22 +70,22 @@ public class FrequencyQueryService {
     }
 
     private void calculateFrequency(Map<FrequencyItem, Integer> result, String key, Statistic statistic) {
-        if (statistic.getVerbCount() > 0) {
-            FrequencyItem item = new FrequencyItem(key, (byte) 1, statistic.getVerbCount());
-            mapItem(result, statistic.getVerbCount(), item);
+        if (statistic.getVerbs() > 0) {
+            FrequencyItem item = new FrequencyItem(key, (byte) 1, statistic.getVerbs());
+            mapItem(result, statistic.getVerbs(), item);
         }
 
-        if (statistic.getNounCount() > 0) {
-            FrequencyItem item = new FrequencyItem(key, (byte) 2, statistic.getNounCount());
-            mapItem(result, statistic.getNounCount(), item);
+        if (statistic.getNouns() > 0) {
+            FrequencyItem item = new FrequencyItem(key, (byte) 2, statistic.getNouns());
+            mapItem(result, statistic.getNouns(), item);
         }
-        if (statistic.getAdvCount() > 0) {
-            FrequencyItem item = new FrequencyItem(key, (byte) 3, statistic.getAdvCount());
-            mapItem(result, statistic.getAdvCount(), item);
+        if (statistic.getAdverbs() > 0) {
+            FrequencyItem item = new FrequencyItem(key, (byte) 3, statistic.getAdverbs());
+            mapItem(result, statistic.getAdverbs(), item);
         }
-        if (statistic.getAdjCount() > 0) {
-            FrequencyItem item = new FrequencyItem(key, (byte) 4, statistic.getAdjCount());
-            mapItem(result, statistic.getAdjCount(), item);
+        if (statistic.getAdjectives() > 0) {
+            FrequencyItem item = new FrequencyItem(key, (byte) 4, statistic.getAdjectives());
+            mapItem(result, statistic.getAdjectives(), item);
         }
     }
 

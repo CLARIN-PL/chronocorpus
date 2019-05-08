@@ -4,6 +4,7 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import java.util.List;
 import java.util.Map;
 
 public class TimeSeries {
@@ -11,9 +12,9 @@ public class TimeSeries {
     private String word;
     private boolean isBaseForm;
     private Integer pos;
-    private Map<String, Integer> series;
+    private List<TimeSeriesRow> series;
 
-    public TimeSeries(String word, boolean isBaseForm, Integer pos, Map<String, Integer> series) {
+    public TimeSeries(String word, boolean isBaseForm, Integer pos, List<TimeSeriesRow> series) {
         this.word = word;
         this.series = series;
         this.pos = pos;
@@ -26,7 +27,8 @@ public class TimeSeries {
         b.add("is_base_form", isBaseForm);
         b.add("part_of_speech", pos);
         JsonArrayBuilder s = Json.createArrayBuilder();
-        series.forEach((k,v) -> s.add(Json.createObjectBuilder().add(k,v)));
+        series.forEach(row -> s.add(Json.createObjectBuilder()
+                .add(row.getKey(), row.getCount())));
         b.add("series", s);
         return  b.build();
     }

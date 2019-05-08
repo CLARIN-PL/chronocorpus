@@ -11,11 +11,11 @@ import java.util.Set;
 
 public class Concordances {
 
-    private String documentId;
+    private int documentId;
     private Set<Property> properties;
     private Set<Concordance> concordances;
 
-    public Concordances(Pair<String, Set<Property>> doc, Set<Concordance> concordances) {
+    public Concordances(Pair<Integer, Set<Property>> doc, Set<Concordance> concordances) {
         this.documentId = doc.getValue0();
         this.properties = doc.getValue1();
         this.concordances = concordances;
