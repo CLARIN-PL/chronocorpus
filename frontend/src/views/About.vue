@@ -1,35 +1,75 @@
 <template>
-  <div id="about">
-    <div class="about_header">
-      <h2>{{$t('about.project.header')}}</h2>
+  <div style="width: 100%; background-color: var(--cold_silver);">
+    <div class="view-title">
+      <h3>{{ $t('about.project.header') }}</h3>
     </div>
-    <span>{{$t('about.project.content')}}</span>
-    <h3>{{$t('about.tools.header')}}</h3>
-    <span>{{$t('about.tools.content')}}</span>
-    <h3>{{$t('about.corpus.header')}}</h3>
-    <span>{{$t('about.corpus.content')}}</span>
-    <h3>{{$t('about.team.header')}}</h3>
-    <span>{{$t('about.team.content')}}</span>
+    <div class="view-content">
+      <div id="about">
+        <div class="about-fit">
+          <div class="about-content">{{$t('about.project.content')}}</div>
+          <div class="about-title">
+            <h2>{{$t('about.tools.header')}}</h2>
+          </div>
+          <div class="about-content">{{$t('about.tools.content')}}</div>
+          <div class="about-title">
+            <h2>{{$t('about.corpus.header')}}</h2>
+          </div>
+          <div class="about-content">{{$t('about.corpus.content')}}</div>
+          <div class="about-title">
+            <h2>{{$t('about.team.header')}}</h2>
+          </div>
+          <div class="about-content">{{$t('about.team.content')}}</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'About'
+  name: 'About',
+  props: ['corpus']
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .about_header {
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    border-bottom-color: slateblue;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+  h2 {
+    /*margin-top: 10px;*/
+    color: #3d5c99;
   }
-  h2, h3 {
-    margin-top: 10px;
-    color: slateblue;
+  #about {
+    height: 100%;
+    overflow: auto;
+    text-align: justify;
+    padding: 20px;
+  }
+  .about-title {
+    margin-top: 2rem;
+    height: 2rem;
+    justify-content: center;
+    /*border-bottom-style: solid;*/
+    /*border-top-style: solid;*/
+    /*border-color: var(--grey_blue);*/
+    background-color: var(--violet_red);
+  }
+  .about-title h2 {
+    height: auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--warm_silver);
+    font-size: 1.5rem;
+  }
+  .about-content {
+    padding-top: 10px ;
+  }
+  @media only screen and (min-width: 768px) {
+    .about-fit {
+      width:700px;
+      margin: auto;
+    }
   }
 </style>
