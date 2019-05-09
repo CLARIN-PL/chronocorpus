@@ -19,12 +19,13 @@ services:
          - -Xmx24g  
          - -jar 
          - chronocorpus.jar
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+    restart: always
+    #deploy:
+    #  restart_policy:
+    #    condition: on-failure
+    #    delay: 5s
+    #    max_attempts: 3
+    #    window: 120s
     
          
   rest:
@@ -41,10 +42,17 @@ services:
          - java
          - -jar 
          - RESTchronocorpus.jar       
-    deploy:  
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+    restart: always
+    #deploy:  
+    #  restart_policy:
+    #    condition: on-failure
+    #    delay: 5s
+    #    max_attempts: 3
+    #    window: 120s
     
+  frontend: 
+    container_name: chrono-frontend
+    build: ./frontend
+    ports:
+        - "80:80"
+        
