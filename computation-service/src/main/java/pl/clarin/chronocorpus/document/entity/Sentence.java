@@ -1,5 +1,8 @@
 package pl.clarin.chronocorpus.document.entity;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectLists;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class Sentence implements Serializable {
 
-    private List<Token> tokens = new ArrayList<Token>();
+    private List<Token> tokens = new ObjectArrayList<>();
 
     public Sentence() {
     }

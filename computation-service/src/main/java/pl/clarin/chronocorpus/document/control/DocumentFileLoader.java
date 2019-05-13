@@ -4,6 +4,7 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import pl.clarin.chronocorpus.Configuration;
 import pl.clarin.chronocorpus.document.entity.*;
 
@@ -37,7 +38,7 @@ public class DocumentFileLoader {
     private static Map<String, ProperName> properNameCache = new HashMap<>();
 
     private static Token createWord(final String orth, final String base, final String ctag, final byte pos, final boolean spaceAfter) {
-        return wordCache.computeIfAbsent(wordParametersAsString(orth, base, ctag, pos, spaceAfter), newParams ->
+        return wordCache.computeIfAbsent(wordParametersAsString(orth, base, pos, spaceAfter), newParams ->
                 new Token(orth, base, ctag, pos, spaceAfter));
     }
 
@@ -51,8 +52,8 @@ public class DocumentFileLoader {
                 new ProperName(type, value));
     }
 
-    private static String wordParametersAsString(String orth, String base, String ctag, int pos, boolean spaceAfter) {
-        return orth + "_" + base + "_" + ctag + "_" + pos + "_" + spaceAfter;
+    private static String wordParametersAsString(String orth, String base,  int pos, boolean spaceAfter) {
+        return orth + "_" + base +  "_" + pos + "_" + spaceAfter;
     }
 
     private static String propertyParameterAsString(String name, String value){
@@ -133,7 +134,7 @@ public class DocumentFileLoader {
 
         long start = System.currentTimeMillis();
 
-        Set<Document> documents = new HashSet<>();
+        Set<Document> documents = new ObjectOpenHashSet<>();
 
         Map<String, Metadata> metadata = loadMetadata(Configuration.METADATA_ZIP_FILE);
 

@@ -1,12 +1,11 @@
 package pl.clarin.chronocorpus.document.entity;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,12 +16,13 @@ public class Document implements Serializable {
 
     private Metadata metadata;
 
-    private List<Sentence> sentences = new ArrayList<>();
+    private List<Sentence> sentences = new ObjectArrayList<>();
 
-    private Map<String, Statistic> bases = new HashMap<>();
-    private Map<String, Statistic> orths = new HashMap<>();
+    private Map<String, Statistic> bases = new Object2ObjectOpenHashMap<>();
+    private Map<String, Statistic> orths = new Object2ObjectOpenHashMap<>();
 
-    private List<ProperName> properNames = new ArrayList<>();
+
+    private List<ProperName> properNames = new ObjectArrayList<>();
 
     public Document() {
     }

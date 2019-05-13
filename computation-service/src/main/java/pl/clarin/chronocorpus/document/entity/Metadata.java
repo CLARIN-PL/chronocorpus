@@ -1,5 +1,7 @@
 package pl.clarin.chronocorpus.document.entity;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
@@ -17,7 +19,7 @@ public class Metadata implements Serializable {
 
     private boolean publicAccess;
 
-    private final List<Property> properties = new ArrayList<Property>();
+    private final List<Property> properties = new ObjectArrayList<>();;
 
     public Metadata(){
     }

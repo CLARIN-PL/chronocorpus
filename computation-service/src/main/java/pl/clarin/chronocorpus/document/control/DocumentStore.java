@@ -3,11 +3,13 @@ package pl.clarin.chronocorpus.document.control;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import pl.clarin.chronocorpus.Configuration;
 import pl.clarin.chronocorpus.document.entity.Document;
 
 import java.io.*;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,16 +18,17 @@ public class DocumentStore {
 
     private static final Logger LOGGER = Logger.getLogger(DocumentStore.class.getName());
     private static volatile DocumentStore instance;
-    private Set<Document> documents = new HashSet<>();
     private final Kryo kryo = new Kryo();
     private final File f = new File(Configuration.DATA_STORE_FILE);
+
+    private Set<Document> documents = new ObjectOpenHashSet<>();
 
     private DocumentStore() {
         super();
 
-        kryo.register(java.util.HashSet.class);
-        kryo.register(java.util.ArrayList.class);
-        kryo.register(java.util.HashMap.class);
+        kryo.register(ObjectArrayList.class);
+        kryo.register(Object2ObjectOpenHashMap.class);
+        kryo.register(ObjectOpenHashSet.class);
         kryo.register(pl.clarin.chronocorpus.document.entity.Document.class);
         kryo.register(pl.clarin.chronocorpus.document.entity.Sentence.class);
         kryo.register(pl.clarin.chronocorpus.document.entity.Statistic.class);
@@ -77,7 +80,7 @@ public class DocumentStore {
             try (Input in = new Input(new FileInputStream(f))) {
                 Object aNewSet = kryo.readClassAndObject(in);
 
-                if (aNewSet instanceof HashSet) {
+                if (aNewSet instanceof ObjectOpenHashSet) {
                     setDocuments((Set<Document>) aNewSet);
                 }
             } catch (IOException e) {

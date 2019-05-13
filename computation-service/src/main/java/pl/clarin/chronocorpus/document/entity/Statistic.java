@@ -1,8 +1,5 @@
 package pl.clarin.chronocorpus.document.entity;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import java.io.Serializable;
 
 public class Statistic implements Serializable {
@@ -14,24 +11,6 @@ public class Statistic implements Serializable {
 
     public int getVerbs() {
         return verbs;
-    }
-
-    public JsonObject toJson() {
-        JsonObjectBuilder b = Json.createObjectBuilder();
-
-        if (verbs > 0) {
-            b.add("v", verbs);
-        }
-        if (nouns > 0) {
-            b.add("n", nouns);
-        }
-        if (adjectives > 0) {
-            b.add("adj", adjectives);
-        }
-        if (adverbs > 0) {
-            b.add("adv", adverbs);
-        }
-        return b.build();
     }
 
     public int getValue(int pos) {
