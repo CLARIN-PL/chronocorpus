@@ -40,7 +40,7 @@ public class Main extends Worker implements ProgressUpdater{
         task = lookup.getTask(input).get();
         } catch(RuntimeException e)
         {
-            LOGGER.log(Level.FINE,"Error in code", e);
+            LOGGER.log(Level.SEVERE,"Error in code", e);
             throw  new Exception("Internal error");
         }
         if (task==null) throw new UnknownTaskException();
