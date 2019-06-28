@@ -13,6 +13,7 @@ import javax.json.JsonObjectBuilder;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import pl.clarin.chronocorpus.Progress;
 
 public class WordProfileTask extends Task {
 
@@ -56,7 +57,7 @@ public class WordProfileTask extends Task {
     }
 
     @Override
-    public JsonObject doTask() {
+    public JsonObject doTask(Progress pr) {
 
         AtomicReference<JsonArray> frequency = new AtomicReference<>();
 

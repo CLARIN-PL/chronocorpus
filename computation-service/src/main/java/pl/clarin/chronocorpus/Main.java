@@ -15,10 +15,10 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
+/** 
  * @author Tomasz Walkowiak
  */
-public class Main extends Worker {
+public class Main extends Worker implements ProgressUpdater{
     private static final Logger LOGGER = Logger.getLogger(Worker.class.getName());
     private TaskLookUp lookup; 
 
@@ -26,19 +26,27 @@ public class Main extends Worker {
     public void init() throws Exception {
         lookup = new TaskLookUp();
     }
-
+    
+    @Override
+    public void update(double progress)  {
+        this.updateProgress(progress);
+    }
+    
+    
     @Override
     public JsonObject process(JsonObject input) throws Exception {
-        Optional<Task> task;
+        Task task;
         try {
-        task = lookup.getTask(input);
+        task = lookup.getTask(input).get();
         } catch(RuntimeException e)
         {
             LOGGER.log(Level.FINE,"Error in code", e);
             throw  new Exception("Internal error");
         }
-        return task.map(Task::doTask).
-                orElseThrow(UnknownTaskException::new);
+        if (task==null) throw new UnknownTaskException();
+        Progress progress=new Progress(this);
+        return task.doTask(progress);
+                
     }
 
     public static void main(String[] args) {

@@ -9,6 +9,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.util.Optional;
+import pl.clarin.chronocorpus.Progress;
 
 public class DocumentTask extends Task {
 
@@ -24,7 +25,7 @@ public class DocumentTask extends Task {
     }
 
     @Override
-    public JsonObject doTask() {
+    public JsonObject doTask(Progress pr) {
 
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id);

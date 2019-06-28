@@ -8,6 +8,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.util.*;
+import pl.clarin.chronocorpus.Progress;
 
 public class ConcordanceTask extends Task {
 
@@ -30,7 +31,7 @@ public class ConcordanceTask extends Task {
     }
 
     @Override
-    public JsonObject doTask() {
+    public JsonObject doTask(Progress pr) {
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id);
 

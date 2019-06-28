@@ -5,6 +5,7 @@ import pl.clarin.chronocorpus.task.entity.Task;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import pl.clarin.chronocorpus.Progress;
 
 public class ReloadModelTask extends Task {
 
@@ -14,7 +15,7 @@ public class ReloadModelTask extends Task {
 
     //TODO Must stop running other tasks
     @Override
-    public JsonObject doTask() {
+    public JsonObject doTask(Progress pr) {
 
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id);

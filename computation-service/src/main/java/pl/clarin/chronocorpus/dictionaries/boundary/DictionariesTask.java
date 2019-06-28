@@ -9,6 +9,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.util.Optional;
+import pl.clarin.chronocorpus.Progress;
 
 public class DictionariesTask extends Task {
 
@@ -31,7 +32,7 @@ public class DictionariesTask extends Task {
     }
 
     @Override
-    public JsonObject doTask() {
+    public JsonObject doTask(Progress pr) {
 
         JsonArrayBuilder partsOfSpeech = Json.createArrayBuilder();
         DictionaryQueryService.getInstance()

@@ -7,6 +7,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import pl.clarin.chronocorpus.Progress;
 
 public class GeographicalProperNamesTask extends Task {
 
@@ -15,7 +16,7 @@ public class GeographicalProperNamesTask extends Task {
     }
 
     @Override
-    public JsonObject doTask() {
+    public JsonObject doTask(Progress pr) {
 
         JsonArray geo = GeographicalQueryService.getInstance()
                 .findGeoNames(metadata);
