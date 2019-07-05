@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chunkList SYSTEM "ccl.dtd">
+<chunkList>
+    <chunk type="p" id="ch2">
+        <sentence id="s2">
+            <tok>
+                <orth>Może</orth>
+                <lex disamb="1">
+                    <base>może</base>
+                    <ctag>qub</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>też</orth>
+                <lex disamb="1">
+                    <base>też</base>
+                    <ctag>qub</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>bedzie</orth>
+                <lex disamb="1">
+                    <base>Beda</base>
+                    <ctag>subst:sg:loc:f</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>w</orth>
+                <lex disamb="1">
+                    <base>w</base>
+                    <ctag>prep:loc:nwok</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>Pcimiu</orth>
+                <lex disamb="1">
+                    <base>Pcim</base>
+                    <ctag>subst:sg:loc:m3</ctag>
+                </lex>
+                <ann chan="nam_loc">1</ann>
+            </tok>
+            <tok>
+                <orth>lub</orth>
+                <lex disamb="1">
+                    <base>lub</base>
+                    <ctag>conj</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>pojedzie</orth>
+                <lex disamb="1">
+                    <base>pojechać</base>
+                    <ctag>fin:sg:ter:perf</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>do</orth>
+                <lex disamb="1">
+                    <base>do</base>
+                    <ctag>prep:gen</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>Zielonej</orth>
+                <lex disamb="1">
+                    <base>zielony</base>
+                    <ctag>adj:sg:gen:f:pos</ctag>
+                </lex>
+                <ann chan="nam_loc">2</ann>
+            </tok>
+            <tok>
+                <orth>Góry</orth>
+                <lex disamb="1">
+                    <base>góra</base>
+                    <ctag>subst:sg:gen:f</ctag>
+                </lex>
+                <ann chan="nam_loc">2</ann>
+            </tok>
+            <tok>
+                <orth>czy</orth>
+                <lex disamb="1">
+                    <base>czy</base>
+                    <ctag>qub</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>na</orth>
+                <lex disamb="1">
+                    <base>na</base>
+                    <ctag>prep:acc</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>Węgry</orth>
+                <lex disamb="1">
+                    <base>Węgry</base>
+                    <ctag>subst:pl:acc:n</ctag>
+                </lex>
+                <ann chan="nam_loc">3</ann>
+            </tok>
+            <ns/>
+            <tok>
+                <orth>.</orth>
+                <lex disamb="1">
+                    <base>.</base>
+                    <ctag>interp</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+        </sentence>
+    </chunk>
+</chunkList>
