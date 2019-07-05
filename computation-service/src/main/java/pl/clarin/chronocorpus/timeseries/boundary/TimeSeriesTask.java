@@ -10,6 +10,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import pl.clarin.chronocorpus.Progress;
 
 public class TimeSeriesTask extends Task {
 
@@ -46,7 +47,7 @@ public class TimeSeriesTask extends Task {
     }
 
     @Override
-    public JsonObject doTask() {
+    public JsonObject doTask(Progress pr) {
         AtomicReference<JsonObject> jsonObject = new AtomicReference<>();
 
         findOrthParameter().ifPresent(w ->

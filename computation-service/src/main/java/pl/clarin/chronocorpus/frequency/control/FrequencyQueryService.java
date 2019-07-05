@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import pl.clarin.chronocorpus.Progress;
 
 public class FrequencyQueryService {
 
@@ -32,15 +33,14 @@ public class FrequencyQueryService {
         return instance;
     }
 
-    public JsonArray calculateFrequency(Set<Property> metadata, Set<String> stopList, Boolean byBase) {
-
+    public JsonArray calculateFrequency(Set<Property> metadata, Set<String> stopList, Boolean byBase,Progress pr) {
+        
         Map<FrequencyItem, Integer> result = new ConcurrentHashMap<>();
-
         if (byBase) {
             DocumentStore.getInstance()
                     .getDocuments()
                     .parallelStream()
-                    .filter(d -> d.getMetadata().matches(metadata))
+                    .filter(d -> { pr.update();return d.getMetadata().matches(metadata);})
                     .flatMap(d -> d.documentBaseFrequency().entrySet().stream())
                     .filter(e -> !stopList.contains(e.getKey()))
                     .forEach(e -> calculateFrequency(result, e.getKey(), e.getValue()));
@@ -49,7 +49,7 @@ public class FrequencyQueryService {
             DocumentStore.getInstance()
                     .getDocuments()
                     .parallelStream()
-                    .filter(d -> d.getMetadata().matches(metadata))
+                    .filter(d -> { pr.update(); return d.getMetadata().matches(metadata); })
                     .flatMap(d -> d.documentOrthFrequency().entrySet().stream())
                     .forEach(e -> calculateFrequency(result, e.getKey(), e.getValue()));
         }

@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import pl.clarin.chronocorpus.Progress;
 
 public class FrequencyTask extends Task {
 
@@ -44,11 +45,11 @@ public class FrequencyTask extends Task {
     }
 
     @Override
-    public JsonObject doTask() {
+    public JsonObject doTask(Progress pr) {
 
 
         JsonArray frequency = FrequencyQueryService.getInstance()
-                .calculateFrequency(metadata, findStopListParameter(), findCountByBaseParameter());
+                .calculateFrequency(metadata, findStopListParameter(), findCountByBaseParameter(),pr);
 
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id)

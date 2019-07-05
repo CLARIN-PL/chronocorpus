@@ -29,7 +29,12 @@ public abstract class Worker extends Thread {
 
     protected Connection connection;
     private Channel channel;
-
+    private long lastTime;
+    private BasicProperties replayProps;
+    private String replayTo;
+    private String id;
+    private double lastProgress=0;
+    
     final public void service_init(Ini init) throws Exception {
         Configuration.init(init);
         //tool inits
@@ -43,6 +48,26 @@ public abstract class Worker extends Thread {
 
     final Object monitor = new Object();
 
+    protected void updateProgress(double progress)  {
+        if (System.currentTimeMillis()>lastTime+250  && progress>lastProgress)
+        {   lastProgress=progress;
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("id", id);
+            response.add("progress", progress);
+            response.add("function", "progress");
+            if (replayProps.getReplyTo() != null)
+                        try {
+                            channel.basicPublish("", replayTo, replayProps, response.build().toString().getBytes(StandardCharsets.UTF_8));
+                        } catch (IOException ex) {
+                            LOGGER.log(Level.WARNING, null, ex);
+                    }
+            lastTime=System.currentTimeMillis();
+        }    
+        
+    }
+    
+    
+    
     protected void initRabbit() throws IOException, TimeoutException {
         //Rabbit
         ConnectionFactory factory = new ConnectionFactory();
@@ -57,6 +82,8 @@ public abstract class Worker extends Thread {
         channel.basicQos(1);
 
         Consumer consumer = new DefaultConsumer(channel) {
+           
+            
             @Override
             public void handleDelivery(
                     String consumerTag,
@@ -73,8 +100,11 @@ public abstract class Worker extends Thread {
                     JsonReader reader = Json.createReader(new StringReader(message));
                     JsonObject input = reader.readObject();
                     //response.add("input", input);
+                    id=input.getString("id");
                     response.add("id", input.get("id"));
                     long start = System.currentTimeMillis();
+                    replayTo=properties.getReplyTo();
+                    replayProps=replyProps;
                     JsonObject res = process(input);
 
                     long stop = System.currentTimeMillis();
@@ -83,7 +113,7 @@ public abstract class Worker extends Thread {
                     response.add("error", "");
                     response.add("result", res);
                 } catch (Exception e) {
-                    LOGGER.log(Level.WARNING, "Problems in task execution for :" + message, e);
+                    LOGGER.log(Level.WARNING, "Problems in task execution for :" + message,e);
                     response.add("error", e.getMessage());
 
                 } finally {

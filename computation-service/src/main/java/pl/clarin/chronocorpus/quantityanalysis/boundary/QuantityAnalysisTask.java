@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import pl.clarin.chronocorpus.Progress;
 
 public class QuantityAnalysisTask extends Task {
 
@@ -57,7 +58,7 @@ public class QuantityAnalysisTask extends Task {
     }
 
     @Override
-    public JsonObject doTask() {
+    public JsonObject doTask(Progress pr) {
         JsonArrayBuilder anal = Json.createArrayBuilder();
 
         Optional<CalculationUnit> unit  =findCalculationUnit();
