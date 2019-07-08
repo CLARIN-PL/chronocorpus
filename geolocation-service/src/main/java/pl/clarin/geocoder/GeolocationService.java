@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -35,9 +36,16 @@ public class GeolocationService {
                                     a.getType().startsWith("nam_num")) {
                         String q = a.getTokenTokens().stream().map(t -> t.getDisambTag().getBase()).collect(Collectors.joining(" "));
                         List<Location> loc = LocationFinder.getInstance().query(q, 5, "pl");
+                        AtomicInteger count = new AtomicInteger(1);
                         loc.forEach(l -> {
-                            a.getHeadToken().getProps().put(a.getType()+":coord", l.toPropertyValue());
+                            a.getTokenTokens().stream().findFirst()
+                                    .ifPresent( t -> {
+                                        a.getMetadata().put(a.getType()+":coord:"+count.get(), l.toPropertyValue());
+                                        t.getProps().put(a.getType()+":coord:"+count.get(), l.toPropertyValue());
+                                    });
+                            count.getAndIncrement();
                         });
+                        count.set(1);
                     }
                 }
             }

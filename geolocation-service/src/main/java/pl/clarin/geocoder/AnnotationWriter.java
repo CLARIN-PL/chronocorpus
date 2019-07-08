@@ -1,9 +1,10 @@
 package pl.clarin.geocoder;
 
+import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.CclStreamWriter;
+import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Document;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,10 +32,11 @@ public class AnnotationWriter {
     public void writeDocument(Document doc){
         Path out = Paths.get("result.ccl");
         try (OutputStream os = Files.newOutputStream(out)) {
-            g419.corpus.io.writer.CclStreamWriter writer = new CclStreamWriter(os);
+            WriterFactory wf = WriterFactory.get();
+            AbstractDocumentWriter writer = wf.getStreamWriter(os, "ccl");
             writer.writeDocument(doc);
-        } catch (IOException ex){
-            LOGGER.log(Level.SEVERE, "Error writing file", ex);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error writing file", e);
         }
     }
 }
