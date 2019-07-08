@@ -42,7 +42,7 @@ public class Location implements Serializable {
     }
 
     public String toPropertyValue() {
-        return longitude + ";" + latitude + ";" + name;
+        return longitude + ";" + latitude + ";"+type+";" + name;
     }
 
     @Override

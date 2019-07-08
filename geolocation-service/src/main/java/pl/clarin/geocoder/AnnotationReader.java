@@ -40,27 +40,4 @@ public class AnnotationReader {
         return null;
     }
 
-    public List<pl.clarin.geocoder.Annotation> loadSingleDocumentAnnotations(g419.corpus.structure.Document ccl) throws IOException {
-        List<pl.clarin.geocoder.Annotation> annotations = new ArrayList<>();
-
-        LOGGER.info("Reading file ... ");
-        if(ccl != null) {
-            for (Annotation a : ccl.getAnnotations()) {
-                if (
-                        a.getType().startsWith("nam_loc") ||
-                                a.getType().startsWith("nam_fac") ||
-                                a.getType().startsWith("nam_num")
-                ) {
-                    pl.clarin.geocoder.Annotation ann = new pl.clarin.geocoder.Annotation(a.getSentence().getId(), a.getChannelIdx());
-                    a.getTokenTokens().forEach(t -> {
-                        Token tt = new Token(t.getOrth(), t.getDisambTag().getBase(), a.getType());
-                        ann.addToken(tt);
-                    });
-                    annotations.add(ann);
-                }
-            }
-        }
-        return annotations;
-    }
-
 }

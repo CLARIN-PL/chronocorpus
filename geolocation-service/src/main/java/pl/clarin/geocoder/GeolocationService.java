@@ -1,10 +1,13 @@
 package pl.clarin.geocoder;
 
+import g419.corpus.structure.Annotation;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,23 +34,36 @@ public class GeolocationService {
         try (InputStream is = Files.newInputStream(path)) {
             g419.corpus.structure.Document ccl = AnnotationReader.getInstance().loadDocument(is);
             if (ccl != null) {
-                for (g419.corpus.structure.Annotation a : ccl.getAnnotations()) {
-                    if (a.getType().startsWith("nam_loc") || a.getType().startsWith("nam_fac") ||
-                                    a.getType().startsWith("nam_num")) {
-                        String q = a.getTokenTokens().stream().map(t -> t.getDisambTag().getBase()).collect(Collectors.joining(" "));
-                        List<Location> loc = LocationFinder.getInstance().query(q, 5, "pl");
-                        AtomicInteger count = new AtomicInteger(1);
-                        loc.forEach(l -> {
-                            a.getTokenTokens().stream().findFirst()
-                                    .ifPresent( t -> {
-                                        a.getMetadata().put(a.getType()+":coord:"+count.get(), l.toPropertyValue());
-                                        t.getProps().put(a.getType()+":coord:"+count.get(), l.toPropertyValue());
-                                    });
-                            count.getAndIncrement();
+                ccl.getParagraphs().forEach(p -> {
+                    p.getSentences().forEach(s -> {
+
+                        Map<Integer, List<g419.corpus.structure.Annotation>> ann = s.getChunks()
+                                .stream()
+                                .filter(a -> a.getType().startsWith("nam_loc") || a.getType().startsWith("nam_fac") ||
+                                        a.getType().startsWith("nam_num"))
+                                .collect(Collectors.groupingBy(g419.corpus.structure.Annotation::getChannelIdx));
+
+                        ann.forEach((k, v)->{
+                            String q = v.stream().map(Annotation::getBaseText)
+                                    .collect(Collectors.joining(" "));
+
+                            try {
+                                List<Location> loc = LocationFinder.getInstance().query(q, 5, "pl");
+
+                                AtomicInteger count = new AtomicInteger(1);
+                                loc.forEach(l -> {
+                                    s.getAnnotationInChannel("nam_loc", k).getMetadata()
+                                            .put("nam_loc:coord:" + count.get(), l.toPropertyValue());
+                                    count.getAndIncrement();
+                                });
+                                count.set(1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
                         });
-                        count.set(1);
-                    }
-                }
+                    });
+                });
             }
             AnnotationWriter.getInstance().writeDocument(ccl);
             LocationStore.getInstance().save();
