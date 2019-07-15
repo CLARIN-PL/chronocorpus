@@ -1,12 +1,8 @@
 package pl.clarin.geocoder;
 
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.Annotation;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

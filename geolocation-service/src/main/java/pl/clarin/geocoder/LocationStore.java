@@ -69,11 +69,11 @@ public class LocationStore {
                     store = (Map<String, List<Location>>) aNewMap;
                 }
             } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, "Restoring document store failure", e);
+                LOGGER.log(Level.SEVERE, "Restoring location store failure", e);
             }
 
             long time = System.currentTimeMillis() - start;
-            LOGGER.info("Restoring documents took: " + time + "ms");
+            LOGGER.info("Restoring store took: " + time + "ms");
         }
     }
 
