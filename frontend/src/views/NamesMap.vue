@@ -25,7 +25,6 @@
             </b-button>
           </b-form-group>
         </transition>
-
         <div v-if="show.filters">
           <TaskFilter :output="setFilters"></TaskFilter>
         </div>
@@ -44,11 +43,11 @@
         </b-button>
         <l-map v-if="task.finished" style="min-width: 100%; border-radius: 10px;" :zoom="zoom" :center="center" >
           <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-          <!--<v-marker-cluster>-->
+          <v-marker-cluster>
             <l-marker v-for="(item) in map_data_table" v-if="item !== null" :key="item.id" :lat-lng="item.lanLon" :icon="item.icon">
               <names-map-popup :input="item"></names-map-popup>
             </l-marker>
-          <!--</v-marker-cluster>-->
+          </v-marker-cluster>
         </l-map>
       </div>
     </div>
@@ -282,9 +281,11 @@ export default {
             }
           }
         }
-        console.log(this.coordinates)
+        // console.log(this.coordinates)
         this.letters = Array.from(letters)
-        console.log(this.letters)
+        this.letters.sort()
+        this.letters.reverse()
+        // console.log(this.letters)
         this.task.finished = true
         this.show.loading = false
       } catch (e) {

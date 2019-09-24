@@ -46,11 +46,20 @@
     <div class="text-center box-container-result" v-if="task.finished">
       <div class="content-container" >
       <b-card class="bv-example-row" >
-        <!--<span v-if="!show.loading">{{$t('concordance.found[0]')}} {{concordances.length}} {{$t('concordance.found[1]')}}</span>-->
+
          <div class="content-pagination">
+           <span v-if="!show.loading" class="rows-count">{{countMessage}}</span>
+           <vue-json-to-csv :json-data="json_data" :csv-title="csv_title">
+             <b-button type="button"  class="btn filter-button btn-secondary" style="float: right">
+               <!--{{$t('download')}} -->
+               ⇩ CSV
+             </b-button>
+           </vue-json-to-csv>
           <b-pagination :total-rows="concordances.length" @change="changePage" align="center" :per-page="limit"
                         :current-page="page" v-model="page"
-                        v-if="concordances.length > 0"/>
+                        v-if="concordances.length > 0">
+          </b-pagination>
+
          </div>
         <b-spinner v-if="show.loading"  style="width: 3rem; height: 3rem;"/>
         <div class="content-list">
@@ -90,6 +99,7 @@ import FadeTransition from '@/components/FadeTransition.vue'
 import ConcordanceList from '@/components/ConcordanceList'
 import TaskFilter from '@/components/TaskFilter'
 import FilterDate from '@/components/FilterDate'
+import VueJsonToCsv from 'vue-json-to-csv'
 
 export default {
   name: 'ConcordanceRequest',
@@ -105,6 +115,8 @@ export default {
   },
   data () {
     return {
+      json_data: [],
+      csv_title: 'concordance',
       form: {
         word: '',
         corpus: {
@@ -133,7 +145,7 @@ export default {
       metadata_filters: []
     }
   },
-  components: {FilterDate, TaskFilter, ConcordanceList, axios, VueAxios, FadeTransition},
+  components: {FilterDate, TaskFilter, ConcordanceList, axios, VueAxios, FadeTransition, VueJsonToCsv},
   watch: {
     page: function (value) {
       this.page = value
@@ -171,6 +183,17 @@ export default {
               {value: 'orth', text: this.$t('concordance.orth')}
             ]
       }
+    },
+    countMessage () {
+      let result = ''
+      if (this.concordances.length === 0 || this.concordances.length > 5) {
+        result = this.$t('concordance.found3')
+      } else if (this.concordances.length === 1) {
+        result = this.$t('concordance.found1')
+      } else if (this.concordances.length > 1 && this.concordances.length < 5) {
+        result = this.$t('concordance.found2')
+      }
+      return this.concordances.length + ' ' + result
     }
   },
   methods: {
@@ -205,6 +228,7 @@ export default {
       this.task.finished = false
       this.show.loading = true
       this.concordances = []
+      this.json_data = []
       try {
         const response = await axios.post(process.env.ROOT_API + 'startTask', {
           corpus: 'chronopress',
@@ -256,7 +280,11 @@ export default {
         this.changePage(1)
         this.skip = this.limit
         this.concordances = response.data.result.rows
+        this.csv_title = this.form.word + '_' + this.method.selected
         this.show.loading = false
+        for (var x in this.concordances) {
+          this.json_data.push({'left': this.concordances[x].concordances[0].left, 'word': this.concordances[x].concordances[0].word, 'right': this.concordances[x].concordances[0].right})
+        }
       } catch (e) {
         console.log(Object.keys(e), e.message)
         this.show.loading = false
@@ -271,6 +299,7 @@ export default {
     },
     changeLimit: function (value) {
       try {
+        this.changePage(1)
         this.limit = value
       } catch (e) {
         console.log(Object.keys(e), e.message)
@@ -325,6 +354,17 @@ export default {
   }
   .box-container-result {
     overflow: inherit;
+  }
+  ul.pagination {
+    /*width: 100px;*/
+  }
+  .rows-count {
+    background-color: var(--violet_red);
+    border-radius: 5px;
+    float: left;
+    padding: 8px 8px;
+    color: white;
+    height: 36px;
   }
   @media only screen and (min-width: 768px) {
     .content-list {

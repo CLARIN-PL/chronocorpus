@@ -22,7 +22,6 @@ export default {
   mounted () {
     this.options.onClick = this.handle
     this.renderChart(this.chartData, this.options)
-    console.log(this.$refs.canvas)
     this.$data._chart.update()
   },
   watch: {

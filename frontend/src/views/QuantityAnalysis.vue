@@ -63,8 +63,8 @@
           </div>
         </div>
         <div class="text-center box-container-result" v-if="task.finished">
-          <div class="content-container">
-            <div>
+          <div class="content-container" ref="chartContainer">
+            <div v-on:resize="redrawChart()">
               <b-button v-on:click="export2image" type="button" size="sm" class="btn submit-button btn-secondary" style="margin: 3px; float: right">
                 {{$t('download')}} PNG
               </b-button>
@@ -73,10 +73,15 @@
                   {{$t('download')}} CSV
                 </b-button>
               </vue-json-to-csv>
+              <b-button v-on:click="redrawChart()" type="button" size="sm" class="btn filter-button btn-secondary" style="margin: 3px; float: right">
+                ⟲
+              </b-button>
 
             </div>
               <b-spinner v-if="show.loading" style="width: 3rem; height: 3rem;"/>
-              <bar-chart :chart-data="chart" :options="options" v-if="show.chart"></bar-chart>
+            <fade-transition>
+              <bar-chart :height="chartHeight" :chart-data="chart" :options="options" v-if="show.chart"></bar-chart>
+            </fade-transition>
           </div>
         </div>
       </div>
@@ -90,10 +95,11 @@ import axios from 'axios'
 import TaskFilter from '@/components/TaskFilter'
 import BarChart from '../components/BarChart'
 import VueJsonToCsv from 'vue-json-to-csv'
+import { ResizeObserver } from 'vue-resize'
 
 export default {
   name: 'QuantityAnalysis',
-  components: {BarChart, TaskFilter, axios, FadeTransition, VueJsonToCsv},
+  components: {BarChart, TaskFilter, axios, FadeTransition, VueJsonToCsv, ResizeObserver},
   data () {
     return {
       json_data: [],
@@ -110,13 +116,14 @@ export default {
         chart: false
       },
       quantity_analysis: [],
-      adjective: false,
-      noun: false,
-      verb: false,
-      adverb: false,
+      adjective: true,
+      noun: true,
+      verb: true,
+      adverb: true,
       metadata_filters: [],
       word_was_chosen: true,
-      chart: {}
+      chart: {},
+      chartHeight: 470
     }
   },
   computed: {
@@ -261,9 +268,45 @@ export default {
           }
         },
         responsive: true,
-        maintainAspectRatio: false,
-        height: 200
+        maintainAspectRatio: false
       }
+    }
+  },
+  watch: {
+    adjective: function () {
+      if (this.noun === false && this.verb === false && this.adverb === false) {
+        if (this.adjective === false) {
+          this.adjective = true
+          alert(this.$t('quantity_analysis.alert'))
+        }
+      }
+    },
+    noun: function () {
+      if (this.adjective === false && this.verb === false && this.adverb === false) {
+        if (this.noun === false) {
+          this.noun = true
+          alert(this.$t('quantity_analysis.alert'))
+        }
+      }
+    },
+    verb: function () {
+      if (this.noun === false && this.adjective === false && this.adverb === false) {
+        if (this.verb === false) {
+          this.verb = true
+          alert(this.$t('quantity_analysis.alert'))
+        }
+      }
+    },
+    adverb: function () {
+      if (this.noun === false && this.verb === false && this.adjective === false) {
+        if (this.adverb === false) {
+          this.adverb = true
+          alert(this.$t('quantity_analysis.alert'))
+        }
+      }
+    },
+    options: function () {
+      this.redrawChart()
     }
   },
   methods: {
@@ -385,8 +428,9 @@ export default {
         this.task.finished = true
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
         this.quantity_analysis = response.data.result.rows[0]
-        console.log(response)
+        console.log(this.quantity_analysis)
         this.mapChartData(this.quantity_analysis.chart)
+        this.resizeChart()
         this.show.loading = false
       } catch (e) {
         console.log(Object.keys(e), e.message)
@@ -397,8 +441,14 @@ export default {
       try {
         for (let i = 0; i <= chartData.length; i++) {
           for (var key in chartData[i]) {
-            this.chart.datasets[0].data.push(chartData[i][key])
-            this.chart.labels.push(key)
+            if (this.calculation_type_word.selected === 'average') {
+              this.chart.datasets[0].data.push(chartData[i][key])
+              this.chart.labels.push(key)
+            } else {
+              this.chart.datasets[0].data.push(key)
+              this.chart.labels.push(i)
+            }
+
             this.json_data.push({[this.csv_title]: key, 'quantity': chartData[i][key]})
           }
         }
@@ -406,6 +456,20 @@ export default {
       } catch (e) {
         console.log(Object.keys(e), e.message)
       }
+    },
+    resizeChart: function () {
+      if (window.innerWidth > 768) {
+        this.chartHeight = Math.ceil(this.$refs.chartContainer.clientHeight * 0.8)
+      } else {
+        this.chartHeight = Math.ceil(470)
+      }
+    },
+    redrawChart: function () {
+      this.show.chart = false
+      this.resizeChart()
+      setTimeout(() => {
+        this.show.chart = true
+      }, 0)
     },
     export2image: function (event) {
       event.preventDefault()
@@ -415,7 +479,18 @@ export default {
       link.href = canvas
       var mouseEvent = new MouseEvent('click')
       link.dispatchEvent(mouseEvent)
+    },
+    handleResize (event) {
+      if (this.task.finished) {
+        this.redrawChart()
+      }
     }
+  },
+  created: function () {
+    window.addEventListener('resize', this.handleResize)
+  },
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this.handleResize)
   }
 }
 </script>

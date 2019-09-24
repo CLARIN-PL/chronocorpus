@@ -55,7 +55,7 @@
           </div>
         </div>
         <div class="text-center box-container-result" v-if="task.finished">
-          <div class="content-container">
+          <div class="content-container" ref="chartContainer">
             <div>
               <b-button v-on:click="export2image" type="button" size="sm" class="btn submit-button btn-secondary" style="margin: 3px; float: right">
                 {{$t('download')}} PNG
@@ -65,10 +65,14 @@
                   {{$t('download')}} CSV
                 </b-button>
               </vue-json-to-csv>
-
+              <b-button v-on:click="redrawChart()" type="button" size="sm" class="btn filter-button btn-secondary" style="margin: 3px; float: right">
+                ⟲
+              </b-button>
             </div>
             <b-spinner v-if="show.loading" style="width: 3rem; height: 3rem;"/>
-            <line-chart :chart-data="chart" :options="options" v-if="show.chart" @on-receive="updatePoint"></line-chart>
+            <fade-transition>
+              <line-chart :height="chartHeight" :chart-data="chart" :options="options" v-if="show.chart" @on-receive="updatePoint"></line-chart>
+            </fade-transition>
             <!--</b-card>-->
           </div>
         </div>
@@ -106,7 +110,8 @@ export default {
       time_series: [],
       metadata_filters: [],
       chart: {},
-      pointData: {}
+      pointData: {},
+      chartHeight: 470
     }
   },
   computed: {
@@ -178,9 +183,13 @@ export default {
           }
         },
         responsive: true,
-        maintainAspectRatio: false,
-        height: 200
+        maintainAspectRatio: false
       }
+    }
+  },
+  watch: {
+    options: function () {
+      this.redrawChart()
     }
   },
   methods: {
@@ -288,8 +297,8 @@ export default {
         var jsonResponse = JSON.stringify(response.data.result.rows[0])
         var formattedResponse = JSON.parse(jsonResponse)
         this.mapChartData(formattedResponse.series)
+        this.resizeChart()
         this.show.loading = false
-        this.show.chart = true
       } catch (e) {
         console.log(Object.keys(e), e.message)
         this.show.loading = false
@@ -342,6 +351,7 @@ export default {
             }
           }
         }
+        this.show.chart = true
       } catch (e) {
         console.log(Object.keys(e), e.message)
       }
@@ -378,7 +388,7 @@ export default {
     },
     updatePoint (data) {
       this.pointData = data
-      this.$router.push({
+      let routeData = this.$router.resolve({
         name: 'ConcordanceTrigger',
         params:
           {concordanceWord: this.concordance_word,
@@ -388,7 +398,33 @@ export default {
                 'value': data
               }]}
       })
+      window.open(routeData.href, '_blank')
+    },
+    resizeChart: function () {
+      if (window.innerWidth > 768) {
+        this.chartHeight = Math.ceil(this.$refs.chartContainer.clientHeight * 0.8)
+      } else {
+        this.chartHeight = Math.ceil(470)
+      }
+    },
+    redrawChart: function () {
+      this.show.chart = false
+      this.resizeChart()
+      setTimeout(() => {
+        this.show.chart = true
+      }, 0)
+    },
+    handleResize (event) {
+      if (this.task.finished) {
+        this.redrawChart()
+      }
     }
+  },
+  created: function () {
+    window.addEventListener('resize', this.handleResize)
+  },
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this.handleResize)
   }
 }
 </script>

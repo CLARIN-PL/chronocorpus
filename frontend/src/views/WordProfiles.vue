@@ -82,7 +82,13 @@
           <div class="content-container">
             <b-card class="bv-example-row" v-if="task.finished">
               <b-spinner v-if="show.loading" style="width: 3rem; height: 3rem;"/>
-              <div class="content-pagination">
+              <div class="content-pagination" v-if="word_profiles.length > 0">
+                <vue-json-to-csv :json-data="json_data" :csv-title="csv_title">
+                  <b-button type="button"  class="btn filter-button btn-secondary" style="float: right">
+                    <!--{{$t('download')}} -->
+                    ⇩ CSV
+                  </b-button>
+                </vue-json-to-csv>
                 <b-pagination :total-rows="word_profiles.length" :per-page="limit" @change="changePage" align="center"
                               v-if="word_profiles.length > 0"/>
               </div>
@@ -104,11 +110,14 @@
 import FadeTransition from '@/components/FadeTransition.vue'
 import axios from 'axios'
 import TaskFilter from '@/components/TaskFilter'
+import VueJsonToCsv from 'vue-json-to-csv'
 
 export default {
   name: 'WordProfiles',
   data () {
     return {
+      json_data: [],
+      csv_title: 'word_profiles',
       form: {
         orth: 'Polska',
         left_window_size: 1,
@@ -131,7 +140,7 @@ export default {
       metadata_filters: []
     }
   },
-  components: {TaskFilter, axios, FadeTransition},
+  components: {TaskFilter, axios, FadeTransition, VueJsonToCsv},
   watch: {
     page: function (value) {
       this.page = value
@@ -203,6 +212,7 @@ export default {
       this.task.finished = false
       this.show.loading = true
       this.word_profiles = []
+      this.json_data = []
       try {
         const response = await axios.post(process.env.ROOT_API + 'startTask', {
           task_type: 'word_profile',
@@ -266,8 +276,11 @@ export default {
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
         this.changePage(1)
         this.skip = this.limit
-        console.log(response)
+        this.csv_title = 'word_profiles_' + this.form.orth + '_L' + this.form.left_window_size + '_R' + this.form.right_window_size
         this.word_profiles = response.data.result.rows
+        for (var x in this.word_profiles) {
+          this.json_data.push({'frequency': this.word_profiles[x].frequency, 'profile': this.word_profiles[x].profile})
+        }
         this.show.loading = false
       } catch (e) {
         console.log(Object.keys(e), e.message)
@@ -283,6 +296,7 @@ export default {
     },
     changeLimit: function (value) {
       try {
+        this.changePage(1)
         this.limit = value
       } catch (e) {
         console.log(Object.keys(e), e.message)

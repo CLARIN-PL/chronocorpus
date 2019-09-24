@@ -41,17 +41,25 @@
         <div class="box-container-result" v-if="task.finished">
           <div class="content-container">
             <b-card class="bv-example-row">
-              <b-spinner v-if="show.loading" style="width: 3rem; height: 3rem;"/>
-              <fade-transition mode="out-in">
+              <div class="content-pagination" v-if="frequency_list.length > 0">
+                <vue-json-to-csv :json-data="json_data" :csv-title="csv_title">
+                  <b-button type="button"  class="btn filter-button btn-secondary" style="float: right">
+                    <!--{{$t('download')}} -->
+                    ⇩ CSV
+                  </b-button>
+                </vue-json-to-csv>
                 <b-pagination :total-rows="frequency_list.length" :per-page="limit" @change="changePage" align="center"
                               v-if="frequency_list.length > 0"/>
-              </fade-transition>
-              <b-row class="line_bottom justify-content-md-center" v-for="(item) in pages" :key="item.id">
-                <b-col cols="7" style="text-align: left;  font-size: 12px">{{item.word}}</b-col>
-                <b-col cols="3" style="text-align: right; font-size: 12px">{{item.part_of_speech}}</b-col>
-                <b-col cols="2" style="margin: auto">{{item.count}}</b-col>
-
-              </b-row>
+              </div>
+              <div class="content-list">
+                <b-spinner v-if="show.loading" style="width: 3rem; height: 3rem;"/>
+                <b-row class="line_bottom justify-content-md-center" v-for="(item) in pages" :key="item.id">
+                  <b-col cols="7" style="text-align: left;  font-size: 12px">{{item.word}}</b-col>
+                  <b-col cols="3" style="text-align: right; font-size: 12px">{{partOfSpeech(item.part_of_speech)}}</b-col>
+                  <!--<b-col cols="3" style="text-align: right; font-size: 12px">{{item.part_of_speech}}</b-col>-->
+                  <b-col cols="2" style="margin: auto">{{item.count}}</b-col>
+                </b-row>
+              </div>
             </b-card>
           </div>
         </div>
@@ -63,11 +71,14 @@
 <script>
 import FadeTransition from '@/components/FadeTransition.vue'
 import axios from 'axios'
+import VueJsonToCsv from 'vue-json-to-csv'
 
 export default {
   name: 'FrequencyLists',
   data () {
     return {
+      json_data: [],
+      csv_title: 'frequency_lists',
       task: {
         id: null,
         status: '',
@@ -83,7 +94,7 @@ export default {
       page: 1
     }
   },
-  components: {axios, FadeTransition},
+  components: {axios, FadeTransition, VueJsonToCsv},
   watch: {
     page: function (value) {
       this.page = value
@@ -127,6 +138,7 @@ export default {
       this.task.finished = false
       this.show.loading = true
       this.frequency_list = []
+      this.json_data = []
       try {
         const response = await axios.post(process.env.ROOT_API + 'startTask', {
           task_type: 'frequency',
@@ -175,7 +187,16 @@ export default {
         this.changePage(1)
         this.skip = this.limit
         this.frequency_list = response.data.result.rows
+        // for (let i = 0; i < 100; i++) {
+        //   this.frequency_list[i] = response.data.result.rows[i]
+        // }
         this.show.loading = false
+        for (var x in this.frequency_list) {
+          this.json_data.push({'word': this.frequency_list[x].word, 'count': this.frequency_list[x].count, 'part_of_speech': this.frequency_list[x].part_of_speech})
+        }
+        this.csv_title = this.count_by_base.selected === 'true' ? 'frequency_lists_words' : 'frequency_lists_lexemes'
+        console.log(this.count_by_base.selected)
+        console.log(this.csv_title)
       } catch (e) {
         console.log(Object.keys(e), e.message)
         this.show.loading = false
@@ -194,20 +215,59 @@ export default {
       } catch (e) {
         console.log(Object.keys(e), e.message)
       }
+    },
+    partOfSpeech: function (value) {
+      try {
+        let number = parseInt(value)
+        let result = ''
+        switch (number) {
+          case 1 :
+            result = this.$t('verb')
+            break
+          case 2 :
+            result = this.$t('noun')
+            break
+          case 3 :
+            result = this.$t('adverb')
+            break
+          case 4 :
+            result = this.$t('adjective')
+            break
+        }
+        return result
+      } catch (e) {
+        console.log(Object.keys(e), e.message)
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-  #form_container {
-    max-width: 40em;
-    margin: 1vw auto;
-    position: relative;
-  }
-
   .line_bottom {
     border-bottom: 1px solid #c3c3c3;
   }
-
+  .content-pagination {
+    height:50px;
+    background-color: var(--dark_silver);
+    padding: 6px;
+  }
+  .card.bv-example-row, .card-body {
+    height: 100%;
+  }
+  .content-list {
+    /*height: 80%;*/
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .box-container-result {
+    overflow: inherit;
+  }
+  @media only screen and (min-width: 768px) {
+    .content-list {
+      height: calc(100% - 50px);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
 </style>
