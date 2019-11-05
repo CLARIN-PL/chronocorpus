@@ -302,30 +302,48 @@ export default {
       return result
     },
     statePointIcon (frequency) {
-      var color = `#ff0000`
-      if (frequency >= 5 && frequency < 15) {
-        color = `#ff8000`
-      } else if (frequency >= 15 && frequency < 30) {
-        color = `#ffff00`
-      } else if (frequency >= 30 && frequency < 50) {
-        color = `#40ff00`
-      } else if (frequency >= 50 && frequency < 100) {
-        color = `#00bfff`
-      } else if (frequency >= 100 && frequency < 200) {
-        color = `#0000ff`
-      } else if (frequency >= 200) {
-        color = `#8000ff`
+      let red = 0
+      let green = 255
+      let blue = 0
+      if (frequency >= 1020) {
+        frequency = 1020
       }
+
+      for (let i = 0; i < frequency; i++) {
+        if (i < 256) {
+          red++
+        } else if (i > 255 && i < 511) {
+          green--
+        } else if (i > 510 && i < 766) {
+          blue++
+        } else if (i > 765) {
+          red--
+        }
+      }
+      // var color = `#ff0000`
+      var color = `rgb(` + red + `,` + green + `,` + blue + `)`
+      // if (frequency >= 5 && frequency < 15) {
+      //   color = `#ff8000`
+      // } else if (frequency >= 15 && frequency < 30) {
+      //   color = `#ffff00`
+      // } else if (frequency >= 30 && frequency < 50) {
+      //   color = `#40ff00`
+      // } else if (frequency >= 50 && frequency < 100) {
+      //   color = `#00bfff`
+      // } else if (frequency >= 100 && frequency < 200) {
+      //   color = `#0000ff`
+      // } else
+
       return `background-color: ` + color + `;
-  width: 30px;
-  height: 30px;
-  display: block;
-  left: -15px;
-  top: -15px;
-  position: relative;
-  border-radius: 45px 45px 0;
-  transform: rotate(45deg);
-  border: 2px solid #FFFFFF`
+              width: 30px;
+              height: 30px;
+              display: block;
+              left: -15px;
+              top: -15px;
+              position: relative;
+              border-radius: 45px 45px 0;
+              transform: rotate(45deg);
+              border: 2px solid #FFFFFF`
     },
     changeLetter (letter) {
       this.letter = letter

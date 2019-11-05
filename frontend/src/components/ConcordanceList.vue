@@ -84,10 +84,8 @@ export default {
       console.log(taskId)
       try {
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
-        // console.log(response.data.result.documents[0].text)
-        // console.log(this.data.concordances[0])
         response.data.result.documents[0].text = this.colorizeDocumentText(response.data.result.documents[0].text)
-        console.log(response.data.result.documents[0].text)
+        console.log(response.data.result)
         this.documentRequest(response)
       } catch (e) {
         console.log(Object.keys(e), e.message)
@@ -96,7 +94,6 @@ export default {
     colorizeDocumentText (data) {
       let concordance = this.data.concordances[0].left + ' ' + this.data.concordances[0].word + ' ' + this.data.concordances[0].right
       let text = data.split(concordance)
-      // return text[0] + `<span style= "background-color: aliceblue">` + concordance + `</span>` + text[1]
       return [text[0], this.data.concordances[0].left, this.data.concordances[0].word, this.data.concordances[0].right, text[1]]
     }
   }

@@ -85,8 +85,7 @@
               <div class="content-pagination" v-if="word_profiles.length > 0">
                 <vue-json-to-csv :json-data="json_data" :csv-title="csv_title">
                   <b-button type="button"  class="btn filter-button btn-secondary" style="float: right">
-                    <!--{{$t('download')}} -->
-                    ⇩ CSV
+                    {{$t('download_csv')}}
                   </b-button>
                 </vue-json-to-csv>
                 <b-pagination :total-rows="word_profiles.length" :per-page="limit" @change="changePage" align="center"

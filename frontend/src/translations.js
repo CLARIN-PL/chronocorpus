@@ -77,8 +77,8 @@ export const i18n = new VueI18n({
       frequency: {
         title: 'Lista frekwencyjna',
         submit: 'Utwórz listę frekwencyjną',
-        true: 'Lista frekwencyjna wyrazów tekstowych (nieodmienionych)',
-        false: 'Lista frekwencyjna leksemów (form hasłowych)'
+        true: 'Formy hasłowe',
+        false: 'Formy nieodmienione'
       },
       wordprofiles: {
         word: 'Wpisz wyraz',
@@ -117,6 +117,7 @@ export const i18n = new VueI18n({
       publication_day: 'Dzień publikacji',
       publication_month: 'Miesiąc publikacji',
       publication_year: 'Rok publikacji',
+      publication_date: 'Data publikacji',
       status: 'Status',
       style: 'Styl',
       article_title: 'Tytuł artykułu',
@@ -128,6 +129,7 @@ export const i18n = new VueI18n({
       month: 'Miesiąc',
       year: 'Rok',
       download: 'Pobierz',
+      download_csv: 'eksportuj do .csv',
       names_map: {
         popup: {
           full_name: 'Nazwa miejscowa',
@@ -142,6 +144,8 @@ export const i18n = new VueI18n({
         word_i: 'pisz wyraz',
         part_of_speech: 'Część mowy',
         time_unit: 'Jednostka czasu',
+        time_unityear: 'Jednostka czasu (rok)',
+        time_unitmonth: 'Jednostka czasu (miesiąc)',
         frequency: 'Liczba wystąpień'
       }
     },
@@ -255,6 +259,7 @@ export const i18n = new VueI18n({
       publication_day: 'Publication day',
       publication_month: 'Publication month',
       publication_year: 'Publication year',
+      publication_date: 'Publication date',
       status: 'Status',
       style: 'Style',
       article_title: 'Article title',
@@ -266,6 +271,7 @@ export const i18n = new VueI18n({
       month: 'Month',
       year: 'Year',
       download: 'Download',
+      download_csv: 'export to .csv',
       names_map: {
         popup: {
           full_name: 'Proper name',
@@ -280,6 +286,8 @@ export const i18n = new VueI18n({
         word_i: 'insert word',
         part_of_speech: 'Part of Speech',
         time_unit: 'Time unit',
+        time_unityear: 'Time unit (year)',
+        time_unitmonth: 'Time unit (month)',
         frequency: 'Frequency'
       }
     }

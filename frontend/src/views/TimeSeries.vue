@@ -100,7 +100,8 @@ export default {
         id: null,
         status: '',
         result: '',
-        finished: false
+        finished: false,
+        unit: 'year'
       },
       show: {
         loading: false,
@@ -150,7 +151,7 @@ export default {
               labelString: this.$t('time_series.frequency')
             },
             ticks: {
-              display: false
+              display: true
             },
             gridLines: {
               display: true
@@ -160,7 +161,7 @@ export default {
           xAxes: [{
             scaleLabel: {
               display: true,
-              labelString: this.$t('time_series.time_unit')
+              labelString: this.$t('time_series.time_unit' + this.time_unit.selected.toString())
             },
             ticks: {
               beginAtZero: true

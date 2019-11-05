@@ -44,8 +44,7 @@
               <div class="content-pagination" v-if="frequency_list.length > 0">
                 <vue-json-to-csv :json-data="json_data" :csv-title="csv_title">
                   <b-button type="button"  class="btn filter-button btn-secondary" style="float: right">
-                    <!--{{$t('download')}} -->
-                    ⇩ CSV
+                    {{$t('download_csv')}}
                   </b-button>
                 </vue-json-to-csv>
                 <b-pagination :total-rows="frequency_list.length" :per-page="limit" @change="changePage" align="center"
@@ -53,12 +52,14 @@
               </div>
               <div class="content-list">
                 <b-spinner v-if="show.loading" style="width: 3rem; height: 3rem;"/>
-                <b-row class="line_bottom justify-content-md-center" v-for="(item) in pages" :key="item.id">
-                  <b-col cols="7" style="text-align: left;  font-size: 12px">{{item.word}}</b-col>
-                  <b-col cols="3" style="text-align: right; font-size: 12px">{{partOfSpeech(item.part_of_speech)}}</b-col>
-                  <!--<b-col cols="3" style="text-align: right; font-size: 12px">{{item.part_of_speech}}</b-col>-->
-                  <b-col cols="2" style="margin: auto">{{item.count}}</b-col>
-                </b-row>
+                <!--<b-row class="line_bottom justify-content-md-center" v-for="(item) in pages" :key="item.id">-->
+                  <!--<b-col cols="7" style="text-align: left;  font-size: 12px">{{item.word}}</b-col>-->
+                  <!--<b-col cols="3" style="text-align: right; font-size: 12px">{{partOfSpeech(item.part_of_speech)}}</b-col>-->
+                  <!--&lt;!&ndash;<b-col cols="3" style="text-align: right; font-size: 12px">{{item.part_of_speech}}</b-col>&ndash;&gt;-->
+                  <!--<b-col cols="2" style="margin: auto">{{item.count}}</b-col>-->
+                <!--</b-row>-->
+
+                <b-table v-if="task.finished" small striped hover fixed :items="frequency_list" :current-page="page" :per-page="limit" :filter="table_filter"  @filtered="onFiltered"></b-table>
               </div>
             </b-card>
           </div>
@@ -79,6 +80,7 @@ export default {
     return {
       json_data: [],
       csv_title: 'frequency_lists',
+      table_filter: null,
       task: {
         id: null,
         status: '',
@@ -190,13 +192,12 @@ export default {
         // for (let i = 0; i < 100; i++) {
         //   this.frequency_list[i] = response.data.result.rows[i]
         // }
+        console.log(response)
         this.show.loading = false
         for (var x in this.frequency_list) {
           this.json_data.push({'word': this.frequency_list[x].word, 'count': this.frequency_list[x].count, 'part_of_speech': this.frequency_list[x].part_of_speech})
         }
         this.csv_title = this.count_by_base.selected === 'true' ? 'frequency_lists_words' : 'frequency_lists_lexemes'
-        console.log(this.count_by_base.selected)
-        console.log(this.csv_title)
       } catch (e) {
         console.log(Object.keys(e), e.message)
         this.show.loading = false
@@ -238,6 +239,11 @@ export default {
       } catch (e) {
         console.log(Object.keys(e), e.message)
       }
+    },
+    onFiltered (filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      // this.totalRows = filteredItems.length
+      this.page = 1
     }
   }
 }

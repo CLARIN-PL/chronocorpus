@@ -51,8 +51,7 @@
            <span v-if="!show.loading" class="rows-count">{{countMessage}}</span>
            <vue-json-to-csv :json-data="json_data" :csv-title="csv_title">
              <b-button type="button"  class="btn filter-button btn-secondary" style="float: right">
-               <!--{{$t('download')}} -->
-               ⇩ CSV
+               {{$t('download_csv')}}
              </b-button>
            </vue-json-to-csv>
           <b-pagination :total-rows="concordances.length" @change="changePage" align="center" :per-page="limit"
@@ -308,11 +307,33 @@ export default {
     getDocument: function (request) {
       try {
         this.documentmodal.data = request.data.result.documents[0]
-        this.documentmodal.properties = request.data.result.documents[0].metadata.properties
+        this.documentmodal.properties = this.serializeProperties(request.data.result.documents[0].metadata.properties)
         this.$refs.documentModal.show()
       } catch (e) {
         console.log(Object.keys(e), e.message)
       }
+    },
+    serializeProperties: function (properties) {
+      let time = {year: null, month: null, day: null}
+      let result = []
+      properties.forEach(function (p) {
+        if (p.name.split('_')[0] === 'publication') {
+          time[p.name.split('_')[1]] = p.value
+        } else if (p.name === 'article_title' || p.name === 'journal_title' || p.name === 'authors') {
+          p.value = p.value.charAt(0).toUpperCase() + p.value.slice(1)
+          result.push({'name': p.name, 'value': p.value})
+        } else {
+          p.value = p.value.charAt(0).toLowerCase() + p.value.slice(1)
+          result.push({'name': p.name, 'value': p.value})
+        }
+      })
+      let newDate = new Date(time.year, time.month - 1, time.day)
+      var dd = String(newDate.getDate()).padStart(2, '0')
+      var mm = String(newDate.getMonth() + 1).padStart(2, '0')
+      var yyyy = newDate.getFullYear()
+      result.push({'name': 'publication_date', 'value': mm + '-' + dd + '-' + yyyy})
+      console.log(result)
+      return result
     }
   },
   mounted () {

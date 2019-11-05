@@ -427,8 +427,8 @@ export default {
       try {
         this.task.finished = true
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        console.log(response)
         this.quantity_analysis = response.data.result.rows[0]
-        console.log(this.quantity_analysis)
         this.mapChartData(this.quantity_analysis.chart)
         this.resizeChart()
         this.show.loading = false
