@@ -4,7 +4,9 @@ import org.ini4j.Ini;
 
 public class Configuration {
 
-    public static String LOCATION_CACHE_STORE_FILE;
+    public static String MAPS_LOCATION_CACHE_STORE_FILE;
+    public static String GEO_NAMES_LOCATION_CACHE_STORE_FILE;
+    public static String GEO_NAMES_SOURCE_FILE;
 
     public static String TOOL_NAME;
     public static String HOST;
@@ -13,7 +15,9 @@ public class Configuration {
     public static String RABBIT_PASSWORD;
 
     public static void init(Ini ini){
-        LOCATION_CACHE_STORE_FILE= ini.get("configuration", "locations_cache_store_file");
+        MAPS_LOCATION_CACHE_STORE_FILE = ini.get("configuration", "maps_locations_cache_store_file");
+        GEO_NAMES_LOCATION_CACHE_STORE_FILE = ini.get("configuration", "geo_names_locations_cache_store_file");
+        GEO_NAMES_SOURCE_FILE = ini.get("configuration", "geo_names_source_file");
 
         TOOL_NAME= ini.get("service", "tool");
         HOST = ini.get("service", "rabbit_host");

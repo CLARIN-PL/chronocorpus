@@ -1,7 +1,6 @@
 package pl.clarin.geocoder;
 
 import g419.corpus.io.writer.AbstractDocumentWriter;
-import g419.corpus.io.writer.CclStreamWriter;
 import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Document;
 

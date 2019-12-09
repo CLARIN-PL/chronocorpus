@@ -13,24 +13,24 @@ import org.apache.http.client.HttpClient;
 
 import org.apache.http.impl.client.HttpClientBuilder;
 
-public class LocationFinder {
+public class MapsLocationFinder {
 
-    private static final Logger LOGGER = Logger.getLogger(LocationFinder.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MapsLocationFinder.class.getName());
 
-    private static volatile LocationFinder instance;
+    private static volatile MapsLocationFinder instance;
     private NominatimClient nc;
-    private LocationStore store = LocationStore.getInstance();
+    private MapsLocationStore store = MapsLocationStore.getInstance();
 
-    private LocationFinder() {
+    private MapsLocationFinder() {
         HttpClient client =  HttpClientBuilder.create().build();
-        nc = new JsonNominatimClient(client, "admin@clarin-pl.eu");
+        nc = new JsonNominatimClient("http://maps.clarin-pl.eu", client, "admin@clarin-pl.eu");
     }
 
-    public static LocationFinder getInstance() {
+    public static MapsLocationFinder getInstance() {
         if (instance == null) {
-            synchronized (LocationFinder.class) {
+            synchronized (MapsLocationFinder.class) {
                 if (instance == null) {
-                    instance = new LocationFinder();
+                    instance = new MapsLocationFinder();
                 }
             }
         }

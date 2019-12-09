@@ -55,17 +55,20 @@ public class GeolocationService {
                                       arg.set(a.getType());
                                     });
                             try {
-                                List<Location> loc = LocationFinder.getInstance().query(q, 5, "pl");
+                                List<Location> loc = GeoNamesLocationFinder.getInstance().query(q);
+                                if(loc.isEmpty()) {
+                                    loc = MapsLocationFinder.getInstance().query(q, 3, "pl");
+                                }
 
                                 AtomicInteger count = new AtomicInteger(1);
                                 loc.forEach(l -> {
                                     s.getAnnotationInChannel(arg.get(), k).getMetadata()
-                                            .put("nam_loc:coord:" + count.get(), l.toPropertyValue());
+                                            .put("coord:" + count.get(), l.toPropertyValue());
                                     count.getAndIncrement();
                                 });
                                 count.set(1);
                             } catch (IOException e) {
-                                LOGGER.log(Level.SEVERE,"", e);
+                                LOGGER.log(Level.SEVERE,"Geo service error", e);
                             }
 
                         });
@@ -73,7 +76,7 @@ public class GeolocationService {
                 });
             }
             AnnotationWriter.getInstance().writeDocument(ccl);
-            LocationStore.getInstance().save();
+            MapsLocationStore.getInstance().save();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "File error", e);
         }

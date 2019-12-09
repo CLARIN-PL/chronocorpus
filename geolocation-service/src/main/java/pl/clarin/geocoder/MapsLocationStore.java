@@ -12,16 +12,16 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LocationStore {
+public class MapsLocationStore {
 
-    private static final Logger LOGGER = Logger.getLogger(LocationStore.class.getName());
-    private static volatile LocationStore instance;
+    private static final Logger LOGGER = Logger.getLogger(MapsLocationStore.class.getName());
+    private static volatile MapsLocationStore instance;
     private final Kryo kryo = new Kryo();
-    private final File f = new File(Configuration.LOCATION_CACHE_STORE_FILE);
+    private final File f = new File(Configuration.MAPS_LOCATION_CACHE_STORE_FILE);
 
     private Map<String, List<Location>> store = new HashMap<>();
 
-    private LocationStore() {
+    private MapsLocationStore() {
         super();
         kryo.register(java.util.HashMap.class);
         kryo.register(java.util.ArrayList.class);
@@ -29,11 +29,11 @@ public class LocationStore {
         restore();
     }
 
-    public static LocationStore getInstance() {
+    public static MapsLocationStore getInstance() {
         if (instance == null) {
-            synchronized (LocationStore.class) {
+            synchronized (MapsLocationStore.class) {
                 if (instance == null) {
-                    instance = new LocationStore();
+                    instance = new MapsLocationStore();
                 }
             }
         }
@@ -78,7 +78,7 @@ public class LocationStore {
     }
 
     public void save() {
-        try (Output out = new Output(new FileOutputStream(Configuration.LOCATION_CACHE_STORE_FILE))) {
+        try (Output out = new Output(new FileOutputStream(Configuration.MAPS_LOCATION_CACHE_STORE_FILE))) {
             LOGGER.info("Saving cached locations ...");
             kryo.writeClassAndObject(out, store);
             out.flush();
