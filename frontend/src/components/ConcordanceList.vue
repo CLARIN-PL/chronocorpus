@@ -35,6 +35,7 @@ export default {
   methods: {
     getTaskId: async function (documentId) {
       try {
+        console.log(documentId)
         const response = await axios.post(process.env.ROOT_API + 'startTask', {
           corpus: 'chronopress',
           task_type: 'document',
@@ -42,7 +43,7 @@ export default {
           query_parameters: [
             {
               name: 'document_id',
-              value: documentId
+              value: documentId.toString()
             }
           ],
           response_parameters: []
@@ -63,25 +64,28 @@ export default {
       try {
         const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
         this.task.status = response.data.status
+        console.log(this.task.status)
         if (this.task.status === 'DONE') {
           this.getResult(taskId)
         } else if (this.task.status === 'QUEUE') {
+          console.log(this.task.status)
           timer += 100
           setTimeout(() => {
             this.checkStatus(taskId)
           }, timer)
+        } else if (this.task.status === 'ERROR') {
+          console.log(response)
         }
       } catch (e) {
         console.log(Object.keys(e), e.message)
       }
     },
     getResult: async function (taskId) {
+      console.log(taskId)
       try {
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
-        // console.log(response.data.result.documents[0].text)
-        // console.log(this.data.concordances[0])
         response.data.result.documents[0].text = this.colorizeDocumentText(response.data.result.documents[0].text)
-        console.log(response.data.result.documents[0].text)
+        console.log(response.data.result)
         this.documentRequest(response)
       } catch (e) {
         console.log(Object.keys(e), e.message)
@@ -90,7 +94,6 @@ export default {
     colorizeDocumentText (data) {
       let concordance = this.data.concordances[0].left + ' ' + this.data.concordances[0].word + ' ' + this.data.concordances[0].right
       let text = data.split(concordance)
-      // return text[0] + `<span style= "background-color: aliceblue">` + concordance + `</span>` + text[1]
       return [text[0], this.data.concordances[0].left, this.data.concordances[0].word, this.data.concordances[0].right, text[1]]
     }
   }

@@ -46,8 +46,8 @@ export const i18n = new VueI18n({
         }
       },
       task: {
-        waiting_for_response: 'Oczekiwanie na odpowiedź serwera...',
-        loading_data: 'Wczytywanie danych do widoku...'
+        waiting_for_response: 'Czekam na odpowiedź serwera...',
+        loading_data: 'Wczytuję dane do widoku...'
       },
       concordance: {
         word: 'Leksem',
@@ -55,15 +55,17 @@ export const i18n = new VueI18n({
         corpus: 'Korpus',
         corpus_i: 'wybierz korpus',
         method: 'Forma wyrazu',
-        method_i: 'wybierz jedną z form wprowadzonego wyrazu ',
+        method_i: 'wskaż formę wprowadzonego wyrazu',
         howmany: 'Liczba wyników na stronie',
         base: 'Forma bazowa wyrazu',
         orth: 'Forma zmieniona wyrazu',
         submit: 'Wyszukaj konkordancję',
-        loading: 'Wczytywanie...',
-        warning: 'Wprowadź wyraz aby rozpocząć wyszukiwanie',
+        loading: 'Wczytuję dane...',
+        warning: 'Wprowadź wyraz przed rozpoczęciem wyszukiwania',
         document_info: 'Kliknij aby zobaczyć szczegóły dokumentu',
-        found: ['Znaleziono', 'korkondancji(e)'],
+        found1: 'wynik',
+        found2: 'wyniki',
+        found3: 'wyników',
         showfilters: 'Pokaż Filtry ⇓ ',
         hidefilters: 'Ukryj filtry ⇑ ',
         modal_title: 'Dane próbki',
@@ -75,8 +77,8 @@ export const i18n = new VueI18n({
       frequency: {
         title: 'Lista frekwencyjna',
         submit: 'Utwórz listę frekwencyjną',
-        true: 'Lista frekwencyjna wyrazów tekstowych (nieodmienionych)',
-        false: 'Lista frekwencyjna leksemów (form hasłowych)'
+        true: 'Formy hasłowe',
+        false: 'Formy nieodmienione'
       },
       wordprofiles: {
         word: 'Wpisz wyraz',
@@ -100,7 +102,8 @@ export const i18n = new VueI18n({
         parts_of_speech: 'Część mowy',
         y_label: 'Ilość',
         x_prefix: 'Liczba jednostek (',
-        x_sufix: ') w przedmiocie obliczeń ('
+        x_sufix: ') w przedmiocie obliczeń (',
+        alert: 'należy wybrać conajmniej jedną część mowy'
       },
       exp: {
         first: 'Pierwsza strona',
@@ -114,6 +117,7 @@ export const i18n = new VueI18n({
       publication_day: 'Dzień publikacji',
       publication_month: 'Miesiąc publikacji',
       publication_year: 'Rok publikacji',
+      publication_date: 'Data publikacji',
       status: 'Status',
       style: 'Styl',
       article_title: 'Tytuł artykułu',
@@ -125,6 +129,7 @@ export const i18n = new VueI18n({
       month: 'Miesiąc',
       year: 'Rok',
       download: 'Pobierz',
+      download_csv: 'eksportuj do .csv',
       names_map: {
         popup: {
           full_name: 'Nazwa miejscowa',
@@ -139,6 +144,8 @@ export const i18n = new VueI18n({
         word_i: 'pisz wyraz',
         part_of_speech: 'Część mowy',
         time_unit: 'Jednostka czasu',
+        time_unityear: 'Jednostka czasu (rok)',
+        time_unitmonth: 'Jednostka czasu (miesiąc)',
         frequency: 'Liczba wystąpień'
       }
     },
@@ -147,7 +154,7 @@ export const i18n = new VueI18n({
       undo_selection: '↺ undo the selection',
       home: {
         title: 'Portal of press texts',
-        service1: 'Corcondances',
+        service1: 'Concordances',
         service2: 'Frequency Lists',
         service3: 'Word Profiles',
         service4: 'Quanity Analysis',
@@ -198,7 +205,9 @@ export const i18n = new VueI18n({
         loading: 'Loading...',
         warning: 'Enter a word to start the search',
         document_info: 'Click to view the document details',
-        found: ['Found', 'concordances'],
+        found1: 'result',
+        found2: 'results',
+        found3: 'results',
         showfilters: '⇓ Show filters',
         hidefilters: '⇑ Hide  filters',
         modal_title: 'Data sample',
@@ -232,7 +241,8 @@ export const i18n = new VueI18n({
         parts_of_speech: 'Parts of speech',
         y_label: 'Quantity',
         x_prefix: 'Units (',
-        x_sufix: ') in calculation object ('
+        x_sufix: ') in calculation object (',
+        alert: 'at least one part of the speech should be chosen'
       },
       footer: {
         copyright: 'Copyright 2019 Clarin-PL. All Rights Reserved.'
@@ -249,6 +259,7 @@ export const i18n = new VueI18n({
       publication_day: 'Publication day',
       publication_month: 'Publication month',
       publication_year: 'Publication year',
+      publication_date: 'Publication date',
       status: 'Status',
       style: 'Style',
       article_title: 'Article title',
@@ -260,6 +271,7 @@ export const i18n = new VueI18n({
       month: 'Month',
       year: 'Year',
       download: 'Download',
+      download_csv: 'export to .csv',
       names_map: {
         popup: {
           full_name: 'Proper name',
@@ -274,6 +286,8 @@ export const i18n = new VueI18n({
         word_i: 'insert word',
         part_of_speech: 'Part of Speech',
         time_unit: 'Time unit',
+        time_unityear: 'Time unit (year)',
+        time_unitmonth: 'Time unit (month)',
         frequency: 'Frequency'
       }
     }

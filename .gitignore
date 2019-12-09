@@ -36,8 +36,9 @@ hs_err_pid*
 /computation-service/src/main/java/pl/clarin/chronocorpus/test/
 /computation-service/src/main/java/pl/clarin/chronocorpus2/
 
-/frontend/build/
-/frontend/config/
 /frontend/dist/
 /frontend/node_modules/
-/frintend/static/
+/frontend/.babelrc
+/frontend/.editorconfig
+/frontend/.eslintignore
+/frontend/.eslintrc.js
