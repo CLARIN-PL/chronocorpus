@@ -164,10 +164,14 @@ Example request and respond getting word profile frequency.
     "query_parameters":[
         {
             "name":"orth",
-            "value":"Polska"
+            "value":"polska"
         },
         {
             "name":"part_of_speech",
+            "value":"2"
+        },
+        {
+            "name":"window_item_part_of_speech",
             "value":"2"
         },
         {
@@ -185,22 +189,36 @@ Example request and respond getting word profile frequency.
 ----
 {
     "task_id":"7910de51-4ca9-4769-80c5-839fa4f358a4",
+
     "rows":[
         {
-            "profile":"Polska Partia",
-            "frequency":5
+            "collocate":"wielki",
+            "matching":"wielki_piec(73),Wielki_piec(7),piec_wielka(3),piec_wielkiego(1),największych_piec(1),piec_wielki(1),piec_wielkiej(1)",
+            "frequency":87,
+            "percentage":28.431371688842773
         },
         {
-            "profile":"Związku Polska",
-            "frequency":2
+            "collocate":"pierwszy",
+            "matching":"pierwszy_piec(17),piec_pierwszy(1),Pierwszy_piec(1),pierwsza_piec(1),piec_pierwszej(1)",
+            "frequency":21,"percentage":6.86274528503418
         },
         {
-            "profile":"niewoli Polska",
-            "frequency":2
+            "collocate":"nowy",
+            "matching":"nowy_piec(11),Nowy_piec(3)",
+            "frequency":14,
+            "percentage":4.5751633644104
         },
         {
-            "profile":"Armia Polska",
-            "frequency":2
+            "collocate":"martenowski",
+            "matching":"piec_martenowski(11),martenowski_piec(1)",
+            "frequency":12,
+            "percentage":3.9215686321258545
+        },
+        {
+            "collocate":"jeden",
+            "matching":"jeden_piec(6),Jeden_piec(2),piec_jeden(1)",
+            "frequency":9,
+            "percentage":2.941176414489746
         }
     ]
 }
@@ -379,7 +397,7 @@ Example request and response fetching geo proper names
 }
 ----
 === Querying time series
-Example request and response fetching time series
+Example request and response fetching time series by base form
 Parameters:
     time_unit = [month, year]
 
@@ -395,7 +413,7 @@ Parameters:
          }],
     "query_parameters":[
         {
-            "name":"orth",
+            "name":"base",
             "value":"czerwony"
         },
         {

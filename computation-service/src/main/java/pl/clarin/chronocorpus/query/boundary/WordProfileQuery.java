@@ -36,6 +36,12 @@ public class WordProfileQuery extends Query {
             return this;
         }
 
+        public  WordProfileQuery.Builder withWindowItemPartOfSpeech(String pos){
+            Property p = new Property("window_item_part_of_speech", pos);
+            withQueryProperty(p);
+            return this;
+        }
+
         public WordProfileQuery.Builder withLeftWindowSize(String size) {
             Property p = new Property("left_window_size", Integer.valueOf(size));
             withQueryProperty(p);
