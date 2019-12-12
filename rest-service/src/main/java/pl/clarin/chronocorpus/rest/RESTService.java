@@ -22,7 +22,7 @@ import java.util.concurrent.TimeoutException;
 @Path("")
 public class RESTService {
 
-@POST
+    @POST
     @Consumes("application/json")
     @Path("/process")
     public String process(String data) throws InterruptedException  {

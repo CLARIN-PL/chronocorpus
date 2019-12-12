@@ -1,26 +1,28 @@
 <template>
   <div class="navbar-container">
-    <b-navbar toggleable="lg">
-      <div class="navbar-left">
-      <b-navbar-brand href="#" @click="redirectUser('/')" >
+    <b-navbar toggleable="lg" class="wrapper">
+
+      <!--<div class="navbar-left">-->
+      <b-navbar-brand id="nav1" href="#" @click="redirectUser('/')" >
         <!--<img src="../assets/images/logo.png" class="d-inline-block align-top" style="height: 30px; margin-left: 20%;"/>-->
         <img src="../assets/images/logo2.png" class="d-inline-block align-top brand-image"/>
       </b-navbar-brand>
 
-      </div>
+      <!--</div>-->
 
-      <!--<b-nav-form class="navbar-form" v-on:submit.prevent="findConcordance">-->
-        <!--<b-form-input :title="this.$t('navbar.form_tooltip')" class="mr-sm-2 nav-concordance-submit" data-tip="This is the text of the tooltip" :placeholder="this.$t('concordance.word_i')" required-->
-                      <!--v-model="concordanceWord" ></b-form-input>-->
+      <b-nav-form id="nav2" class="navbar-form" v-on:submit.prevent="findConcordance">
+        <b-form-input :title="this.$t('navbar.form_tooltip')" class="mr-sm-2 nav-concordance-submit" data-tip="This is the text of the tooltip" :placeholder="this.$t('concordance.word_i')" required
+                      v-model="concordanceWord" ></b-form-input>
         <!--<b-button @submit="findConcordance" class="my-2 my-sm-0 nav-concordance-submit" type="submit" variant="primary">-->
         <!--{{$t('concordance.submit')}}-->
         <!--</b-button>-->
-      <!--</b-nav-form>-->
+      </b-nav-form>
+
       <!--<b-button block class=""></b-button>-->
 
         <!--<b-navbar-toggle target="nav-collapse"></b-navbar-toggle>-->
 
-      <b-navbar-nav class="ml-auto navbar-small">
+      <b-navbar-nav id="nav4" class="ml-auto navbar-small">
         <b-nav-form class="dropdown-button" v-if="this.$i18n.locale === 'pl'" @click.prevent="changeLanguage('en')">
           <b-button class="lang-button">
             <img src="../assets/ico/icon_pl.png" height="70%" width="100%">
@@ -34,7 +36,7 @@
       </b-navbar-nav>
         <!--<b-collapse id="nav-collapse" is-nav class="navbar-left">-->
 
-          <b-navbar-nav class="ml-auto navbar-large">
+          <b-navbar-nav  id="nav3" class="ml-auto navbar-large">
             <b-nav-item @click="redirectUser('/')">
               {{ $t('navbar.home') }}
             </b-nav-item>
@@ -108,8 +110,9 @@ export default {
       this.$router.push(path)
     },
     findConcordance: function () {
-      // event.preventDefault()
+      event.preventDefault()
       this.$router.push({name: 'ConcordanceTrigger', params: {concordanceWord: this.concordanceWord}})
+      this.$router.reload()
     }
   }
 }
@@ -117,33 +120,53 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .wrapper {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-gap: 30px;
+    grid-template-columns:1fr 1fr;
+    grid-template-areas:
+      "nav1 nav4"
+  ;
+  }
+  #nav1 {
+    grid-area: nav1;
+    position: relative}
+  #nav2 {
+    grid-area: nav2;
+    position: relative;
+    display: none}
+  #nav3 {
+    grid-area: nav3;
+    position: relative;
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    flex-direction: row;
+    display:none;
+  }
+  #nav4 {
+    grid-area: nav4;
+    position: relative
+  }
   .navbar-container {
     height: 66px;
-    /*background-image: url('../assets/images/pattern.png') !important;*/
-    /*background-color: var(--lavender);*/
   }
   .navbar-container .navbar{
-    /*background: url('../assets/images/pattern.png') 10% !important;*/
     background-color: var(--cold_silver);
   }
-  .navbar-brand {
-    /*width: 400px;*/
-    max-width: 50vw;
-  }
+
   .brand-image {
-    height: 40px;
-    /*height: 40px;*/
-    /*width: 300px;*/
-    max-width: 60vw;
+    height: 42px;
+    /*max-width: 60vw;*/
     margin-left: 30px;
   }
   .nav-concordance-submit {
     display: block;
     width: 100%;
-    /*position: absolute;*/
-    /*margin-right: 400px;*/
-    /*margin-left: 400px;*/
-    /*visibility: hidden;*/
   }
   .lang-button, .lang-button:active, .lang-button:focus {
     background-color: transparent !important;
@@ -165,18 +188,24 @@ export default {
   .navbar-icon {
     width: 20px;
   }
-  .nav-item {
-    max-height: 40px;
-    display: block;
-    text-align: center;
-    width: auto;
-
+  /*.nav-item {*/
+    /*max-height: 40px;*/
+    /*display: block;*/
+    /*text-align: center;*/
+    /*width: auto;*/
+  /*}*/
+  li.nav-item {
+    /*max-height: 40px;*/
+    /*display: block;*/
+    /*text-align: center;*/
+    /*width: auto;*/
   }
   .nav-link {
     max-height: 40px;
     text-align: center;
-    display: block;
+    /*display: block;*/
     width: auto;
+    display: inline-block;
   }
   .navbar-sufix {
     width: 450px;
@@ -187,25 +216,46 @@ export default {
   .navbar-small{
     float: right;
   }
-  @media only screen and (min-width: 1100px) {
-    .navbar-large{
-      display: inherit;
+  @media only screen and (min-width: 1020px) {
+    .wrapper {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: "nav1 nav3";
     }
-    .navbar-small{
+    #nav3 {
+      grid-area: nav3;
+      position: relative;
+      display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+      display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+      display: -ms-flexbox;      /* TWEENER - IE 10 */
+      display: -webkit-flex;     /* NEW - Chrome */
+      display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+      flex-direction: row
+    }
+    #nav4 {
       display: none;
     }
   }
-  /*@media only screen and (min-width: 768px) {*/
-    /*.navbar-container {*/
-      /*background-image: url('../assets/images/pattern.png') !important;*/
-      /*!*padding: 10px;*!*/
-    /*}*/
-    /*@media only screen and (min-width: 1100px) {*/
-        /*.navbar-container {*/
-          /*!*height: 10vh;*!*/
-          /*background-image: url('../assets/images/pattern.png') !important;*/
-          /*!*padding: 10px;*!*/
-        /*}*/
-    /*}*/
-  /*}*/
+  @media only screen and (min-width: 1300px) {
+    .wrapper {
+      grid-template-columns:1fr 1fr 1fr;
+      grid-template-areas:
+        "nav1 nav2 nav3"
+    ;
+    }
+    #nav2 {
+      grid-area: nav2;
+      position: relative;
+      display: inline
+    }
+    #nav3 {
+      grid-area: nav3;
+      position: relative;
+      display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+      display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+      display: -ms-flexbox;      /* TWEENER - IE 10 */
+      display: -webkit-flex;     /* NEW - Chrome */
+      display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+      flex-direction: row
+    }
+  }
 </style>

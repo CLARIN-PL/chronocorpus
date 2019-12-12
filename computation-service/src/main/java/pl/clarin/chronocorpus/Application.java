@@ -6,14 +6,12 @@ import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationUnit;
-import pl.clarin.chronocorpus.query.boundary.ConcordanceQuery;
-import pl.clarin.chronocorpus.query.boundary.FrequencyQuery;
-import pl.clarin.chronocorpus.query.boundary.QuantityAnalysisQuery;
-import pl.clarin.chronocorpus.query.boundary.TimeSeriesQuery;
+import pl.clarin.chronocorpus.query.boundary.*;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
 import pl.clarin.chronocorpus.task.entity.Task;
 import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
+import pl.clarin.chronocorpus.wordprofile.entity.WordProfile;
 
 
 import javax.json.JsonObject;
@@ -30,58 +28,35 @@ public class Application {
     private TaskLookUp lookup;
 
     public static void main(String... args) {
+
         Application app = new Application();
 
-
+/*
         ConcordanceQuery con = new ConcordanceQuery.Builder()
                 .withOrth("Armia")
                 .build();
 
-        JsonObject j = con.getJson();
-        System.out.println(j);
-        long start4 = System.currentTimeMillis();
-        System.out.println(app.process(j));
-        long time4 = System.currentTimeMillis() - start4;
-        LOGGER.log(Level.INFO, "Concord execution took: " + time4 + "ms");
+        app.testWithTimer(con, "Concordance");
+
 
         TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
-                .withOrth("czerwony")
+                .withBase("czerwony")
                 .withPartOfSpeech("4")
                 .withUnit(TimeUnit.month)
                 .build();
-
-        j = ana1l.getJson();
-        System.out.println(j);
-        start4 = System.currentTimeMillis();
-        System.out.println(app.process(j));
-        time4 = System.currentTimeMillis() - start4;
-        LOGGER.log(Level.INFO, "TimeSeries execution took: " + time4 + "ms");
+        app.testWithTimer(ana1l, "Time series");
+*/
 
 
-        QuantityAnalysisQuery anal = new QuantityAnalysisQuery.Builder()
-                .calculationObject(CalculationObject.word)
-                .calculationType(CalculationType.average)
-                .calculationUnit(CalculationUnit.letter)
+        WordProfileQuery wp = new WordProfileQuery.Builder()
+                .withRightWindowSize("3")
+                .withLeftWindowSize("3")
+                .withPartOfSpeech("2")
+                .withWindowItemPartOfSpeech("4")
+                .withOrth("piec")
                 .build();
 
-        j = anal.getJson();
-        System.out.println(j);
-        start4 = System.currentTimeMillis();
-        System.out.println(app.process(j));
-        time4 = System.currentTimeMillis() - start4;
-        LOGGER.log(Level.INFO, "QuantityAnalysis execution took: " + time4 + "ms");
-
-
-        FrequencyQuery grq = new FrequencyQuery.Builder()
-                .countByBase(false)
-                .build();
-
-        j = grq.getJson();
-        System.out.println(j);
-        start4 = System.currentTimeMillis();
-        app.process(j);
-        time4 = System.currentTimeMillis() - start4;
-        LOGGER.log(Level.INFO, "Freq Task execution took frq: " + time4 + "ms");
+        app.testWithTimer(wp, "Word Profile");
     }
 
     public Application() {
@@ -109,5 +84,15 @@ public class Application {
         Optional<Task> task = lookup.getTask(json);
         return task.map(Task::doTask).
                 orElseThrow(UnknownTaskException::new);
+    }
+
+    public void testWithTimer(Query q, String name){
+        JsonObject j = q.getJson();
+        LOGGER.log(Level.INFO, name+" query json:"+ j);
+
+        long start4 = System.currentTimeMillis();
+        LOGGER.log(Level.INFO, name+" response json:"+ this.process(j));
+        long time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, name + " execution took: " + time4 + "ms");
     }
 }

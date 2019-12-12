@@ -6,6 +6,7 @@ import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.document.entity.Sentence;
 import pl.clarin.chronocorpus.document.entity.Token;
 import pl.clarin.chronocorpus.wordprofile.entity.WordProfile;
+import pl.clarin.chronocorpus.wordprofile.entity.WordProfileResult;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -38,9 +39,10 @@ public class WordProfileQueryService {
                                      Integer leftWindowSize,
                                      Integer rightWindowSize,
                                      Integer partOfSpeech,
+                                     Integer windowItemPartOfSpeech,
                                      Set<Property> metadata, boolean byBase) {
 
-        Map<WordProfile,Long> result = new HashMap<>();
+        Map<WordProfile, Long> result = new HashMap<>();
 
         for (Document d : DocumentStore.getInstance().getDocuments()) {
 
@@ -54,15 +56,15 @@ public class WordProfileQueryService {
                         .collect(Collectors.toList());
 
                 matching.forEach(s -> {
-                        getWordProfile(s.getTokens(), keyWord, byBase, partOfSpeech, leftWindowSize, rightWindowSize)
-                             .forEach((k,v)->{
-                                 if(!result.containsKey(k)){
-                                     result.put(k, v);
-                                 }else{
-                                     Long val = result.get(k) + v;
-                                     result.replace(k, val);
-                                 }
-                             });
+                    getWordProfile(s.getTokens(), keyWord, byBase, partOfSpeech, windowItemPartOfSpeech, leftWindowSize, rightWindowSize)
+                            .forEach((k, v) -> {
+                                if (!result.containsKey(k)) {
+                                    result.put(k, v);
+                                } else {
+                                    Long val = result.get(k) + v;
+                                    result.replace(k, val);
+                                }
+                            });
                 });
             }
         }
@@ -73,23 +75,42 @@ public class WordProfileQueryService {
                 .sorted(Comparator.comparing(WordProfile::getFrequency).reversed())
                 .collect(Collectors.toList());
 
+        Map<String, List<WordProfile>> colocations = new HashMap<>();
+        for (WordProfile item : items) {
+            String coloc =  item.getLeftWordBase() != null ? item.getLeftWordBase() : item.getRightWordBase();
+            if(!colocations.containsKey(coloc)){
+                colocations.put(coloc, new ArrayList<>());
+            }
+            colocations.get(coloc).add(item);
+        }
+
+        List<WordProfileResult> r = colocations.entrySet().stream()
+                .map( e -> new WordProfileResult(e.getKey(), e.getValue()))
+                .sorted(Comparator.comparingLong(WordProfileResult::getFrequency).reversed())
+                .collect(Collectors.toList());
+
+        long sum = r.stream().mapToLong(WordProfileResult::getFrequency).sum();
+        r.forEach(i -> i.setPercentage((i.getFrequency()*100f)/sum));
+
         JsonArrayBuilder frequency = Json.createArrayBuilder();
-        items.stream().map(WordProfile::toJson).forEach(frequency::add);
+        r.stream().map(WordProfileResult::toJson).forEach(frequency::add);
 
         return frequency.build();
     }
-    public Map<WordProfile, Long> getWordProfile(List<Token> tokens, String word, boolean byBase, Integer pos, Integer leftWindowSize, Integer rightWindowSize) {
+
+    public Map<WordProfile, Long> getWordProfile(List<Token> tokens, String word, boolean byBase, Integer pos,
+                                                 Integer windowItemPos, Integer leftWindowSize, Integer rightWindowSize) {
         List<WordProfile> tmp = new ArrayList<>();
-        IntStream.range(0,tokens.size()).forEach(i -> {
+        IntStream.range(0, tokens.size()).forEach(i -> {
             if (byBase) {
-                if (tokens.get(i).getBase().equals(word)) {
-                    tmp.addAll(findLeftWindow(tokens, tokens.get(i).getBase(),i,pos,leftWindowSize));
-                    tmp.addAll(findRightWindow(tokens, tokens.get(i).getBase(),i,pos,rightWindowSize));
+                if (tokens.get(i).getBase().equals(word) && tokens.get(i).getPos() == pos) {
+                    tmp.addAll(findLeftWindow(tokens, tokens.get(i).getBase(), i, windowItemPos, leftWindowSize));
+                    tmp.addAll(findRightWindow(tokens, tokens.get(i).getBase(), i,windowItemPos, rightWindowSize));
                 }
             } else {
-                if (tokens.get(i).getOrth().equals(word)) {
-                    tmp.addAll(findLeftWindow(tokens, tokens.get(i).getOrth(),i,pos,leftWindowSize));
-                    tmp.addAll(findRightWindow(tokens, tokens.get(i).getOrth(),i,pos,rightWindowSize));
+                if (tokens.get(i).getOrth().equals(word) && tokens.get(i).getPos() == pos) {
+                    tmp.addAll(findLeftWindow(tokens, tokens.get(i).getOrth(), i, windowItemPos, leftWindowSize));
+                    tmp.addAll(findRightWindow(tokens, tokens.get(i).getOrth(), i, windowItemPos, rightWindowSize));
                 }
             }
         });
@@ -100,14 +121,14 @@ public class WordProfileQueryService {
     private List<WordProfile> findRightWindow(List<Token> tokens, String word, int i, Integer pos, Integer rightWindowSize) {
         List<WordProfile> result = new ArrayList<>();
         if (rightWindowSize != null && rightWindowSize > 0) {
-            int steps = (i + rightWindowSize) > tokens.size()-1 ? tokens.size()-1 : (i + rightWindowSize);
+            int steps = (i + rightWindowSize) > tokens.size() - 1 ? tokens.size() - 1 : (i + rightWindowSize);
             for (int z = i + 1; z <= steps; z++) {
-                if(tokens.get(z).isInterp() &&
-                        (tokens.get(z).getOrth().equals(",") || (tokens.get(z).getOrth().equals(".")))){
+                if (tokens.get(z).isInterp() &&
+                        (tokens.get(z).getOrth().equals(",") || (tokens.get(z).getOrth().equals(".")))) {
                     break;
                 }
                 if (tokens.get(z).getPos() == pos) {
-                    result.add(new WordProfile(null, word, tokens.get(z).getOrth()));
+                    result.add(new WordProfile(null, null, word, tokens.get(z).getOrth(), tokens.get(z).getBase()));
                 }
             }
         }
@@ -119,18 +140,19 @@ public class WordProfileQueryService {
         if (leftWindowSize != null && leftWindowSize > 0) {
             int steps = (i - leftWindowSize) < 0 ? 0 : (i - leftWindowSize);
             for (int z = steps; z < i; z++) {
-                if(tokens.get(z).isInterp() &&
-                        (tokens.get(z).getOrth().equals(",") || (tokens.get(z).getOrth().equals(".")))){
+                if (tokens.get(z).isInterp() &&
+                        (tokens.get(z).getOrth().equals(",") || (tokens.get(z).getOrth().equals(".")))) {
                     break;
                 }
                 if (tokens.get(z).getPos() == pos) {
-                    result.add(new WordProfile(tokens.get(z).getOrth(), word, null ));
+                    result.add(new WordProfile(tokens.get(z).getOrth(), tokens.get(z).getBase(), word, null, null));
                 }
             }
         }
         return result;
     }
-    private void reMapValues(Map<WordProfile, Long> result){
+
+    private void reMapValues(Map<WordProfile, Long> result) {
         result.forEach(WordProfile::setFrequency);
     }
 

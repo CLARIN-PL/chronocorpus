@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chunkList SYSTEM "ccl.dtd">
+<chunkList>
+    <chunk type="p" id="ch1">
+        <sentence id="s1">
+            <tok>
+                <orth>Ala</orth>
+                <lex disamb="1">
+                    <base>Ala</base>
+                    <ctag>subst:sg:nom:f</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>ma</orth>
+                <lex disamb="1">
+                    <base>mieć</base>
+                    <ctag>fin:sg:ter:imperf</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>kota</orth>
+                <lex disamb="1">
+                    <base>kot</base>
+                    <ctag>subst:sg:acc:m2</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>i</orth>
+                <lex disamb="1">
+                    <base>i</base>
+                    <ctag>conj</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>jedzie</orth>
+                <lex disamb="1">
+                    <base>jechać</base>
+                    <ctag>fin:sg:ter:imperf</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>do</orth>
+                <lex disamb="1">
+                    <base>do</base>
+                    <ctag>prep:gen</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>Wrocławia</orth>
+                <lex disamb="1">
+                    <base>Wrocław</base>
+                    <ctag>subst:sg:gen:m3</ctag>
+                </lex>
+                <ann chan="nam_loc">1</ann>
+            </tok>
+            <tok>
+                <orth>po</orth>
+                <lex disamb="1">
+                    <base>po</base>
+                    <ctag>prep:acc</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>nowe</orth>
+                <lex disamb="1">
+                    <base>nowy</base>
+                    <ctag>adj:pl:acc:f:pos</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <tok>
+                <orth>zabawki</orth>
+                <lex disamb="1">
+                    <base>zabawka</base>
+                    <ctag>subst:pl:acc:f</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+            <ns/>
+            <tok>
+                <orth>.</orth>
+                <lex disamb="1">
+                    <base>.</base>
+                    <ctag>interp</ctag>
+                </lex>
+                <ann chan="nam_loc">0</ann>
+            </tok>
+        </sentence>
+    </chunk>
+</chunkList>

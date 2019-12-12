@@ -42,6 +42,13 @@ public class WordProfileTask extends Task {
                 .findFirst().orElse(0);
     }
 
+    private Integer findWindowItemPartOfSpeechParameter(){
+        return queryParameters.stream()
+                .filter(p -> p.getName().equals("window_item_part_of_speech"))
+                .map( p -> Integer.parseInt(p.getValueAsString()))
+                .findFirst().orElse(0);
+    }
+
     private Optional<String> findBaseParameter(){
         return queryParameters.stream()
                 .filter(p -> p.getName().equals("base"))
@@ -64,12 +71,12 @@ public class WordProfileTask extends Task {
         findOrthParameter().ifPresent(w ->
                 frequency.set(WordProfileQueryService.getInstance()
                         .findWordProfile(w, findLeftWindowUnit(), findRightWindowUnit(),
-                                findPartOfSpeechParameter(),  metadata, false)));
+                                findPartOfSpeechParameter(), findWindowItemPartOfSpeechParameter(),  metadata, false)));
 
         findBaseParameter().ifPresent(w ->
                 frequency.set(WordProfileQueryService.getInstance()
                         .findWordProfile(w, findLeftWindowUnit(), findRightWindowUnit(),
-                                findPartOfSpeechParameter(),  metadata, true)));
+                                findPartOfSpeechParameter(), findWindowItemPartOfSpeechParameter(),  metadata, true)));
 
 
         JsonObjectBuilder json = Json.createObjectBuilder()
