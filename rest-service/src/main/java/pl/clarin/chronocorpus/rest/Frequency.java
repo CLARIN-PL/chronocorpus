@@ -7,6 +7,8 @@ package pl.clarin.chronocorpus.rest;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONObject;
 import pl.clarin.chronocorpus.rest.pagination.Storage;
 import pl.clarin.chronocorpus.rest.resulter.Resulter;
@@ -86,11 +88,18 @@ public class Frequency {
         tasks.put(taskID, taskerID);
     }
 
-    byte[] toXLSX(String taskID) throws IOException
+    byte[] toXLSX(String taskID) 
     {   Storage storage=storages.get(taskID);
         if (storage==null)
             return null;
-        return new JSON2XLSX().process(storage.get());
+        byte [] res=null;
+        
+        try {
+            res= new JSON2XLSX().process(storage.get());
+        } catch (IOException ex) {
+            Logger.getLogger(Frequency.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
     }
     
 }
