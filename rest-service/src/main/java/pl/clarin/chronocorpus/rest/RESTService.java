@@ -10,6 +10,7 @@ import pl.clarin.chronocorpus.rest.resulter.Resulter;
 
 import javax.inject.Singleton;
 import javax.ws.rs.*;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import java.io.File;
@@ -104,6 +105,32 @@ public class RESTService {
         //base.close();
         return res.toString();
     }
+    
+    
+    Frequency frequency=new Frequency(resulter);
+    
+    @GET
+    @Path("getPagination/{taskID}")
+    public String getPagination(@PathParam("taskID") String taskID, @QueryParam("page") int page,@QueryParam("size") int size)
+    {    
+        
+        if (frequency.doprocess(taskID))
+        {
+            JSONObject result = SendTask.send(frequency.getData(taskID), connection, init);
+            frequency.started(taskID,result.getString("id"));
+        }    
+        
+        long start = System.currentTimeMillis();
+
+        JSONObject res = frequency.get(taskID,page,size);
+        if ((System.currentTimeMillis() - start) / 1000.0 > 0.1) {
+            Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Status in " + (System.currentTimeMillis() - start) / 1000.0 + "s");
+        }
+
+        return res.toString();
+    }
+    
+    
 
     @GET
     @Path("/test")
