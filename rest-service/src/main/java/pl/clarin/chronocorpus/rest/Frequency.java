@@ -37,6 +37,7 @@ public class Frequency {
     JSONObject get(String taskID, int page, int size) {
         JSONObject result = new JSONObject();
         result.put("id", taskID);
+        result.put("error","");
         //unknown 
         if (taskDescr.get(taskID) == null) {
             result.put("error", "Not existing task");
@@ -46,10 +47,11 @@ public class Frequency {
         //not started
         if (storages.get(taskID) == null) {
             String resulterID = tasks.get(taskID);
+            
             if (resulter.checkstatus(resulterID).equals("DONE")) {
                 JSONObject res = resulter.result(resulterID);
-                if (res != null && res.has("rows")) {
-                    storages.put(taskID, new Storage(res.getJSONArray("rows")));
+                if (res != null && res.has("result") && res.getJSONObject("result").has("rows")) {
+                    storages.put(taskID, new Storage(res.getJSONObject("result").getJSONArray("rows")));
                     tasks.remove(resulterID);
                 } else {
                     result.put("error", "Problems with task execution");
@@ -63,7 +65,11 @@ public class Frequency {
         }
 
         result.put("status", "DONE");
-        result.put("rows", storages.get(taskID).getPages(page, size));
+        JSONObject result_result=new JSONObject();
+        
+        result.put("result", result_result);
+        result_result.put("task_id",taskID);
+        result_result.put("rows", storages.get(taskID).getPages(page, size));
         return result;
 
     }
