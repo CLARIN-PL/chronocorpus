@@ -117,7 +117,10 @@ public class RESTService {
         if (frequency.doprocess(taskID))
         {
             JSONObject result = SendTask.send(frequency.getData(taskID), connection, init);
-            frequency.started(taskID,result.getString("id"));
+            if (result.has("id")) {
+                resulter.started(result.getString("id"));
+                frequency.started(taskID,result.getString("id"));
+            }    
         }    
         
         long start = System.currentTimeMillis();

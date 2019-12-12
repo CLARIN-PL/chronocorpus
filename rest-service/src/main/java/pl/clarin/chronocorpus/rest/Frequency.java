@@ -50,6 +50,7 @@ public class Frequency {
                 JSONObject res = resulter.result(resulterID);
                 if (res != null && res.has("rows")) {
                     storages.put(taskID, new Storage(res.getJSONArray("rows")));
+                    tasks.remove(resulterID);
                 } else {
                     result.put("error", "Problems with task execution");
                     return result;
