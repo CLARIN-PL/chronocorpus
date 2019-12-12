@@ -17,6 +17,10 @@ public class Storage {
     
     private JSONArray data;
     
+    public JSONArray get()
+    {
+        return data;
+    }
     
     public JSONObject getPages(int page,int size)
     {

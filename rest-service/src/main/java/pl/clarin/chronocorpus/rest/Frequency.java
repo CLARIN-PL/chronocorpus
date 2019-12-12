@@ -5,6 +5,7 @@
  */
 package pl.clarin.chronocorpus.rest;
 
+import java.io.IOException;
 import java.util.HashMap;
 import org.json.JSONObject;
 import pl.clarin.chronocorpus.rest.pagination.Storage;
@@ -30,7 +31,6 @@ public class Frequency {
 
     Frequency(Resulter resulter) {
         this.resulter = resulter;
-
     }
 
     JSONObject get(String taskID, int page, int size) {
@@ -86,4 +86,11 @@ public class Frequency {
         tasks.put(taskID, taskerID);
     }
 
+    byte[] toXLSX(String taskID) throws IOException
+    {   Storage storage=storages.get(taskID);
+        if (storage==null)
+            return null;
+        return new JSON2XLSX().process(storage.get());
+    }
+    
 }

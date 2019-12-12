@@ -109,6 +109,7 @@ public class RESTService {
     
     Frequency frequency=new Frequency(resulter);
     
+    
     @GET
     @Path("getPagination/{taskID}")
     public String getPagination(@PathParam("taskID") String taskID, @QueryParam("page") int page,@QueryParam("size") int size)
@@ -133,6 +134,12 @@ public class RESTService {
         return res.toString();
     }
     
+    @GET
+    @Path("getXLSX/{taskID}")
+    public byte[] getXLSX(@PathParam("taskID") String taskID) throws IOException
+    {
+        return frequency.toXLSX(taskID);
+    }
     
 
     @GET
