@@ -68,8 +68,8 @@ public class JSON2XLSX {
                    c.setCellValue(key);
             }
         }    
-        for (int i=1;i<=data.length();i++)
-        {  XSSFRow r = s.createRow(i+1);
+        for (int i=0;i<data.length();i++)
+        {  XSSFRow r = s.createRow(i+2);
            JSONObject o=data.getJSONObject(i);
            j=0;
            for (String key:o.keySet())
