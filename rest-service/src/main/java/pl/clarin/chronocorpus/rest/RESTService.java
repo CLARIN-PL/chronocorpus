@@ -136,9 +136,16 @@ public class RESTService {
     
     @GET
     @Path("getXLSX/{taskID}")
-    public byte[] getXLSX(@PathParam("taskID") String taskID) throws IOException
-    {
+    public byte[] getXLSX(@PathParam("taskID") String taskID)
+    {   try {
         return frequency.toXLSX(taskID);
+        }
+      catch(Exception ex)
+      {
+           Logger.getLogger(RESTService.class.getName()).log(Level.FATAL, null, ex);
+          
+      }
+      return null;
     }
     
 
