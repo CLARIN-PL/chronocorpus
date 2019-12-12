@@ -71,7 +71,7 @@ public class JSON2XLSX {
         for (int i=1;i<=data.length();i++)
         {  XSSFRow r = s.createRow(i+1);
            JSONObject o=data.getJSONObject(i);
-           
+           j=0;
            for (String key:o.keySet())
            {  XSSFCell c = r.createCell(j++);
               setCell(c,key,o);  
