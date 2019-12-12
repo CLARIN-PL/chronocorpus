@@ -78,6 +78,15 @@ public class Resulter implements Runnable{
         }
     }
 
+    public String checkstatus(String id) {
+        
+        if (taskMap.containsKey(id))
+           return taskMap.get(id).getStatus();
+        else 
+           return "UNKNOWN";
+        
+    } 
+    
     public JSONObject status(String id) {
         JSONObject result = new JSONObject();
         result.put("id", id);
