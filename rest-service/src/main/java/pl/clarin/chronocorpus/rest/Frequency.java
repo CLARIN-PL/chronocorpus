@@ -31,7 +31,7 @@ public class Frequency {
 
     Frequency(Resulter resulter) {
         this.resulter = resulter;
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     JSONObject get(String taskID, int page, int size) {
