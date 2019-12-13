@@ -69,6 +69,12 @@ public class DictionaryQueryService {
                 .collect(Collectors.toList());
     }
 
+    public List<String> defaultStopList(){
+        return Stream.of("w", "i", "to", "z", "na", "że", "po", "pod", "za",
+                "który", "być", "się", "nie", "do", "o", "on", "ten", "a", "też")
+                .collect(Collectors.toList());
+    }
+
     public List<String> findAllPropertyNames() {
         return propertyNames;
     }

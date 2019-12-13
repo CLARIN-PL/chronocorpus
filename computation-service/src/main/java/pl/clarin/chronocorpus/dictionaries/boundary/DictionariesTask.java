@@ -46,6 +46,10 @@ public class DictionariesTask extends Task {
         DictionaryQueryService.getInstance()
                 .findAllPropertyNames().forEach(propertyNames::add);
 
+        JsonArrayBuilder defaultStopList = Json.createArrayBuilder();
+        DictionaryQueryService.getInstance()
+                .defaultStopList().forEach(defaultStopList::add);
+
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id);
 
@@ -53,7 +57,8 @@ public class DictionariesTask extends Task {
             JsonObjectBuilder dict = Json.createObjectBuilder()
                     .add("parts_of_speech", partsOfSpeech)
                     .add("exposition", exposition)
-                    .add("property_names", propertyNames);
+                    .add("property_names", propertyNames)
+                    .add("default_stop_list", defaultStopList);
 
             json.add("dictionaries", dict);
         } else {

@@ -1,5 +1,6 @@
 package pl.clarin.chronocorpus.frequency.boundary;
 
+import pl.clarin.chronocorpus.dictionaries.control.DictionaryQueryService;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.frequency.control.FrequencyQueryService;
 import pl.clarin.chronocorpus.task.entity.Task;
@@ -8,6 +9,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,9 +39,7 @@ public class FrequencyTask extends Task {
         if (s.isPresent()) {
             stopList = Stream.of(s.get().split(";")).collect(Collectors.toSet());
         } else {
-            stopList = Stream.of("w", "i", "to", "z", "na", "że", "po", "pod", "za",
-                    "który", "być", "się", "nie", "do", "o", "on", "ten", "a", "też")
-                    .collect(Collectors.toSet());
+            stopList = new HashSet<>(DictionaryQueryService.getInstance().defaultStopList());
         }
         return stopList;
     }

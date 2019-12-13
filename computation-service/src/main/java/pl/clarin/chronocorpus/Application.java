@@ -31,14 +31,14 @@ public class Application {
 
         Application app = new Application();
 
-/*
+
         ConcordanceQuery con = new ConcordanceQuery.Builder()
-                .withOrth("Armia")
+                .withBase("armia czerwony")
                 .build();
 
         app.testWithTimer(con, "Concordance");
 
-
+/*
         TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
                 .withBase("czerwony")
                 .withPartOfSpeech("4")
@@ -47,7 +47,7 @@ public class Application {
         app.testWithTimer(ana1l, "Time series");
 */
 
-
+/*
         WordProfileQuery wp = new WordProfileQuery.Builder()
                 .withRightWindowSize("3")
                 .withLeftWindowSize("3")
@@ -56,7 +56,7 @@ public class Application {
                 .withOrth("piec")
                 .build();
 
-        app.testWithTimer(wp, "Word Profile");
+        app.testWithTimer(wp, "Word Profile");*/
     }
 
     public Application() {

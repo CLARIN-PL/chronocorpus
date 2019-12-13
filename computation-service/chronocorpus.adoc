@@ -200,7 +200,8 @@ Example request and respond getting word profile frequency.
         {
             "collocate":"pierwszy",
             "matching":"pierwszy_piec(17),piec_pierwszy(1),Pierwszy_piec(1),pierwsza_piec(1),piec_pierwszej(1)",
-            "frequency":21,"percentage":6.86274528503418
+            "frequency":21,
+            "percentage":6.86274528503418
         },
         {
             "collocate":"nowy",
@@ -499,6 +500,10 @@ Example request and response fetching dictionary values or property lists
                 "article_title","authors","exposition",
                 "journal_title","medium","period","publication_day",
                 "publication_month","publication_year","status","style"
+        ],
+        "default_stop_list":[
+            "w", "i", "to", "z", "na", "że", "po", "pod", "za",
+            "który", "być", "się", "nie", "do", "o", "on", "ten", "a", "też"
         ]
     }
 }

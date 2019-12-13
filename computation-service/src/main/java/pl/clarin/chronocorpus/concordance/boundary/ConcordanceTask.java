@@ -1,5 +1,6 @@
 package pl.clarin.chronocorpus.concordance.boundary;
 
+import pl.clarin.chronocorpus.concordance.control.ConcordanceQueryServiceNew;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.concordance.control.ConcordanceQueryService;
 import pl.clarin.chronocorpus.task.entity.Task;
@@ -30,15 +31,22 @@ public class ConcordanceTask extends Task {
                 .findFirst();
     }
 
+    private Optional<String> findWindowModeParameter(){
+        return queryParameters.stream()
+                .filter(p -> p.getName().equals("window_mode"))
+                .map(Property::getValueAsString)
+                .findFirst();
+    }
+
     @Override
     public JsonObject doTask(Progress pr) {
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id);
 
-        findOrthParameter().ifPresent(w ->  json.add("rows", ConcordanceQueryService.getInstance()
+        findOrthParameter().ifPresent(w ->  json.add("rows", ConcordanceQueryServiceNew.getInstance()
                 .findConcordance(w, responseParameters, metadata, false)));
 
-        findBaseParameter().ifPresent(w ->  json.add("rows", ConcordanceQueryService.getInstance()
+        findBaseParameter().ifPresent(w ->  json.add("rows", ConcordanceQueryServiceNew.getInstance()
                 .findConcordance(w, responseParameters, metadata, true)));
 
         return json.build();

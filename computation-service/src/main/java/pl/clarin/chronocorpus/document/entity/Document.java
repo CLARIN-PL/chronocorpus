@@ -65,9 +65,15 @@ public class Document implements Serializable {
                 .add("text", toText()).build();
     }
 
-    private String toText() {
+    public String toText() {
         return sentences.stream()
                 .map(Sentence::getSentence)
+                .collect(Collectors.joining());
+    }
+
+    public String toTextInBase() {
+        return sentences.stream()
+                .map(Sentence::getSentenceInBaseForm)
                 .collect(Collectors.joining());
     }
 

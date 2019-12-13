@@ -23,10 +23,15 @@ public class Sentence implements Serializable {
         return tokens;
     }
 
-
     public String getSentence() {
         return tokens.stream()
                 .map(Token::getOrthWithDelimiter)
+                .collect(Collectors.joining());
+    }
+
+    public String getSentenceInBaseForm() {
+        return tokens.stream()
+                .map(Token::getBaseWithDelimiter)
                 .collect(Collectors.joining());
     }
 

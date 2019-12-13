@@ -31,6 +31,14 @@ public class Token implements Serializable {
         return null;
     }
 
+    public String getBaseWithDelimiter() {
+        if(word != null)
+            if(isNoSpaceAfter()){
+                return word.getBase();
+            } else return word.getBase() + " ";
+        return getOrthWithDelimiter();
+    }
+
     public String getOrth() {
         return orth;
     }
