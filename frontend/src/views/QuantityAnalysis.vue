@@ -31,10 +31,10 @@
               </b-form-group>
               <b-form-group
                 :label="this.$t('quantity_analysis.parts_of_speech')">
-                  <b-button class="trigger-button" :pressed.sync="adjective">{{$t('adjective')}}</b-button>
-                  <b-button class="trigger-button" :pressed.sync="noun" >{{$t('noun')}}</b-button>
-                  <b-button class="trigger-button" :pressed.sync="verb" >{{$t('verb')}}</b-button>
-                  <b-button class="trigger-button" :pressed.sync="adverb">{{$t('adverb')}}</b-button>
+                  <b-button class="trigger-button" :pressed.sync="adjective"><span class="trigger-button-ico"></span> {{$t('adjective')}}</b-button>
+                  <b-button class="trigger-button" :pressed.sync="noun" ><span class="trigger-button-ico"></span>{{$t('noun')}}</b-button>
+                  <b-button class="trigger-button" :pressed.sync="verb" ><span class="trigger-button-ico"></span>{{$t('verb')}}</b-button>
+                  <b-button class="trigger-button" :pressed.sync="adverb"><span class="trigger-button-ico"></span>{{$t('adverb')}}</b-button>
               </b-form-group>
 
               <transition>
@@ -65,12 +65,37 @@
         <div class="text-center box-container-result" v-if="task.finished">
           <div class="content-container" ref="chartContainer">
             <div v-on:resize="redrawChart()">
+              <!--<b-button v-on:click="export2image" type="button" size="sm" class="btn submit-button btn-secondary" style="margin: 3px; float: left">-->
+                <!--{{$t('download')}} PNG-->
+              <!--</b-button>-->
+              <div>
+                <b-collapse id="collapse-1" class="mt-2">
+                  <b-card class="mb-2">
+                    <div class=""></div>
+                    <b-container v-for="item in table" :key="item.key" class="info-card" style="">
+                      <b-row class="mb-0  line_bottom">
+                        <b-col style="text-align: right" ><strong>{{$t('quantity_analysis.' + item.key)}}</strong></b-col>
+                        <b-col style="text-align: left" >{{ isNaN(item.value) ? $t('quantity_analysis.' + item.value) : item.value.toFixed(8)}}</b-col>
+                      </b-row>
+                    </b-container>
+                  </b-card>
+                </b-collapse>
+              </div>
+
+              <b-button v-b-toggle.collapse-1 type="button" size="sm" class="btn submit-button btn-secondary" style="margin: 3px; float: left">
+                {{$t('quantity_analysis.more_info')}}
+              </b-button>
+
+                <b-button class="btn filter-button" size="sm"  @click="log = !log" style="margin: 3px; float: left" :title="$t('scale.title')">
+                  {{$t('scale.'+log.toString())}}
+                </b-button>
+
               <b-button v-on:click="export2image" type="button" size="sm" class="btn submit-button btn-secondary" style="margin: 3px; float: right">
                 {{$t('download')}} PNG
               </b-button>
-              <vue-json-to-csv :json-data="json_data" :csv-title="csv_title">
+              <vue-json-to-csv :json-data="json_data" :csv-title="csv_title" :separator="'\t'">
                 <b-button type="button" size="sm" class="btn filter-button btn-secondary" style="margin: 3px; float: right">
-                  {{$t('download')}} CSV
+                  {{$t('download')}} TSV
                 </b-button>
               </vue-json-to-csv>
               <b-button v-on:click="redrawChart()" type="button" size="sm" class="btn filter-button btn-secondary" style="margin: 3px; float: right">
@@ -120,8 +145,10 @@ export default {
       noun: true,
       verb: true,
       adverb: true,
+      log: false,
       metadata_filters: [],
       word_was_chosen: true,
+      table: [],
       chart: {},
       chartHeight: 470
     }
@@ -226,6 +253,7 @@ export default {
         },
         scales: {
           yAxes: [{
+            type: this.log ? 'logarithmic' : 'linear',
             scaleLabel: {
               display: true,
               labelString: this.$t('quantity_analysis.y_label')
@@ -236,7 +264,6 @@ export default {
             gridLines: {
               display: true
             }
-            // type: 'logarithmic'
           }],
           xAxes: [{
             scaleLabel: {
@@ -429,12 +456,25 @@ export default {
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
         console.log(response)
         this.quantity_analysis = response.data.result.rows[0]
+        this.mapData(this.quantity_analysis)
         this.mapChartData(this.quantity_analysis.chart)
         this.resizeChart()
         this.show.loading = false
       } catch (e) {
         console.log(Object.keys(e), e.message)
         this.show.loading = false
+      }
+    },
+    mapData: function (data) {
+      try {
+        for (let key in data) {
+          if (key !== 'chart') {
+            this.table.push({key: key, value: data[key]})
+          }
+        }
+        console.log(this.table)
+      } catch (e) {
+        console.log(Object.keys(e), e.message)
       }
     },
     mapChartData: function (chartData) {
@@ -503,7 +543,27 @@ export default {
   }
 
   .line_bottom {
-    border-bottom: 1px solid #c3c3c3;
+    /*border-bottom: 1px solid var(--dark_silver);*/
+    /*border-image:*/
+      /*linear-gradient(#e66465, #9198e5);*/
+    /*color: red;*/
+    border-width: 1px;
+    border-style: solid;
+    border-image:
+      linear-gradient(
+        to left,
+        rgba(0, 0, 0, 0),
+        var(--dark_silver),
+        rgba(0, 0, 0, 0)
+      )1 0;
+  }
+
+  .info-card {
+    width: 50%;
+    display: inline-block;
+    float: left;
+    font-size: 0.8rem;
+    color: var(--grey_blue);
   }
 
 </style>

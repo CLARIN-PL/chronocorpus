@@ -24,6 +24,11 @@
                               v-model="form.orth" oninput="setCustomValidity('')"/>
               </b-form-group>
 
+              <b-form-group :label="this.$t('wordprofiles.word_part')">
+                <b-form-select selected="" required v-model="word_part_of_speech.selected"
+                               :options="word_part_of_speech.options"/>
+              </b-form-group>
+
               <b-container style="padding: 0 !important">
                 <b-row >
                   <b-col>
@@ -41,10 +46,21 @@
                 </b-row>
               </b-container>
 
+              <!--<b-form-group :label="this.$t('wordprofiles.context')">-->
+                <!--<b-form-select class="form-input-select" selected="" required v-model="part_of_speech.selected"-->
+                               <!--:options="part_of_speech.options"/>-->
+              <!--</b-form-group>-->
               <b-form-group :label="this.$t('wordprofiles.context')">
-                <b-form-select class="form-input-select" selected="" required v-model="part_of_speech.selected"
-                               :options="part_of_speech.options"/>
+                <b-form-select selected="" required v-model="context_part_of_speech.selected"
+                               :options="context_part_of_speech.options"/>
               </b-form-group>
+              <!--<b-form-group-->
+                <!--:label="this.$t('wordprofiles.context')">-->
+                <!--<b-button class="trigger-button" :pressed.sync="adjective"><span class="trigger-button-ico"></span> {{$t('adjective')}}</b-button>-->
+                <!--<b-button class="trigger-button" :pressed.sync="noun" ><span class="trigger-button-ico"></span>{{$t('noun')}}</b-button>-->
+                <!--<b-button class="trigger-button" :pressed.sync="verb" ><span class="trigger-button-ico"></span>{{$t('verb')}}</b-button>-->
+                <!--<b-button class="trigger-button" :pressed.sync="adverb"><span class="trigger-button-ico"></span>{{$t('adverb')}}</b-button>-->
+              <!--</b-form-group>-->
 
               <transition>
                 <b-form-group>
@@ -83,7 +99,7 @@
             <b-card class="bv-example-row" v-if="task.finished">
               <b-spinner v-if="show.loading" style="width: 3rem; height: 3rem;"/>
               <div class="content-pagination" v-if="word_profiles.length > 0">
-                <vue-json-to-csv :json-data="json_data" :csv-title="csv_title">
+                <vue-json-to-csv :json-data="json_data" :csv-title="csv_title" :separator="'\t'">
                   <b-button type="button"  class="btn filter-button btn-secondary" style="float: right">
                     {{$t('download_csv')}}
                   </b-button>
@@ -91,12 +107,19 @@
                 <b-pagination :total-rows="word_profiles.length" :per-page="limit" @change="changePage" align="center"
                               v-if="word_profiles.length > 0"/>
               </div>
-              <div class="content-list">
-              <b-row class="justify-content-md-center" v-for="(item) in pages" :key="item.id">
-                <b-col col lg="2" class="line_bottom">{{item.profile}}</b-col>
+
+              <div class="content-list col-5 card-img-left">
+                <pie-chart v-if="chart.visible" :chart-data="chart"></pie-chart>
+              </div>
+              <div class="content-list col-7">
+              <b-row class="justify-content-md" v-for="(item) in pages" :key="item.id">
+                <b-col col lg="2" class="line_bottom">{{item.collocate}}</b-col>
+                <b-col col lg="6" class="line_bottom">{{item.matching.split(',').join(', ')}}</b-col>
                 <b-col col lg="2" class="line_bottom">{{item.frequency}}</b-col>
+                <b-col col lg="2" class="line_bottom">{{item.percentage.toFixed(3)}}</b-col>
               </b-row>
               </div>
+
             </b-card>
           </div>
         </div>
@@ -106,12 +129,13 @@
 </template>
 
 <script>
-import FadeTransition from '@/components/FadeTransition.vue'
-import axios from 'axios'
-import TaskFilter from '@/components/TaskFilter'
-import VueJsonToCsv from 'vue-json-to-csv'
+  import FadeTransition from '@/components/FadeTransition.vue'
+  import axios from 'axios'
+  import TaskFilter from '@/components/TaskFilter'
+  import VueJsonToCsv from 'vue-json-to-csv'
+  import PieChart from '../components/PieChart'
 
-export default {
+  export default {
   name: 'WordProfiles',
   data () {
     return {
@@ -132,14 +156,30 @@ export default {
         loading: false,
         filters: false
       },
+      chart:
+        {
+          label: 'a',
+          labels: [],
+          datasets: [
+            {
+              backgroundColor: ['#f44336', '#2196f3', '#ffc107', '#4caf50', '#7e57c2', '#8d6e63', '#ec407a', '#3f51b5', '#7cb342', '#c7c7c7'],
+              data: []
+            }
+          ],
+          visible: false
+        },
       word_profiles: [],
+      adjective: false,
+      noun: true,
+      verb: false,
+      adverb: false,
       limit: 50,
       skip: 0,
       page: 1,
       metadata_filters: []
     }
   },
-  components: {TaskFilter, axios, FadeTransition, VueJsonToCsv},
+  components: {TaskFilter, axios, FadeTransition, VueJsonToCsv, PieChart},
   watch: {
     page: function (value) {
       this.page = value
@@ -151,6 +191,38 @@ export default {
         this.page = parseInt(this.word_profiles.length / this.limit) + 1
       }
       this.skip = this.limit * this.page
+    },
+    adjective: function () {
+      if (this.noun === false && this.verb === false && this.adverb === false) {
+        if (this.adjective === false) {
+          this.adjective = true
+          alert(this.$t('quantity_analysis.alert'))
+        }
+      }
+    },
+    noun: function () {
+      if (this.adjective === false && this.verb === false && this.adverb === false) {
+        if (this.noun === false) {
+          this.noun = true
+          alert(this.$t('quantity_analysis.alert'))
+        }
+      }
+    },
+    verb: function () {
+      if (this.noun === false && this.adjective === false && this.adverb === false) {
+        if (this.verb === false) {
+          this.verb = true
+          alert(this.$t('quantity_analysis.alert'))
+        }
+      }
+    },
+    adverb: function () {
+      if (this.noun === false && this.verb === false && this.adjective === false) {
+        if (this.adverb === false) {
+          this.adverb = true
+          alert(this.$t('quantity_analysis.alert'))
+        }
+      }
     }
   },
   computed: {
@@ -169,15 +241,66 @@ export default {
       }
     },
     part_of_speech () {
+      let partOfSpeech = ''
+      if (this.adjective) {
+        partOfSpeech += '1'
+      }
+      if (this.noun) {
+        if (partOfSpeech !== '') {
+          partOfSpeech += ';'
+        }
+        partOfSpeech += '2'
+      }
+      if (this.verb) {
+        if (partOfSpeech !== '') {
+          partOfSpeech += ';'
+        }
+        partOfSpeech += '3'
+      }
+      if (this.adverb) {
+        if (partOfSpeech !== '') {
+          partOfSpeech += ';'
+        }
+        partOfSpeech += '4'
+      }
+      return partOfSpeech
+    },
+    word_part_of_speech () {
       return {
         selected: '2',
         options:
-          [
-            {value: '1', text: this.$t('verb')},
-            {value: '2', text: this.$t('noun')},
-            {value: '3', text: this.$t('adverb')},
-            {value: '4', text: this.$t('adjective')}
-          ]
+                [
+                  {value: '1', text: this.$t('verb')},
+                  {value: '2', text: this.$t('noun')},
+                  {value: '3', text: this.$t('adverb')},
+                  {value: '4', text: this.$t('adjective')}
+                ]
+      }
+    },
+    context_part_of_speech () {
+      return {
+        selected: '1',
+        options:
+                [
+                  {value: '1', text: this.$t('verb')},
+                  {value: '2', text: this.$t('noun')},
+                  {value: '3', text: this.$t('adverb')},
+                  {value: '4', text: this.$t('adjective')}
+                ]
+      }
+    },
+    chart_options: function () {
+      return {
+        title: {
+          display: true,
+          text: this.$t('charts.lemma.title') + '"' + 'iksde' + '"'
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        pieceLabel: {
+          mode: 'percentage',
+          precision: 1
+        }
       }
     }
   },
@@ -223,7 +346,11 @@ export default {
             },
             {
               name: 'part_of_speech',
-              value: this.part_of_speech.selected
+              value: this.word_part_of_speech.selected
+            },
+            {
+              name: 'window_item_part_of_speech',
+              value: this.context_part_of_speech.selected
             },
             {
               name: 'left_window_size',
@@ -245,6 +372,8 @@ export default {
         console.log(response)
         this.checkStatus(this.task.id, 200)
       } catch (e) {
+        this.task.finished = false
+        this.show.loading = true
         console.log(Object.keys(e), e.message)
       }
     },
@@ -262,7 +391,7 @@ export default {
             this.checkStatus(taskId, timer)
           }, timer)
         } else if (this.task.status === 'ERROR') {
-          this.task.finished = true
+          this.task.finished = false
           this.task.loading = false
         }
       } catch (e) {
@@ -273,12 +402,19 @@ export default {
       try {
         this.task.finished = true
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        console.log(response)
         this.changePage(1)
         this.skip = this.limit
         this.csv_title = 'word_profiles_' + this.form.orth + '_L' + this.form.left_window_size + '_R' + this.form.right_window_size
         this.word_profiles = response.data.result.rows
+        this.mapChartData(response.data.result.rows)
         for (var x in this.word_profiles) {
-          this.json_data.push({'frequency': this.word_profiles[x].frequency, 'profile': this.word_profiles[x].profile})
+          this.json_data.push({
+            'collocate': this.word_profiles[x].collocate,
+            'matching': this.word_profiles[x].matching,
+            'frequency': this.word_profiles[x].frequency,
+            'percentage': this.word_profiles[x].percentage
+            })
         }
         this.show.loading = false
       } catch (e) {
@@ -300,6 +436,17 @@ export default {
       } catch (e) {
         console.log(Object.keys(e), e.message)
       }
+    },
+    mapChartData: function (data) {
+      let left = 100
+      for (let i = 0; i < 9; i++) {
+        left -= data[i].percentage
+        this.chart.labels[i] = '"' + data[i].collocate + '" (' + data[i].percentage.toFixed(3) + '%)'
+        this.chart.datasets[0].data[i] = data[i].percentage
+      }
+      this.chart.labels[9] = '*' + '" (' + left.toFixed(3) + '%)'
+      this.chart.datasets[0].data[9] = left
+      this.chart.visible = true
     }
   }
 }
@@ -317,7 +464,9 @@ export default {
       height: 100%;
     }
   .content-list {
-    /*height: 80%;*/
+    margin: auto;
+    float: left;
+    height: calc(100% - 30px);
     overflow-y: auto;
     overflow-x: hidden;
   }
@@ -325,10 +474,6 @@ export default {
     overflow: inherit;
   }
   @media only screen and (min-width: 768px) {
-    .content-list {
-      height: calc(100% - 50px);
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
+
   }
 </style>

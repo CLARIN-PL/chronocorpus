@@ -56,6 +56,10 @@ export default {
     /*margin-bottom: -100px;*/
   }
 
+  .justify {
+    text-align: justify;
+    text-justify: inter-word;
+  }
   #view-container {
     /*height: 100%;*/
     display: flex;
@@ -217,14 +221,19 @@ export default {
     border: 2px solid var(--grey_blue) !important;
     text-transform: uppercase;
     color: var(--grey_blue) !important;
-    text-decoration: line-through;
+    /*text-decoration: line-through;*/
     margin: 2px;
   }
-
+  .active .trigger-button-ico:before {
+    content: "✔ "!important;
+  }
+  .trigger-button-ico:before {
+    content: '✘ ' !important;
+  }
   .trigger-button:hover {
     background-color: var(--grey_blue) !important;
     color: var(--warm_silver) !important;
-    text-decoration: line-through;
+    /*text-decoration: line-through;*/
   }
 
   .trigger-button.active:hover {
