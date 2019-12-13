@@ -49,7 +49,7 @@
 
          <div class="content-pagination">
            <span v-if="!show.loading" class="rows-count">{{countMessage}}</span>
-           <vue-json-to-csv :json-data="json_data" :csv-title="csv_title">
+           <vue-json-to-csv :json-data="json_data" :csv-title="csv_title" :separator="'\t'">
              <b-button type="button"  class="btn filter-button btn-secondary" style="float: right">
                {{$t('download_csv')}}
              </b-button>
@@ -71,20 +71,25 @@
     </div>
     <b-modal ref="documentModal" size="xl" :title="this.$t('concordance.modal_title')"
              :cancel-title="this.$t('concordance.modal_cancel')" cancel-variant="none" ok-variant="dark submit-button">
-      <b-row v-for="item in documentmodal.properties" :key="item.name">
-        <b-col class="line_bottom" cols="2" style="text-align: right;"><strong>{{$t(item.name)}}</strong></b-col>
-        <b-col class="line_bottom" cols="10" style="text-align: left;">{{item.value}}</b-col>
-      </b-row>
-      <b-row v-if="documentmodal.data.text">
-        <b-col cols="2" style="text-align: right;"><strong> </strong></b-col>
-        <b-col cols="10" style="text-align: left;">
-          {{documentmodal.data.text[0]}}
-          <span style="color: #8772c3; font-weight: bold">{{documentmodal.data.text[1]}}</span>
-          <span style="color: #b14a89; font-weight: bold">{{documentmodal.data.text[2]}}</span>
-          <span style="color: #8772c3; font-weight: bold">{{documentmodal.data.text[3]}}</span>
-          {{documentmodal.data.text[4]}}
-        </b-col>
-      </b-row>
+      <b-container v-for="item in documentmodal.properties" :key="item.name" style="width: 50%; display: inline-block; float: left">
+        <b-row class="mb-2">
+          <b-col class="line_bottom" style="text-align: right" ><strong>{{$t(item.name)}}</strong></b-col>
+          <b-col class="line_bottom" style="text-align: left" >{{item.value}}</b-col>
+        </b-row>
+      </b-container>
+      <b-container class="card" style="padding: 20px">
+        <b-row v-if="documentmodal.data.text">
+          <!--<b-col cols="2" style="text-align: right;"><strong> </strong></b-col>-->
+          <b-col  style=" text-align: justify; text-justify: inter-word;">
+            {{documentmodal.data.text[0]}}
+            <span style="color: #8772c3; font-weight: bold">{{documentmodal.data.text[1]}}</span>
+            <span style="color: #b14a89; font-weight: bold">{{documentmodal.data.text[2]}}</span>
+            <span style="color: #8772c3; font-weight: bold">{{documentmodal.data.text[3]}}</span>
+            {{documentmodal.data.text[4]}}
+          </b-col>
+        </b-row>
+      </b-container>
+
     </b-modal>
 
   </div>
@@ -279,7 +284,7 @@ export default {
         this.changePage(1)
         this.skip = this.limit
         this.concordances = response.data.result.rows
-        this.csv_title = this.form.word + '_' + this.method.selected
+        this.csv_title = this.form.word + '_' + this.method.selected + '_' + this.task.id
         this.show.loading = false
         for (var x in this.concordances) {
           this.json_data.push({'left': this.concordances[x].concordances[0].left, 'word': this.concordances[x].concordances[0].word, 'right': this.concordances[x].concordances[0].right})
@@ -332,7 +337,7 @@ export default {
       var mm = String(newDate.getMonth() + 1).padStart(2, '0')
       var yyyy = newDate.getFullYear()
       result.push({'name': 'publication_date', 'value': mm + '-' + dd + '-' + yyyy})
-      console.log(result)
+      // result.push({'name': '  ', 'value': '  '})
       return result
     }
   },

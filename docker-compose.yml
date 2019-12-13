@@ -2,7 +2,9 @@ version: '3.7'
 services:
   base:
     image: chronocorpus
-    build: ./chronocorpus
+    build:
+        context:  ./
+        dockerfile: Dockerfile_computation-service
   chronopress:    
     container_name: chrono-chronopress
     build: ./chronopress
@@ -20,21 +22,17 @@ services:
          - -jar 
          - chronocorpus.jar
     restart: always
-    #deploy:
-    #  restart_policy:
-    #    condition: on-failure
-    #    delay: 5s
-    #    max_attempts: 3
-    #    window: 120s
     
          
   rest:
     container_name: chrono-rest
-    build: ./rest
+    build:
+        context:  ./
+        dockerfile: Dockerfile_rest-service
     ports:
         - "8080:8080"
     volumes:
-        - ./rest/config.ini:/home/worker/config.ini
+        - ./rest-service/config.ini:/home/worker/config.ini
     working_dir: /home/worker/    
     depends_on:
       - base
@@ -43,12 +41,6 @@ services:
          - -jar 
          - RESTchronocorpus.jar       
     restart: always
-    #deploy:  
-    #  restart_policy:
-    #    condition: on-failure
-    #    delay: 5s
-    #    max_attempts: 3
-    #    window: 120s
     
   frontend: 
     container_name: chrono-frontend

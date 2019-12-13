@@ -49,6 +49,18 @@
             <version>20180130</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>4.1.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>4.1.1</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -86,4 +98,5 @@
         </plugins>
         <finalName>RESTchronocorpus</finalName>
     </build>
+    <name>chrono-rest</name>
 </project>

@@ -8,6 +8,11 @@ export const i18n = new VueI18n({
   fallbackLocale: 'pl',
   messages: {
     pl: {
+      scale: {
+        title: 'kliknj aby zmienić skalę',
+        true: '✔ skala logarytmiczna',
+        false: '✘ skala logarytmiczna'
+      },
       cancel: 'Anuluj',
       undo_selection: '↺ cofnij wybór',
       home: {
@@ -51,7 +56,7 @@ export const i18n = new VueI18n({
       },
       concordance: {
         word: 'Leksem',
-        word_i: 'wpisz wyraz',
+        word_i: 'szybkie wyszukiwanie konkordancji',
         corpus: 'Korpus',
         corpus_i: 'wybierz korpus',
         method: 'Forma wyrazu',
@@ -82,9 +87,10 @@ export const i18n = new VueI18n({
       },
       wordprofiles: {
         word: 'Wpisz wyraz',
+        word_part: 'Wybierz część mowy wyrazu',
         left: 'Lewy kontekst',
         right: 'Prawy kontekst',
-        context: 'Wyrazy kontekstowe',
+        context: 'Część mowy dla kontekstu',
         submit: 'Generuj profil'
       },
       quantity_analysis: {
@@ -103,7 +109,13 @@ export const i18n = new VueI18n({
         y_label: 'Ilość',
         x_prefix: 'Liczba jednostek (',
         x_sufix: ') w przedmiocie obliczeń (',
-        alert: 'należy wybrać conajmniej jedną część mowy'
+        alert: 'należy wybrać conajmniej jedną część mowy',
+        more_info: 'więcej informacji',
+        skewness: 'Skośność',
+        average_length: 'Średnia długość',
+        standard_deviation: 'Odchylenie standardowe',
+        coefficient_of_variation: 'Współczynnik zmienności',
+        kurtosis: 'Kurtoza'
       },
       exp: {
         first: 'Pierwsza strona',
@@ -129,7 +141,9 @@ export const i18n = new VueI18n({
       month: 'Miesiąc',
       year: 'Rok',
       download: 'Pobierz',
-      download_csv: 'eksportuj do .csv',
+      download_csv: 'eksportuj do .tsv',
+      download_xlsx: 'eksportuj do .xlsx',
+      wait_for_file: ' plik jest przygotowywany',
       names_map: {
         popup: {
           full_name: 'Nazwa miejscowa',
@@ -141,7 +155,7 @@ export const i18n = new VueI18n({
       },
       time_series: {
         word: 'Wyraz',
-        word_i: 'pisz wyraz',
+        word_i: 'wprowadź wyraz',
         part_of_speech: 'Część mowy',
         time_unit: 'Jednostka czasu',
         time_unityear: 'Jednostka czasu (rok)',
@@ -150,6 +164,11 @@ export const i18n = new VueI18n({
       }
     },
     en: {
+      scale: {
+        title: 'click to change the scale',
+        true: 'logarithmic scale',
+        false: 'logarithmic scale'
+      },
       cancel: 'Cancel',
       undo_selection: '↺ undo the selection',
       home: {
@@ -193,7 +212,7 @@ export const i18n = new VueI18n({
       },
       concordance: {
         word: 'Lexeme',
-        word_i: 'type word',
+        word_i: 'quick concordance search',
         corpus: 'Corpus',
         corpus_i: 'select corpus',
         method: 'Form',
@@ -221,9 +240,10 @@ export const i18n = new VueI18n({
       },
       wordprofiles: {
         word: 'Type word',
+        word_part: 'part of the speech of the word',
         left: 'Left context',
         right: 'Right context',
-        context: 'Context words',
+        context: 'part of the speech of the context',
         submit: 'Generate profile'
       },
       quantity_analysis: {
@@ -242,7 +262,13 @@ export const i18n = new VueI18n({
         y_label: 'Quantity',
         x_prefix: 'Units (',
         x_sufix: ') in calculation object (',
-        alert: 'at least one part of the speech should be chosen'
+        alert: 'at least one part of the speech should be chosen',
+        more_info: 'more details',
+        skewness: 'Skewness',
+        average_length: 'Average length',
+        standard_deviation: 'Standard deviation',
+        coefficient_of_variation: 'Coefficient of variation',
+        kurtosis: 'Kurtosis'
       },
       footer: {
         copyright: 'Copyright 2019 Clarin-PL. All Rights Reserved.'
@@ -271,7 +297,9 @@ export const i18n = new VueI18n({
       month: 'Month',
       year: 'Year',
       download: 'Download',
-      download_csv: 'export to .csv',
+      download_csv: 'export to .tsv',
+      download_xlsx: 'export to .xlsx',
+      wait_for_file: ' the file is being prepared',
       names_map: {
         popup: {
           full_name: 'Proper name',
