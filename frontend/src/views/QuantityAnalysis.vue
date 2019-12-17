@@ -466,6 +466,7 @@ export default {
       }
     },
     mapData: function (data) {
+      this.table = []
       try {
         for (let key in data) {
           if (key !== 'chart') {
@@ -488,7 +489,7 @@ export default {
               this.chart.datasets[0].data.push(key)
               this.chart.labels.push(i)
             }
-
+            console.log(this.chart)
             this.json_data.push({[this.csv_title]: key, 'quantity': chartData[i][key]})
           }
         }

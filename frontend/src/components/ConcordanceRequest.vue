@@ -78,10 +78,19 @@
         </b-row>
       </b-container>
       <b-container style="width: 50%; display: inline-block; float: left">
-        <b-row class="mb-2">
+        <b-row class="mb-2" v-if="documentmodal.data.proper_names">
           <b-col class="line_bottom" style="text-align: right" ><strong>{{$t('concordance.proper_names')}}</strong></b-col>
-          <b-col class="line_bottom" style="text-align: left" >
-            <span v-for="item in documentmodal.data.proper_names" :key="item.name" :title="item.type">{{item.value}}; </span>
+          <b-col class="line_bottom" style="text-align: left; overflow: auto; border-style: outset; border-color: #dee2e6" >
+            <b-container style="width: 100%; height: 48px">
+              <b-row v-if="item.geo_location" v-for="item in documentmodal.data.proper_names" :key="item.name" :title="item.geo_location.name + ' lon:' + item.geo_location.lon + ' lat:' + item.geo_location.lat">
+                <b-col class="sm-8">
+                  {{item.value}}
+                </b-col>
+                <!--<b-col class="sm-4">-->
+                  <!--{{item.geo_location}}-->
+                <!--</b-col>-->
+              </b-row>
+            </b-container>
           </b-col>
         </b-row>
       </b-container>

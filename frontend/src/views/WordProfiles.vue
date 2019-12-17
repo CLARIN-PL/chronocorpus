@@ -455,20 +455,20 @@ export default {
                   }
                 ]
               }
-      let left = 100
+      // let left = 100
       let fields
       if (data.length > 9) {
         fields = 9
       } else {
         fields = data.length
       }
-      for (let i = 0; i < fields; i++) {
-        left -= data[i].percentage
+      for (let i = 0; i <= fields; i++) {
+        // left -= data[i].percentage
         this.chart.labels[i] = '"' + data[i].collocate + '" (' + data[i].percentage.toFixed(3) + '%)'
         this.chart.datasets[0].data[i] = data[i].percentage
       }
-      this.chart.labels[fields] = '*' + '" (' + left.toFixed(3) + '%)'
-      this.chart.datasets[0].data[fields] = left
+      // this.chart.labels[fields + 1] = '*' + '" (' + left.toFixed(3) + '%)'
+      // this.chart.datasets[0].data[fields] = left
       this.show.chart = true
     }
   }

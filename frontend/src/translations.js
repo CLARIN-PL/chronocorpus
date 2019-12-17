@@ -63,7 +63,7 @@ export const i18n = new VueI18n({
         method: 'Forma wyrazu',
         method_i: 'wskaż formę wprowadzonego wyrazu',
         howmany: 'Liczba wyników na stronie',
-        base: 'Forma bazowa wyrazu',
+        base: 'Forma hasłowa (leksem)',
         orth: 'Forma zmieniona wyrazu',
         submit: 'Wyszukaj konkordancję',
         loading: 'Wczytuję dane...',
@@ -84,8 +84,8 @@ export const i18n = new VueI18n({
       frequency: {
         title: 'Lista frekwencyjna',
         submit: 'Utwórz listę frekwencyjną',
-        true: 'Formy hasłowe',
-        false: 'Formy nieodmienione'
+        true: 'Formy hasłowe (leksemy)',
+        false: 'Formy odmienione'
       },
       wordprofiles: {
         word: 'Wpisz wyraz',
@@ -99,7 +99,7 @@ export const i18n = new VueI18n({
         submit: 'Generuj statystyki',
         word: 'wyraz',
         sentence: 'zdanie',
-        average: 'średnia',
+        average: 'histogram długości',
         zipf_histogram: 'histogram Zipfa',
         letter: 'litera',
         syllable: 'sylaba',
