@@ -91,318 +91,318 @@
 </template>
 
 <script>
-  import FadeTransition from '@/components/FadeTransition.vue'
-  import axios from 'axios'
-  import TaskFilter from '@/components/TaskFilter'
-  import LineChart from '@/components/LineChart'
-  import VueJsonToCsv from 'vue-json-to-csv'
+import FadeTransition from '@/components/FadeTransition.vue'
+import axios from 'axios'
+import TaskFilter from '@/components/TaskFilter'
+import LineChart from '@/components/LineChart'
+import VueJsonToCsv from 'vue-json-to-csv'
 
-  export default {
-    name: 'TimeSeries',
-    components: {LineChart, TaskFilter, axios, FadeTransition, VueJsonToCsv},
-    data () {
+export default {
+  name: 'TimeSeries',
+  components: {LineChart, TaskFilter, axios, FadeTransition, VueJsonToCsv},
+  data () {
+    return {
+      json_data: [],
+      orth: '',
+      concordance_word: '',
+      task: {
+        id: null,
+        status: '',
+        result: '',
+        finished: false,
+        unit: 'year'
+      },
+      show: {
+        loading: false,
+        filters: false,
+        chart: false
+      },
+      time_series: [],
+      metadata_filters: [],
+      log: false,
+      chart: {},
+      pointData: {},
+      chartHeight: 470
+    }
+  },
+  computed: {
+    part_of_speech () {
       return {
-        json_data: [],
-        orth: '',
-        concordance_word: '',
-        task: {
-          id: null,
-          status: '',
-          result: '',
-          finished: false,
-          unit: 'year'
-        },
-        show: {
-          loading: false,
-          filters: false,
-          chart: false
-        },
-        time_series: [],
-        metadata_filters: [],
-        log: false,
-        chart: {},
-        pointData: {},
-        chartHeight: 470
-      }
-    },
-    computed: {
-      part_of_speech () {
-        return {
-          selected: '2',
-          options:
+        selected: '2',
+        options:
             [
               {value: '1', text: this.$t('adjective')},
               {value: '2', text: this.$t('noun')},
               {value: '3', text: this.$t('verb')},
               {value: '4', text: this.$t('adverb')}
             ]
-        }
-      },
-      time_unit () {
-        return {
-          selected: 'year',
-          options:
+      }
+    },
+    time_unit () {
+      return {
+        selected: 'year',
+        options:
             [
               {value: 'month', text: this.$t('month')},
               {value: 'year', text: this.$t('year')}
             ]
-        }
-      },
-      options () {
-        return {
-          title: {
-            display: true,
-            text: this.$t('home.service6')
-          },
-          scales: {
-            yAxes: [{
-              type: this.log ? 'logarithmic' : 'linear',
-              scaleLabel: {
-                display: true,
-                labelString: this.$t('time_series.frequency')
-              },
-              ticks: {
-                display: true
-              },
-              gridLines: {
-                display: true
-              }
-              // type: 'logarithmic'
-            }],
-            xAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: this.$t('time_series.time_unit' + this.time_unit.selected.toString())
-              },
-              ticks: {
-                beginAtZero: true
-              },
-              gridLines: {
-                display: false
-              }
-            }]
-          },
-          legend: {
-            display: false
-          },
-          tooltips: {
-            enabled: true,
-            mode: 'single',
-            callbacks: {
-              label: function (tooltipItems, data) {
-                return tooltipItems.yLabel
-              }
-            }
-          },
-          responsive: true,
-          maintainAspectRatio: false
-        }
       }
     },
-    watch: {
-      options: function () {
-        this.redrawChart()
-      }
-    },
-    methods: {
-      showFilters: function () {
-        this.show.filters = true
-      },
-      hideFilters: function () {
-        this.show.filters = false
-        this.metadata_filters = []
-      },
-      setFilters: function (metadata, all) {
-        this.metadata_filters = []
-        for (let i = 0; i < all.length; i++) {
-          if (typeof metadata[all[i]] !== 'undefined' && metadata[all[i]] !== '') {
-            this.metadata_filters.push({
-              name: all[i],
-              value: metadata[all[i]]
-            })
-          }
-        }
-        if (typeof metadata['publication_year'] !== 'undefined' && metadata['publication_year'] !== '') {
-          this.metadata_filters.push({
-            name: 'publication_year',
-            value: metadata['publication_year']
-          })
-        }
-      },
-      startTask: async function (event) {
-        event.preventDefault()
-        this.concordance_word = this.orth
-        this.task.finished = false
-        this.show.loading = true
-        this.show.chart = false
-        this.json_data = []
-        this.time_series = {}
-        this.chart = {
-          labels: [],
-          datasets: [
-            {
-              // backgroundColor: '#b14a89',
-              borderColor: '#b14a89',
-              backgroundColor: 'rgba(177, 74, 137, 0.1)',
-              pointBackgroundColor: '#b14a89',
-              borderWidth: 1,
-              data: []
-            }]
-        }
-        try {
-          const response = await axios.post(process.env.ROOT_API + 'startTask', {
-            task_type: 'time_series',
-            metadata_filter: this.metadata_filters,
-            query_parameters: [
-              {
-                name: 'base',
-                value: this.orth
-              },
-              {
-                name: 'part_of_speech',
-                value: this.part_of_speech.selected
-              },
-              {
-                name: 'time_unit',
-                value: this.time_unit.selected
-              }
-            ],
-            response_parameters: []
-          }, {
-            headers: {
-              'Content-Type': 'application/json'
+    options () {
+      return {
+        title: {
+          display: true,
+          text: this.$t('home.service6')
+        },
+        scales: {
+          yAxes: [{
+            type: this.log ? 'logarithmic' : 'linear',
+            scaleLabel: {
+              display: true,
+              labelString: this.$t('time_series.frequency')
             },
-            timeout: 5000
+            ticks: {
+              display: true
+            },
+            gridLines: {
+              display: true
+            }
+            // type: 'logarithmic'
+          }],
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: this.$t('time_series.time_unit' + this.time_unit.selected.toString())
+            },
+            ticks: {
+              beginAtZero: true
+            },
+            gridLines: {
+              display: false
+            }
+          }]
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          enabled: true,
+          mode: 'single',
+          callbacks: {
+            label: function (tooltipItems, data) {
+              return tooltipItems.yLabel
+            }
+          }
+        },
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    }
+  },
+  watch: {
+    options: function () {
+      this.redrawChart()
+    }
+  },
+  methods: {
+    showFilters: function () {
+      this.show.filters = true
+    },
+    hideFilters: function () {
+      this.show.filters = false
+      this.metadata_filters = []
+    },
+    setFilters: function (metadata, all) {
+      this.metadata_filters = []
+      for (let i = 0; i < all.length; i++) {
+        if (typeof metadata[all[i]] !== 'undefined' && metadata[all[i]] !== '') {
+          this.metadata_filters.push({
+            name: all[i],
+            value: metadata[all[i]]
           })
-          this.task.id = response.data.id
-          // console.log(response)
-          this.checkStatus(this.task.id, 200)
-        } catch (e) {
-          console.log(Object.keys(e), e.message)
         }
-      },
-      checkStatus: async function (taskId, timer) {
-        try {
-          timer += 100
-          console.log(timer)
-          const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
-          this.task.status = response.data.status
-          console.log('status => ' + this.task.status)
-          if (this.task.status === 'DONE') {
-            this.getResult(taskId)
-          } else if (this.task.status === 'QUEUE') {
-            setTimeout(() => {
-              this.checkStatus(taskId, timer)
-            }, timer)
-          } else if (this.task.status === 'ERROR') {
-            this.task.finished = true
-            this.task.loading = false
-          }
-        } catch (e) {
-          console.log(Object.keys(e), e.message)
-        }
-      },
-      getResult: async function (taskId) {
-        try {
+      }
+      if (typeof metadata['publication_year'] !== 'undefined' && metadata['publication_year'] !== '') {
+        this.metadata_filters.push({
+          name: 'publication_year',
+          value: metadata['publication_year']
+        })
+      }
+    },
+    startTask: async function (event) {
+      event.preventDefault()
+      this.concordance_word = this.orth
+      this.task.finished = false
+      this.show.loading = true
+      this.show.chart = false
+      this.json_data = []
+      this.time_series = {}
+      this.chart = {
+        labels: [],
+        datasets: [
+          {
+            // backgroundColor: '#b14a89',
+            borderColor: '#b14a89',
+            backgroundColor: 'rgba(177, 74, 137, 0.1)',
+            pointBackgroundColor: '#b14a89',
+            borderWidth: 1,
+            data: []
+          }]
+      }
+      try {
+        const response = await axios.post(process.env.ROOT_API + 'startTask', {
+          task_type: 'time_series',
+          metadata_filter: this.metadata_filters,
+          query_parameters: [
+            {
+              name: 'base',
+              value: this.orth
+            },
+            {
+              name: 'part_of_speech',
+              value: this.part_of_speech.selected
+            },
+            {
+              name: 'time_unit',
+              value: this.time_unit.selected
+            }
+          ],
+          response_parameters: []
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          timeout: 5000
+        })
+        this.task.id = response.data.id
+        // console.log(response)
+        this.checkStatus(this.task.id, 200)
+      } catch (e) {
+        console.log(Object.keys(e), e.message)
+      }
+    },
+    checkStatus: async function (taskId, timer) {
+      try {
+        timer += 100
+        console.log(timer)
+        const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
+        this.task.status = response.data.status
+        console.log('status => ' + this.task.status)
+        if (this.task.status === 'DONE') {
+          this.getResult(taskId)
+        } else if (this.task.status === 'QUEUE') {
+          setTimeout(() => {
+            this.checkStatus(taskId, timer)
+          }, timer)
+        } else if (this.task.status === 'ERROR') {
           this.task.finished = true
-          const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
-          var jsonResponse = JSON.stringify(response.data.result.rows[0])
-          var formattedResponse = JSON.parse(jsonResponse)
-          this.mapChartData(formattedResponse.series)
-          this.resizeChart()
-          this.show.loading = false
-        } catch (e) {
-          console.log(Object.keys(e), e.message)
-          this.show.loading = false
+          this.task.loading = false
         }
-      },
-      mapChartData: function (chartData) {
-        try {
-          let years = this.getYears(chartData)
-          for (let y = years[0]; y <= years[1]; y++) {
+      } catch (e) {
+        console.log(Object.keys(e), e.message)
+      }
+    },
+    getResult: async function (taskId) {
+      try {
+        this.task.finished = true
+        const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        var jsonResponse = JSON.stringify(response.data.result.rows[0])
+        var formattedResponse = JSON.parse(jsonResponse)
+        this.mapChartData(formattedResponse.series)
+        this.resizeChart()
+        this.show.loading = false
+      } catch (e) {
+        console.log(Object.keys(e), e.message)
+        this.show.loading = false
+      }
+    },
+    mapChartData: function (chartData) {
+      try {
+        let years = this.getYears(chartData)
+        for (let y = years[0]; y <= years[1]; y++) {
+          if (this.time_unit.selected === 'year') {
+            this.time_series[y] = {'value': 0, 'label': y}
+          } else if (this.time_unit.selected === 'month') {
+            this.time_series[y] = {
+              1: {'value': 0, 'label': '1-' + y},
+              2: {'value': 0, 'label': '2-' + y},
+              3: {'value': 0, 'label': '3-' + y},
+              4: {'value': 0, 'label': '4-' + y},
+              5: {'value': 0, 'label': '5-' + y},
+              6: {'value': 0, 'label': '6-' + y},
+              7: {'value': 0, 'label': '7-' + y},
+              8: {'value': 0, 'label': '8-' + y},
+              9: {'value': 0, 'label': '9-' + y},
+              10: {'value': 0, 'label': '10-' + y},
+              11: {'value': 0, 'label': '11-' + y},
+              12: {'value': 0, 'label': '12-' + y}
+            }
+          }
+        }
+        for (let i = 0; i <= chartData.length; i++) {
+          for (var key in chartData[i]) {
             if (this.time_unit.selected === 'year') {
-              this.time_series[y] = {'value': 0, 'label': y}
+              this.time_series[key].value = chartData[i][key]
             } else if (this.time_unit.selected === 'month') {
-              this.time_series[y] = {
-                1: {'value': 0, 'label': '1-' + y},
-                2: {'value': 0, 'label': '2-' + y},
-                3: {'value': 0, 'label': '3-' + y},
-                4: {'value': 0, 'label': '4-' + y},
-                5: {'value': 0, 'label': '5-' + y},
-                6: {'value': 0, 'label': '6-' + y},
-                7: {'value': 0, 'label': '7-' + y},
-                8: {'value': 0, 'label': '8-' + y},
-                9: {'value': 0, 'label': '9-' + y},
-                10: {'value': 0, 'label': '10-' + y},
-                11: {'value': 0, 'label': '11-' + y},
-                12: {'value': 0, 'label': '12-' + y}
-              }
+              let date = key
+              let splittedDate = date.split('-')
+              this.time_series[splittedDate[1]][splittedDate[0]].value = chartData[i][key]
             }
           }
-          for (let i = 0; i <= chartData.length; i++) {
-            for (var key in chartData[i]) {
-              if (this.time_unit.selected === 'year') {
-                this.time_series[key].value = chartData[i][key]
-              } else if (this.time_unit.selected === 'month') {
-                let date = key
-                let splittedDate = date.split('-')
-                this.time_series[splittedDate[1]][splittedDate[0]].value = chartData[i][key]
-              }
+        }
+        for (var x in this.time_series) {
+          if (this.time_unit.selected === 'year') {
+            this.chart.datasets[0].data.push(this.time_series[x].value)
+            this.chart.labels.push(this.time_series[x].label)
+            this.json_data.push({'year': x, 'frequency': this.time_series[x].value})
+          } else if (this.time_unit.selected === 'month') {
+            for (let i = 1; i <= 12; i++) {
+              this.chart.datasets[0].data.push(this.time_series[x][i].value)
+              this.chart.labels.push(this.time_series[x][i].label)
+              this.json_data.push({'year': x, 'month': i, 'frequency': this.time_series[x][i].value})
             }
           }
-          for (var x in this.time_series) {
+        }
+        this.show.chart = true
+      } catch (e) {
+        console.log(Object.keys(e), e.message)
+      }
+    },
+    getYears: function (data) {
+      try {
+        let years = []
+        for (let i = 0; i <= data.length; i++) {
+          for (var key in data[i]) {
             if (this.time_unit.selected === 'year') {
-              this.chart.datasets[0].data.push(this.time_series[x].value)
-              this.chart.labels.push(this.time_series[x].label)
-              this.json_data.push({'year': x, 'frequency': this.time_series[x].value})
+              years.push(parseInt(key))
             } else if (this.time_unit.selected === 'month') {
-              for (let i = 1; i <= 12; i++) {
-                this.chart.datasets[0].data.push(this.time_series[x][i].value)
-                this.chart.labels.push(this.time_series[x][i].label)
-                this.json_data.push({'year': x, 'month': i, 'frequency': this.time_series[x][i].value})
-              }
+              let fullDate = key
+              let splittedDate = fullDate.split('-')
+              years.push(parseInt(splittedDate[1]))
             }
           }
-          this.show.chart = true
-        } catch (e) {
-          console.log(Object.keys(e), e.message)
         }
-      },
-      getYears: function (data) {
-        try {
-          let years = []
-          for (let i = 0; i <= data.length; i++) {
-            for (var key in data[i]) {
-              if (this.time_unit.selected === 'year') {
-                years.push(parseInt(key))
-              } else if (this.time_unit.selected === 'month') {
-                let fullDate = key
-                let splittedDate = fullDate.split('-')
-                years.push(parseInt(splittedDate[1]))
-              }
-            }
-          }
-          return [Math.min.apply(null, years), Math.max.apply(null, years)]
-        } catch (e) {
-          console.log(Object.keys(e), e.message)
-        }
-      },
-      export2image: function (event) {
-        event.preventDefault()
-        let canvas = document.getElementById('line-chart').toDataURL('image/png')
-        let link = document.createElement('a')
-        link.download = 'time_seres_chart'
-        link.href = canvas
-        console.log(canvas)
-        console.log(link)
-        var mouseEvent = new MouseEvent('click')
-        link.dispatchEvent(mouseEvent)
-      },
-      updatePoint (data) {
-        this.pointData = data
-        let routeData = this.$router.resolve({
-          name: 'ConcordanceTrigger',
-          params:
+        return [Math.min.apply(null, years), Math.max.apply(null, years)]
+      } catch (e) {
+        console.log(Object.keys(e), e.message)
+      }
+    },
+    export2image: function (event) {
+      event.preventDefault()
+      let canvas = document.getElementById('line-chart').toDataURL('image/png')
+      let link = document.createElement('a')
+      link.download = 'time_seres_chart'
+      link.href = canvas
+      console.log(canvas)
+      console.log(link)
+      var mouseEvent = new MouseEvent('click')
+      link.dispatchEvent(mouseEvent)
+    },
+    updatePoint (data) {
+      this.pointData = data
+      let routeData = this.$router.resolve({
+        name: 'ConcordanceTrigger',
+        params:
             {
               concordanceWord: this.concordance_word,
               predefinedFilters: [
@@ -411,36 +411,36 @@
                   'value': data
                 }]
             }
-        })
-        window.open(routeData.href, '_blank')
-      },
-      resizeChart: function () {
-        if (window.innerWidth > 768) {
-          this.chartHeight = Math.ceil(this.$refs.chartContainer.clientHeight * 0.8)
-        } else {
-          this.chartHeight = Math.ceil(470)
-        }
-      },
-      redrawChart: function () {
-        this.show.chart = false
-        this.resizeChart()
-        setTimeout(() => {
-          this.show.chart = true
-        }, 0)
-      },
-      handleResize (event) {
-        if (this.task.finished) {
-          this.redrawChart()
-        }
+      })
+      window.open(routeData.href, '_blank')
+    },
+    resizeChart: function () {
+      if (window.innerWidth > 768) {
+        this.chartHeight = Math.ceil(this.$refs.chartContainer.clientHeight * 0.8)
+      } else {
+        this.chartHeight = Math.ceil(470)
       }
     },
-    created: function () {
-      window.addEventListener('resize', this.handleResize)
+    redrawChart: function () {
+      this.show.chart = false
+      this.resizeChart()
+      setTimeout(() => {
+        this.show.chart = true
+      }, 0)
     },
-    beforeDestroy: function () {
-      window.removeEventListener('resize', this.handleResize)
+    handleResize (event) {
+      if (this.task.finished) {
+        this.redrawChart()
+      }
     }
+  },
+  created: function () {
+    window.addEventListener('resize', this.handleResize)
+  },
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this.handleResize)
   }
+}
 </script>
 
 <style scoped>

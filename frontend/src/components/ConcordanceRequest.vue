@@ -77,6 +77,14 @@
           <b-col class="line_bottom" style="text-align: left" >{{item.value}}</b-col>
         </b-row>
       </b-container>
+      <b-container style="width: 50%; display: inline-block; float: left">
+        <b-row class="mb-2">
+          <b-col class="line_bottom" style="text-align: right" ><strong>{{$t('concordance.proper_names')}}</strong></b-col>
+          <b-col class="line_bottom" style="text-align: left" >
+            <span v-for="item in documentmodal.data.proper_names" :key="item.name" :title="item.type">{{item.value}}; </span>
+          </b-col>
+        </b-row>
+      </b-container>
       <b-container class="card" style="padding: 20px">
         <b-row v-if="documentmodal.data.text">
           <!--<b-col cols="2" style="text-align: right;"><strong> </strong></b-col>-->
@@ -313,6 +321,7 @@ export default {
       try {
         this.documentmodal.data = request.data.result.documents[0]
         this.documentmodal.properties = this.serializeProperties(request.data.result.documents[0].metadata.properties)
+        console.log(this.documentmodal)
         this.$refs.documentModal.show()
       } catch (e) {
         console.log(Object.keys(e), e.message)

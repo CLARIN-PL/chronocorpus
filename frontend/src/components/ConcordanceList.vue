@@ -91,9 +91,9 @@ export default {
         console.log(Object.keys(e), e.message)
       }
     },
-    colorizeDocumentText (data) {
+    colorizeDocumentText (documentData) {
       let concordance = this.data.concordances[0].left + ' ' + this.data.concordances[0].word + ' ' + this.data.concordances[0].right
-      let text = data.split(concordance)
+      let text = documentData.split(concordance)
       return [text[0], this.data.concordances[0].left, this.data.concordances[0].word, this.data.concordances[0].right, text[1]]
     }
   }

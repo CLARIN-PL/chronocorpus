@@ -108,9 +108,12 @@
                               v-if="word_profiles.length > 0"/>
               </div>
 
-              <div class="content-list col-5 card-img-left">
-                <pie-chart v-if="chart.visible" :chart-data="chart"></pie-chart>
+              <div class="content-list col-5 card-img-left" v-if="chart.datasets[0].data.length > 1">
+                <pie-chart v-if="show.chart" :chart-data="chart"></pie-chart>
               </div>
+                <div class="content-list col-5 card-img-left" v-if="!(chart.datasets[0].data.length > 1)">
+                  {{$t('nodata')}}
+                </div>
               <div class="content-list col-7">
               <b-row class="justify-content-md" v-for="(item) in pages" :key="item.id">
                 <b-col col lg="2" class="line_bottom">{{item.collocate}}</b-col>
@@ -129,13 +132,13 @@
 </template>
 
 <script>
-  import FadeTransition from '@/components/FadeTransition.vue'
-  import axios from 'axios'
-  import TaskFilter from '@/components/TaskFilter'
-  import VueJsonToCsv from 'vue-json-to-csv'
-  import PieChart from '../components/PieChart'
+import FadeTransition from '@/components/FadeTransition.vue'
+import axios from 'axios'
+import TaskFilter from '@/components/TaskFilter'
+import VueJsonToCsv from 'vue-json-to-csv'
+import PieChart from '../components/PieChart'
 
-  export default {
+export default {
   name: 'WordProfiles',
   data () {
     return {
@@ -154,7 +157,8 @@
       },
       show: {
         loading: false,
-        filters: false
+        filters: false,
+        chart: false
       },
       chart:
         {
@@ -165,8 +169,7 @@
               backgroundColor: ['#f44336', '#2196f3', '#ffc107', '#4caf50', '#7e57c2', '#8d6e63', '#ec407a', '#3f51b5', '#7cb342', '#c7c7c7'],
               data: []
             }
-          ],
-          visible: false
+          ]
         },
       word_profiles: [],
       adjective: false,
@@ -408,15 +411,19 @@
         this.csv_title = 'word_profiles_' + this.form.orth + '_L' + this.form.left_window_size + '_R' + this.form.right_window_size
         this.word_profiles = response.data.result.rows
         this.mapChartData(response.data.result.rows)
+        // console.log(this.chart.datasets[0].data)
         for (var x in this.word_profiles) {
           this.json_data.push({
             'collocate': this.word_profiles[x].collocate,
             'matching': this.word_profiles[x].matching,
             'frequency': this.word_profiles[x].frequency,
             'percentage': this.word_profiles[x].percentage
-            })
+          })
         }
         this.show.loading = false
+        setTimeout(() => {
+          this.show.chart = true
+        }, 110)
       } catch (e) {
         console.log(Object.keys(e), e.message)
         this.show.loading = false
@@ -438,15 +445,32 @@
       }
     },
     mapChartData: function (data) {
+      this.show.chart = true
+      this.chart =
+              {
+                label: 'a',
+                labels: [],
+                datasets: [
+                  {
+                    backgroundColor: ['#f44336', '#2196f3', '#ffc107', '#4caf50', '#7e57c2', '#8d6e63', '#ec407a', '#3f51b5', '#7cb342', '#c7c7c7'],
+                    data: []
+                  }
+                ]
+              }
       let left = 100
-      for (let i = 0; i < 9; i++) {
+      let fields
+      if (data.length > 9) {
+        fields = 9
+      } else {
+        fields = data.length
+      }
+      for (let i = 0; i < fields; i++) {
         left -= data[i].percentage
         this.chart.labels[i] = '"' + data[i].collocate + '" (' + data[i].percentage.toFixed(3) + '%)'
         this.chart.datasets[0].data[i] = data[i].percentage
       }
-      this.chart.labels[9] = '*' + '" (' + left.toFixed(3) + '%)'
-      this.chart.datasets[0].data[9] = left
-      this.chart.visible = true
+      this.chart.labels[fields] = '*' + '" (' + left.toFixed(3) + '%)'
+      this.chart.datasets[0].data[fields] = left
     }
   }
 }
