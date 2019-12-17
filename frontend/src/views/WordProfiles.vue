@@ -108,10 +108,10 @@
                               v-if="word_profiles.length > 0"/>
               </div>
 
-              <div class="content-list col-5 card-img-left" v-if="chart.datasets[0].data.length > 1">
-                <pie-chart v-if="show.chart" :chart-data="chart"></pie-chart>
-              </div>
-                <div class="content-list col-5 card-img-left" v-if="!(chart.datasets[0].data.length > 1)">
+                <div class="content-list col-5 card-img-left" v-if="chart.datasets[0].data.length > 1">
+                  <pie-chart v-if="show.chart" :chart-data="chart"></pie-chart>
+                </div>
+                <div class="content-list col-5 card-img-left" v-if="!(chart.datasets[0].data.length > 1) && task.finished">
                   {{$t('nodata')}}
                 </div>
               <div class="content-list col-7">
@@ -122,14 +122,13 @@
                 <b-col col lg="2" class="line_bottom">{{item.percentage.toFixed(3)}}</b-col>
               </b-row>
               </div>
-
             </b-card>
           </div>
         </div>
       </div>
     </div>
   </div>
-</template>
+</template>R
 
 <script>
 import FadeTransition from '@/components/FadeTransition.vue'
@@ -337,6 +336,7 @@ export default {
       this.task.finished = false
       this.show.loading = true
       this.word_profiles = []
+      this.show.chart = false
       this.json_data = []
       try {
         const response = await axios.post(process.env.ROOT_API + 'startTask', {
@@ -411,7 +411,6 @@ export default {
         this.csv_title = 'word_profiles_' + this.form.orth + '_L' + this.form.left_window_size + '_R' + this.form.right_window_size
         this.word_profiles = response.data.result.rows
         this.mapChartData(response.data.result.rows)
-        // console.log(this.chart.datasets[0].data)
         for (var x in this.word_profiles) {
           this.json_data.push({
             'collocate': this.word_profiles[x].collocate,
@@ -445,7 +444,6 @@ export default {
       }
     },
     mapChartData: function (data) {
-      this.show.chart = true
       this.chart =
               {
                 label: 'a',
@@ -471,6 +469,7 @@ export default {
       }
       this.chart.labels[fields] = '*' + '" (' + left.toFixed(3) + '%)'
       this.chart.datasets[0].data[fields] = left
+      this.show.chart = true
     }
   }
 }
