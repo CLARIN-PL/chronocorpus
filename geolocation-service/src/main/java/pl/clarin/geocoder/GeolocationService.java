@@ -30,7 +30,28 @@ public class GeolocationService {
         return instance;
     }
 
-    public void process(Path path) {
+    public void process(Path p,  int limit){
+        AtomicInteger c = new AtomicInteger(0);
+        if(Files.isDirectory(p)){
+            try {
+                List<Path> fileWithName = Files.walk(p)
+                        .map(Path::toAbsolutePath)
+                        .collect(Collectors.toList());
+                for (Path name : fileWithName) {
+                    System.out.println(c.getAndIncrement());
+                   run(name ,limit);
+                }
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Unable to load file",  e);
+            }
+
+        } else if (Files.isRegularFile(p)){
+            run(p, limit);
+        }
+        MapsLocationStore.getInstance().save();
+    }
+
+    private void run(Path path, int limit) {
 
         try (InputStream is = Files.newInputStream(path)) {
             g419.corpus.structure.Document ccl = AnnotationReader.getInstance().loadDocument(is);
@@ -46,7 +67,7 @@ public class GeolocationService {
                                         a.getType().startsWith("nam_num"))
                                 .collect(Collectors.groupingBy(g419.corpus.structure.Annotation::getChannelIdx));
 
-                        ann.forEach((k, v)->{
+                        ann.forEach((k, v) -> {
 
                             String q = v.stream().map(Annotation::getBaseText)
                                     .collect(Collectors.joining(" "));
@@ -57,11 +78,11 @@ public class GeolocationService {
                             try {
                                 List<Location> loc = GeoNamesLocationFinder.getInstance().query(q);
                                 if(loc.isEmpty()) {
-                                    loc = MapsLocationFinder.getInstance().query(q, 3, "pl");
+                                    loc = MapsLocationFinder.getInstance().query(q, limit, "pl");
                                 }
 
                                 AtomicInteger count = new AtomicInteger(1);
-                                loc.forEach(l -> {
+                                loc.stream().limit(limit).forEach(l -> {
                                     s.getAnnotationInChannel(arg.get(), k).getMetadata()
                                             .put("coord:" + count.get(), l.toPropertyValue());
                                     count.getAndIncrement();
@@ -75,8 +96,7 @@ public class GeolocationService {
                     });
                 });
             }
-            AnnotationWriter.getInstance().writeDocument(ccl);
-            MapsLocationStore.getInstance().save();
+            AnnotationWriter.getInstance().writeDocument(ccl, path);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "File error", e);
         }

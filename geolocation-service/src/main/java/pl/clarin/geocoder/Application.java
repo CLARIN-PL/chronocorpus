@@ -16,8 +16,8 @@ public class Application {
     public static void main(String... args) {
             new Application();
 
-            Path p = Paths.get("/home/tnaskret/Development/chronocorpus/geolocation-service/test.top9");
-            GeolocationService.getInstance().process(p);
+            Path p = Paths.get("/home/tnaskret/Dane/test/ch/");
+            GeolocationService.getInstance().process(p, 1);
 
     }
 

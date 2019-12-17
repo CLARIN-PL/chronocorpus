@@ -47,9 +47,9 @@ public class DocumentFileLoader {
                 new Property(name, value));
     }
 
-    private static ProperName createProperName(final String type, final String value) {
+    private static ProperName createProperName(final String type, final String value, final String geoString) {
         return properNameCache.computeIfAbsent(propertyParameterAsString(type, value), newParams ->
-                new ProperName(type, value));
+                new ProperName(type, value, geoString));
     }
 
     private static String wordParametersAsString(String orth, String base,  int pos, boolean spaceAfter) {
@@ -162,7 +162,7 @@ public class DocumentFileLoader {
 
                 for(Annotation a : ccl.getAnnotations()){
                     if(a.getType().startsWith("nam")){
-                        doc.getProperNames().add(createProperName(a.getType(), a.getText()));
+                        doc.getProperNames().add(createProperName(a.getType(), a.getText(), a.getMetadata("coord")));
                     }
                 }
 

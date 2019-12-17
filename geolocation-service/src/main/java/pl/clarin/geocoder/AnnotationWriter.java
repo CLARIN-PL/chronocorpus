@@ -28,8 +28,8 @@ public class AnnotationWriter {
         return instance;
     }
 
-    public void writeDocument(Document doc){
-        Path out = Paths.get("result.ccl");
+    public void writeDocument(Document doc, Path out){
+
         try (OutputStream os = Files.newOutputStream(out)) {
             WriterFactory wf = WriterFactory.get();
             AbstractDocumentWriter writer = wf.getStreamWriter(os, "ccl");

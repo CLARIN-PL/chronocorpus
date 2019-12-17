@@ -81,6 +81,22 @@ Example request and respond when searching for document.
                 ]
             },
             "text":"Od paru tygodni, przechodząc al. Stalina, zauważyć można w Ośrodku Ujazdowskim przy wylocie ul. Szopena żołnierzy Czerwonej Armii przy pracy. Betonowy bunkier niemiecki rozpada się pod uderzeniami oskardów. Przez bramę wjeżdżają i wyjeżdżają ciężarowe \"Zisy\" i ciągniki. Zainteresowany podchodzę do bramy. Młoda dziewczyna z karabinem, pełniąca służbę wartowniczą przy wejściu, na pytanie moje, dotyczące wykonywanych prac skierowuje mnie do kierownika robót. Inżynier Galicyn — siedzący opodal na ławce — je właśnie obiad z żołnierskiej menażki i jednocześnie wydaje rozporządzenia otaczającym go podwładnym. — To miejsce w Ogrodzie Ujazdowskim odgrodzone drutem jest terenem budowy Pomnika Zwycięstwa Armii Radzieckiej i Polskiej nad Niemcami. Materiał z obecnie burzonego bunkra zostanie użyty jako fundament i cokół pomnika. Pomników takich stanie na ziemiach polskich sześć: w Warszawie prawo i lewobrzeżnej, w Lublinie, w Chełmie, Poznaniu i Sznajdemülle — nie wiem, jak to jest po polsku, — uśmiecha się. — Każdy oczywiście będzie inny. — Jak będzie wyglądał ten warszawski? — pytam. — Na cokole, który zostanie wyłożony granitem — stanie czołg. Będzie on odlany z metalu w... Berlinie! Patrzymy na siebie porozumiewawczo. Dobrze jest widzieć w jasny, słoneczny dzień — jak pod zgodnymi uderzeniami kilofów rozsypuje się niemiecki bunkier. Dobrze jest wiedzieć, że szczątki jego praca obróci w cokół pod pomnik chwały i braterstwa broni radziecko-polskiej — czołg odlany w pokonanej stolicy okupanta! — Przyjechaliśmy tu do Warszawy — mówi dalej inż. Galicyn — specjalnie z Niemiec, dla budowy pomnika. Nie jest nas wielu. Przeważają dziewczęta. Sporo starszych z mojej grupy zostało ostatnio zdemobilizowanych. Od dziś dnia pracuje z nami 120-u saperów Wojska Polskiego. Pracujemy bardzo intensywnie — inż. Galicyn wskazuje stojącą na ławce menażkę — nawet nie mam czasu pojechać do domu na obiad. Pierwszego listopada pomnik ma być gotowy. Od przyszłego tygodnia pracować będziemy na dwie zmiany: w dzień i w nocy. Tu na tych słupach zostaną umieszczone reflektory. Materiał z bunkra nie wystarczy na wykonanie całego cokołu. "
+            "proper_names": [
+                {
+                    "type": "nam_liv_person",
+                    "value": "Jan"
+                },
+                {
+                  "type": "nam_loc_gpe_city",
+                  "value": "Kraków",
+                  "geo_location": [
+                        "lon": 10,300
+                        "lat": -12.56
+                        "type": "city"
+                        "name": "Kraków"
+                  ]
+                },
+            ]
         }
     ]
 }

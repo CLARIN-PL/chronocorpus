@@ -48,12 +48,12 @@ public class GeographicalQueryService {
                 });
         JsonArrayBuilder geoNames = Json.createArrayBuilder();
         map.forEach((k,v)->{
-            double latitude=(Math.random()*180.0)-90.0;
-            double longitude=(Math.random()*360.0)-180.0;
-            GeoProperty gp=new GeoProperty(k.getValue(),k.getType(),v);
-            gp.setLan(latitude);
-            gp.setLon(longitude);
-            geoNames.add(gp.toJson());
+            if(k.getGeoString() != null) {
+                GeoProperty gp = new GeoProperty(k.getValue(), k.getType(), v);
+                gp.setLan(k.getLat());
+                gp.setLon(k.getLon());
+                geoNames.add(gp.toJson());
+            }
         });
 
         return geoNames.build();

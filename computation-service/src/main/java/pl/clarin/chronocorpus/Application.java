@@ -32,13 +32,24 @@ public class Application {
         Application app = new Application();
 
 
+
         ConcordanceQuery con = new ConcordanceQuery.Builder()
                 .withBase("armia czerwony")
                 .build();
 
-        app.testWithTimer(con, "Concordance");
+        app.testWithTimer(con, "Geo");
+
+        DocumentQuery doc = new DocumentQuery.Builder()
+                .withDocumentId("599")
+                .build();
+
+        app.testWithTimer(doc, "Document");
 
 /*
+        GeoNamesQuery g = new GeoNamesQuery.Builder().build();
+
+
+
         TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
                 .withBase("czerwony")
                 .withPartOfSpeech("4")

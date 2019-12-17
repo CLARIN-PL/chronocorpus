@@ -4,6 +4,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.Serializable;
 import java.util.List;
@@ -59,10 +61,16 @@ public class Document implements Serializable {
     }
 
     public JsonObject toJson() {
+
+        JsonArrayBuilder pn = Json.createArrayBuilder();
+        properNames.forEach(n -> pn.add(n.toJson()));
+
         return Json.createObjectBuilder()
                 .add("id", id)
                 .add("metadata", metadata.toJson())
-                .add("text", toText()).build();
+                .add("text", toText())
+                .add("proper_names", pn)
+                .build();
     }
 
     public String toText() {

@@ -32,7 +32,6 @@ public class ConcordanceQueryService {
         return instance;
     }
 
-    //TODO needs solution for multi word expressions like Armia Czerwona
     public JsonArray findConcordance(String keyWord, Set<String> responseParams, Set<Property> metadata, boolean byBase) {
 
         Map<Pair<Integer, Set<Property>>, List<Sentence>> sentences = new HashMap<>();
