@@ -25,10 +25,10 @@ export default new Router({
       path: '/concordance/',
       name: 'Concordance',
       component: Concordance,
-      props: false
+      props: true
     },
     {
-      path: '/concordance/:concordanceWord',
+      path: '/concordance/:concordanceWord/:publicationYear',
       name: 'ConcordanceTrigger',
       component: Concordance,
       props: true

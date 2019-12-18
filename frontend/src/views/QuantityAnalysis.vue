@@ -486,8 +486,8 @@ export default {
               this.chart.datasets[0].data.push(chartData[i][key])
               this.chart.labels.push(key)
             } else {
-              this.chart.datasets[0].data.push(key)
-              this.chart.labels.push(i)
+              this.chart.datasets[0].data.push(i)
+              this.chart.labels.push(key)
             }
             console.log(this.chart)
             this.json_data.push({[this.csv_title]: key, 'quantity': chartData[i][key]})

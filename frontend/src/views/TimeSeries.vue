@@ -405,11 +405,8 @@ export default {
         params:
             {
               concordanceWord: this.concordance_word,
-              predefinedFilters: [
-                {
-                  'name': 'publication_year',
-                  'value': data
-                }]
+              publicationYear: data.year
+
             }
       })
       window.open(routeData.href, '_blank')

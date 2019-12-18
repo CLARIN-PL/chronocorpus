@@ -86,9 +86,7 @@
                 <b-col class="sm-8">
                   {{item.value}}
                 </b-col>
-                <!--<b-col class="sm-4">-->
-                  <!--{{item.geo_location}}-->
-                <!--</b-col>-->
+
               </b-row>
             </b-container>
           </b-col>
@@ -96,7 +94,6 @@
       </b-container>
       <b-container class="card" style="padding: 20px">
         <b-row v-if="documentmodal.data.text">
-          <!--<b-col cols="2" style="text-align: right;"><strong> </strong></b-col>-->
           <b-col  style=" text-align: justify; text-justify: inter-word;">
             {{documentmodal.data.text[0]}}
             <span style="color: #8772c3; font-weight: bold">{{documentmodal.data.text[1]}}</span>
@@ -130,8 +127,8 @@ export default {
     concordanceWord: {
       type: String
     },
-    predefinedFilters: {
-      type: Array
+    publicationYear: {
+      type: String
     }
   },
   data () {
@@ -163,6 +160,7 @@ export default {
         data: '',
         properties: []
       },
+      dupa: [],
       metadata_filters: []
     }
   },
@@ -330,7 +328,6 @@ export default {
       try {
         this.documentmodal.data = request.data.result.documents[0]
         this.documentmodal.properties = this.serializeProperties(request.data.result.documents[0].metadata.properties)
-        console.log(this.documentmodal)
         this.$refs.documentModal.show()
       } catch (e) {
         console.log(Object.keys(e), e.message)
@@ -362,11 +359,13 @@ export default {
   mounted () {
     try {
       if (this.executeOnMount === true && typeof this.concordanceWord !== 'undefined') {
-        console.log(this.executeOnMount)
         this.form.word = this.concordanceWord
-        // if (this.predefinedFilters !== 'undefined') {
-        //   this.metadata_filters = this.predefinedFilters
-        // }
+        if (this.publicationYear !== '') {
+          this.metadata_filters.push({
+            name: 'publication_year',
+            value: this.publicationYear
+          })
+        }
         this.startTask()
       }
     } catch (e) {
