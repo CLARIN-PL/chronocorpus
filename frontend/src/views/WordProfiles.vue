@@ -50,17 +50,17 @@
                 <!--<b-form-select class="form-input-select" selected="" required v-model="part_of_speech.selected"-->
                                <!--:options="part_of_speech.options"/>-->
               <!--</b-form-group>-->
-              <b-form-group :label="this.$t('wordprofiles.context')">
-                <b-form-select selected="" required v-model="context_part_of_speech.selected"
-                               :options="context_part_of_speech.options"/>
-              </b-form-group>
-              <!--<b-form-group-->
-                <!--:label="this.$t('wordprofiles.context')">-->
-                <!--<b-button class="trigger-button" :pressed.sync="adjective"><span class="trigger-button-ico"></span> {{$t('adjective')}}</b-button>-->
-                <!--<b-button class="trigger-button" :pressed.sync="noun" ><span class="trigger-button-ico"></span>{{$t('noun')}}</b-button>-->
-                <!--<b-button class="trigger-button" :pressed.sync="verb" ><span class="trigger-button-ico"></span>{{$t('verb')}}</b-button>-->
-                <!--<b-button class="trigger-button" :pressed.sync="adverb"><span class="trigger-button-ico"></span>{{$t('adverb')}}</b-button>-->
+              <!--<b-form-group :label="this.$t('wordprofiles.context')">-->
+                <!--<b-form-select selected="" required v-model="context_part_of_speech.selected"-->
+                               <!--:options="context_part_of_speech.options"/>-->
               <!--</b-form-group>-->
+              <b-form-group
+                :label="this.$t('wordprofiles.context')">
+                <b-button class="trigger-button" :pressed.sync="adjective"><span class="trigger-button-ico"></span> {{$t('adjective')}}</b-button>
+                <b-button class="trigger-button" :pressed.sync="noun" ><span class="trigger-button-ico"></span>{{$t('noun')}}</b-button>
+                <b-button class="trigger-button" :pressed.sync="verb" ><span class="trigger-button-ico"></span>{{$t('verb')}}</b-button>
+                <b-button class="trigger-button" :pressed.sync="adverb"><span class="trigger-button-ico"></span>{{$t('adverb')}}</b-button>
+              </b-form-group>
 
               <transition>
                 <b-form-group>
@@ -338,34 +338,36 @@ export default {
       this.word_profiles = []
       this.show.chart = false
       this.json_data = []
+      let task = {
+        task_type: 'word_profile',
+        metadata_filter: this.metadata_filters,
+        query_parameters: [
+          {
+            name: 'orth',
+            value: this.form.orth
+          },
+          {
+            name: 'part_of_speech',
+            value: this.word_part_of_speech.selected
+          },
+          {
+            name: 'window_item_part_of_speech',
+            value: this.part_of_speech
+          },
+          {
+            name: 'left_window_size',
+            value: this.form.left_window_size.toString()
+          },
+          {
+            name: 'right_window_size',
+            value: this.form.right_window_size.toString()
+          }
+        ],
+        response_parameters: []
+      }
+      console.log('task: ' + JSON.stringify(task))
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
-          task_type: 'word_profile',
-          metadata_filter: this.metadata_filters,
-          query_parameters: [
-            {
-              name: 'orth',
-              value: this.form.orth
-            },
-            {
-              name: 'part_of_speech',
-              value: this.word_part_of_speech.selected
-            },
-            {
-              name: 'window_item_part_of_speech',
-              value: this.context_part_of_speech.selected
-            },
-            {
-              name: 'left_window_size',
-              value: this.form.left_window_size.toString()
-            },
-            {
-              name: 'right_window_size',
-              value: this.form.right_window_size.toString()
-            }
-          ],
-          response_parameters: []
-        }, {
+        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json'
           },
@@ -386,16 +388,22 @@ export default {
         console.log(timer)
         const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
         this.task.status = response.data.status
+        console.log(response)
         console.log('status => ' + this.task.status)
         if (this.task.status === 'DONE') {
           this.getResult(taskId)
         } else if (this.task.status === 'QUEUE') {
-          setTimeout(() => {
-            this.checkStatus(taskId, timer)
-          }, timer)
+          if (timer <= 5000) {
+            setTimeout(() => {
+              this.checkStatus(taskId, timer)
+            }, timer)
+          } else {
+            this.task.finished = false
+            this.show.loading = false
+          }
         } else if (this.task.status === 'ERROR') {
           this.task.finished = false
-          this.task.loading = false
+          this.show.loading = false
         }
       } catch (e) {
         console.log(Object.keys(e), e.message)

@@ -85,7 +85,8 @@ export const i18n = new VueI18n({
         title: 'Lista frekwencyjna',
         submit: 'Utwórz listę frekwencyjną',
         true: 'Formy hasłowe (leksemy)',
-        false: 'Formy odmienione'
+        false: 'Formy odmienione',
+        stop_list: 'Stop-lista'
       },
       wordprofiles: {
         word: 'Wpisz wyraz',
@@ -240,7 +241,8 @@ export const i18n = new VueI18n({
         title: 'Frequency list',
         submit: 'Create frequency list',
         true: 'Frequency Lists of words',
-        false: 'Frequency Lists of lexemes (form slogans)'
+        false: 'Frequency Lists of lexemes (form slogans)',
+        stop_list: 'Stopwords'
       },
       wordprofiles: {
         word: 'Type word',

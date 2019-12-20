@@ -23,6 +23,17 @@
                                                selected=""
                                                v-model="count_by_base.selected"/>
                             </b-form-group>
+                            <b-form-group :label="this.$t('frequency.stop_list')">
+                                <multiselect
+                                        v-model="stop_list"
+                                        :options="stop_list_default"
+                                        :multiple="true"
+                                        :close-on-select="false"
+                                        deselect-label="☒"
+                                        select-label="☐"
+                                        selected-label="☑"
+                                ></multiselect>
+                            </b-form-group>
 
                             <b-form-group :label="this.$t('concordance.howmany')">
                                 <b-input-group :prepend="limit.toString()" class="mt-3">
@@ -88,6 +99,7 @@
 import FadeTransition from '@/components/FadeTransition.vue'
 import axios from 'axios'
 import VueJsonToCsv from 'vue-json-to-csv'
+import Multiselect from 'vue-multiselect'
 
 export default {
   name: 'FrequencyLists',
@@ -111,10 +123,12 @@ export default {
       skip: 0,
       page: 1,
       number_of_pages: 0,
-      download: false
+      download: false,
+      stop_list: [],
+      stop_list_default: []
     }
   },
-  components: {axios, FadeTransition, VueJsonToCsv},
+  components: {axios, FadeTransition, VueJsonToCsv, Multiselect},
   watch: {
     page: function (value) {
       this.page = value
@@ -195,28 +209,38 @@ export default {
       this.show.loading = true
       this.frequency_list = []
       this.json_data = []
-      try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
-          task_type: 'frequency',
-          metadata_filter: [],
-          query_parameters: [
-            {
-              name: 'count_by_base',
-              value: this.count_by_base.selected
-            }
-          ],
-          response_parameters: []
-        }, {
-          headers: {
-            'Content-Type': 'application/json'
+      let stopList = ''
+      this.stop_list.forEach(element => {
+        stopList += element + ';'
+      })
+      let task = {
+        task_type: 'frequency',
+        metadata_filter: [],
+        query_parameters: [
+          {
+            name: 'count_by_base',
+            value: this.count_by_base.selected
           },
-          timeout: 5000
-        })
-        this.task.id = response.data.id
-        this.checkStatus(this.task.id, 1000)
-      } catch (e) {
-        console.log(Object.keys(e), e.message)
+          {
+            name: 'stop_list',
+            value: stopList
+          }
+        ],
+        response_parameters: []
       }
+      console.log('task: ' + JSON.stringify(task))
+      // try {
+      //   const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
+      //     headers: {
+      //       'Content-Type': 'application/json'
+      //     },
+      //     timeout: 5000
+      //   })
+      //   this.task.id = response.data.id
+      //   this.checkStatus(this.task.id, 1000)
+      // } catch (e) {
+      //   console.log(Object.keys(e), e.message)
+      // }
     },
     checkStatus: async function (taskId, timer) {
       try {
@@ -331,12 +355,67 @@ export default {
         console.log(Object.keys(e), e.message)
         this.download = false
       }
+    },
+    getStopList: async function () {
+      try {
+        const response = await axios.post(process.env.ROOT_API + 'startTask', {
+          task_type: 'dictionaries',
+          metadata_filter: [],
+          query_parameters: [
+            {
+              name: 'dictionaries',
+              value: 'true'
+            }
+          ],
+          response_parameters: []
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          crossDomain: true,
+          timeout: 5000
+        })
+        this.checkStopListStatus(response.data.id, 100)
+      } catch (e) {
+        console.log(Object.keys(e), e.message)
+      }
+    },
+    checkStopListStatus: async function (taskId, timer) {
+      try {
+        timer += 200
+        const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 10000})
+        if (response.data.status === 'DONE') {
+          this.getStopListResult(taskId)
+        } else if (response.data.status === 'QUEUE') {
+          setTimeout(() => {
+            this.checkStatus(taskId, timer)
+          }, timer)
+        }
+      } catch (e) {
+        console.log(Object.keys(e), e.message)
+      }
+    },
+    getStopListResult: async function (taskId) {
+      try {
+        const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        this.stop_list_default = response.data.result.dictionaries.default_stop_list
+        this.stop_list = response.data.result.dictionaries.default_stop_list
+      } catch (e) {
+        console.log(Object.keys(e), e.message)
+        this.show.loading = false
+      }
     }
+  },
+  mounted () {
+    this.getStopList()
   }
 }
 </script>
 
 <style scoped>
+    .multiselect {
+        max-width: 500px;
+    }
     .line_bottom {
         border-bottom: 1px solid #c3c3c3;
     }
@@ -369,3 +448,4 @@ export default {
         }
     }
 </style>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
