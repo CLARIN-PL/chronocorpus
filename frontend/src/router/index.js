@@ -28,8 +28,14 @@ export default new Router({
       props: true
     },
     {
-      path: '/concordance/:concordanceWord/:publicationYear',
+      path: '/concordance/:concordanceWord',
       name: 'ConcordanceTrigger',
+      component: Concordance,
+      props: true
+    },
+    {
+      path: '/concordance/:concordanceWord/:publicationYear',
+      name: 'ConcordanceTime',
       component: Concordance,
       props: true
     },

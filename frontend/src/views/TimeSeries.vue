@@ -401,7 +401,7 @@ export default {
     updatePoint (data) {
       this.pointData = data
       let routeData = this.$router.resolve({
-        name: 'ConcordanceTrigger',
+        name: 'ConcordanceTime',
         params:
             {
               concordanceWord: this.concordance_word,

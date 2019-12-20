@@ -248,19 +248,21 @@ export default {
       this.show.loading = true
       this.concordances = []
       this.json_data = []
+      let task = {
+        corpus: 'chronopress',
+        task_type: 'concordance',
+        metadata_filter: this.metadata_filters,
+        query_parameters: [
+          {
+            name: this.method.selected,
+            value: this.form.word
+          }
+        ],
+        response_parameters: []
+      }
+      console.log('task: ' + JSON.stringify(task))
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
-          corpus: 'chronopress',
-          task_type: 'concordance',
-          metadata_filter: this.metadata_filters,
-          query_parameters: [
-            {
-              name: this.method.selected,
-              value: this.form.word
-            }
-          ],
-          response_parameters: []
-        }, {
+        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -269,7 +271,6 @@ export default {
           timeout: 5000
         })
         this.task.id = response.data.id
-        console.log(response)
         this.checkStatus(this.task.id, 100)
       } catch (e) {
         console.log(Object.keys(e), e.message)
@@ -296,6 +297,7 @@ export default {
       try {
         this.task.finished = true
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        console.log('result: ', response.data.result)
         this.changePage(1)
         this.skip = this.limit
         this.concordances = response.data.result.rows

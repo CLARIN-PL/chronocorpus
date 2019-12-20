@@ -65,9 +65,6 @@
         <div class="text-center box-container-result" v-if="task.finished">
           <div class="content-container" ref="chartContainer">
             <div v-on:resize="redrawChart()">
-              <!--<b-button v-on:click="export2image" type="button" size="sm" class="btn submit-button btn-secondary" style="margin: 3px; float: left">-->
-                <!--{{$t('download')}} PNG-->
-              <!--</b-button>-->
               <div>
                 <b-collapse id="collapse-1" class="mt-2">
                   <b-card class="mb-2">
@@ -394,7 +391,7 @@ export default {
           }]
         }}
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
+        let task = {
           task_type: 'quantity_analysis',
           metadata_filter: this.metadata_filters,
           query_parameters: [
@@ -416,14 +413,15 @@ export default {
             }
           ],
           response_parameters: []
-        }, {
+        }
+        console.log('task: ' + JSON.stringify(task))
+        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json'
           },
           timeout: 5000
         })
         this.task.id = response.data.id
-        console.log(response)
         this.checkStatus(this.task.id, 200)
       } catch (e) {
         console.log(Object.keys(e), e.message)
@@ -432,7 +430,6 @@ export default {
     checkStatus: async function (taskId, timer) {
       try {
         timer += 100
-        console.log(timer)
         const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
         this.task.status = response.data.status
         console.log('status => ' + this.task.status)
@@ -454,7 +451,7 @@ export default {
       try {
         this.task.finished = true
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
-        console.log(response)
+        console.log('result:', response.data.result)
         this.quantity_analysis = response.data.result.rows[0]
         this.mapData(this.quantity_analysis)
         this.mapChartData(this.quantity_analysis.chart)
@@ -473,7 +470,6 @@ export default {
             this.table.push({key: key, value: data[key]})
           }
         }
-        console.log(this.table)
       } catch (e) {
         console.log(Object.keys(e), e.message)
       }
@@ -482,14 +478,9 @@ export default {
       try {
         for (let i = 0; i <= chartData.length; i++) {
           for (var key in chartData[i]) {
-            if (this.calculation_type_word.selected === 'average') {
-              this.chart.datasets[0].data.push(chartData[i][key])
-              this.chart.labels.push(key)
-            } else {
-              this.chart.datasets[0].data.push(i)
-              this.chart.labels.push(key)
-            }
-            console.log(this.chart)
+            // console.log(i, key, chartData[i][key])
+            this.chart.datasets[0].data.push(chartData[i][key])
+            this.chart.labels.push(key)
             this.json_data.push({[this.csv_title]: key, 'quantity': chartData[i][key]})
           }
         }
@@ -544,10 +535,6 @@ export default {
   }
 
   .line_bottom {
-    /*border-bottom: 1px solid var(--dark_silver);*/
-    /*border-image:*/
-      /*linear-gradient(#e66465, #9198e5);*/
-    /*color: red;*/
     border-width: 1px;
     border-style: solid;
     border-image:

@@ -374,7 +374,6 @@ export default {
           timeout: 5000
         })
         this.task.id = response.data.id
-        console.log(response)
         this.checkStatus(this.task.id, 200)
       } catch (e) {
         this.task.finished = false
@@ -385,10 +384,8 @@ export default {
     checkStatus: async function (taskId, timer) {
       try {
         timer += 100
-        console.log(timer)
         const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
         this.task.status = response.data.status
-        console.log(response)
         console.log('status => ' + this.task.status)
         if (this.task.status === 'DONE') {
           this.getResult(taskId)
@@ -413,7 +410,7 @@ export default {
       try {
         this.task.finished = true
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
-        console.log(response)
+        console.log('result:', response.data.result)
         this.changePage(1)
         this.skip = this.limit
         this.csv_title = 'word_profiles_' + this.form.orth + '_L' + this.form.left_window_size + '_R' + this.form.right_window_size
@@ -471,12 +468,9 @@ export default {
         fields = data.length
       }
       for (let i = 0; i <= fields; i++) {
-        // left -= data[i].percentage
         this.chart.labels[i] = '"' + data[i].collocate + '" (' + data[i].percentage.toFixed(3) + '%)'
         this.chart.datasets[0].data[i] = data[i].percentage
       }
-      // this.chart.labels[fields + 1] = '*' + '" (' + left.toFixed(3) + '%)'
-      // this.chart.datasets[0].data[fields] = left
       this.show.chart = true
     }
   }

@@ -181,6 +181,7 @@ export default {
     },
     getPage: async function () {
       try {
+        console.log('task: ' + process.env.ROOT_API + 'getPagination/' + this.count_by_base.selected + '?page=' + (this.page - 1) + '&size=' + this.limit)
         const response = await axios.get(process.env.ROOT_API + 'getPagination/' + this.count_by_base.selected + '?page=' + (this.page - 1) + '&size=' + this.limit, {}, {
           headers: {
             'Content-Type': 'application/json'
@@ -229,18 +230,18 @@ export default {
         response_parameters: []
       }
       console.log('task: ' + JSON.stringify(task))
-      // try {
-      //   const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
-      //     headers: {
-      //       'Content-Type': 'application/json'
-      //     },
-      //     timeout: 5000
-      //   })
-      //   this.task.id = response.data.id
-      //   this.checkStatus(this.task.id, 1000)
-      // } catch (e) {
-      //   console.log(Object.keys(e), e.message)
-      // }
+      try {
+        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          timeout: 5000
+        })
+        this.task.id = response.data.id
+        this.checkStatus(this.task.id, 1000)
+      } catch (e) {
+        console.log(Object.keys(e), e.message)
+      }
     },
     checkStatus: async function (taskId, timer) {
       try {
@@ -358,7 +359,7 @@ export default {
     },
     getStopList: async function () {
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
+        let task = {
           task_type: 'dictionaries',
           metadata_filter: [],
           query_parameters: [
@@ -368,7 +369,9 @@ export default {
             }
           ],
           response_parameters: []
-        }, {
+        }
+        console.log('task: ' + JSON.stringify(task))
+        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json'
           },
