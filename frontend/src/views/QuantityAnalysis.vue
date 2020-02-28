@@ -16,16 +16,16 @@
         <div v-bind:class="{ 'box-container-form': task.finished, 'box-container': !task.finished }">
           <div class="content-container">
             <b-form @submit="startTask">
-
-              <b-form-group :label="this.$t('quantity_analysis.calculation_object')">
+              <b-form-group :label="this.$t('quantity_analysis.calculation_type')">
+                <b-form-select selected="" required v-model="calculation_type.selected"
+                               :options="calculation_type.options" @change="onTypeChange"/>
+              </b-form-group>
+              <b-form-group   v-if="is_average" :label="this.$t('quantity_analysis.calculation_object')">
                 <b-form-select selected="" required v-model="calculation_object.selected"
                                :options="calculation_object.options" @change="onObjectChange"/>
               </b-form-group>
-              <b-form-group :label="this.$t('quantity_analysis.calculation_type')">
-                <b-form-select selected="" required v-model="calculation_type.selected"
-                               :options="calculation_type.options"/>
-              </b-form-group>
-              <b-form-group :label="this.$t('quantity_analysis.calculation_unit')">
+
+              <b-form-group v-if="is_average" :label="this.$t('quantity_analysis.calculation_unit')">
                 <b-form-select selected="" required v-model="calculation_unit.selected"
                                :options="calculation_unit.options"/>
               </b-form-group>
@@ -145,6 +145,7 @@ export default {
       log: false,
       metadata_filters: [],
       word_was_chosen: true,
+      is_average: true,
       table: [],
       chart: {},
       chartHeight: 470
@@ -341,6 +342,9 @@ export default {
         this.word_was_chosen = false
       }
     },
+    onTypeChange (value) {
+      this.is_average = value === 'average'
+    },
     showFilters: function () {
       this.show.filters = true
     },
@@ -490,7 +494,7 @@ export default {
       }
     },
     resizeChart: function () {
-      if (window.innerWidth > 768) {
+      if (window.innerWidth > 768 && this.$refs.chartContainer) {
         this.chartHeight = Math.ceil(this.$refs.chartContainer.clientHeight * 0.8)
       } else {
         this.chartHeight = Math.ceil(470)
@@ -512,7 +516,7 @@ export default {
       var mouseEvent = new MouseEvent('click')
       link.dispatchEvent(mouseEvent)
     },
-    handleResize (event) {
+    handleResize: function (event) {
       if (this.task.finished) {
         this.redrawChart()
       }
