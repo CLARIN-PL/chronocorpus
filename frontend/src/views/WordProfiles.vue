@@ -108,18 +108,18 @@
                               v-if="word_profiles.length > 0"/>
               </div>
 
-                <div class="content-list col-5 card-img-left" v-if="chart.datasets[0].data.length > 1">
+                <div class="content-list col-7 card-img-left" v-if="chart.datasets[0].data.length > 1">
                   <pie-chart v-if="show.chart" :chart-data="chart"></pie-chart>
                 </div>
-                <div class="content-list col-5 card-img-left" v-if="!(chart.datasets[0].data.length > 1) && task.finished">
+                <div class="content-list col-7 card-img-left" v-if="!(chart.datasets[0].data.length > 1) && task.finished">
                   {{$t('nodata')}}
                 </div>
-              <div class="content-list col-7">
+              <div class="content-list col-5">
               <b-row class="justify-content-md" v-for="(item) in pages" :key="item.id">
-                <b-col col lg="2" class="line_bottom">{{item.collocate}}</b-col>
-                <b-col col lg="6" class="line_bottom">{{item.matching.split(',').join(', ')}}</b-col>
-                <b-col col lg="2" class="line_bottom">{{item.frequency}}</b-col>
-                <b-col col lg="2" class="line_bottom">{{item.percentage.toFixed(3)}}</b-col>
+<!--                <b-col col lg="2" class="line_bottom">{{item.collocate}}</b-col>-->
+                <b-col col lg="8" class="line_bottom">{{item.profile}}</b-col>
+                <b-col col lg="4" class="line_bottom">{{item.frequency}}</b-col>
+<!--                <b-col col lg="2" class="line_bottom">{{item.percentage.toFixed(3)}}</b-col>-->
               </b-row>
               </div>
             </b-card>
@@ -418,10 +418,10 @@ export default {
         this.mapChartData(response.data.result.rows)
         for (var x in this.word_profiles) {
           this.json_data.push({
-            'collocate': this.word_profiles[x].collocate,
-            'matching': this.word_profiles[x].matching,
+            // 'collocate': this.word_profiles[x].collocate,
+            // 'matching': this.word_profiles[x].matching,
             'frequency': this.word_profiles[x].frequency,
-            'percentage': this.word_profiles[x].percentage
+            'profile': this.word_profiles[x].profile
           })
         }
         this.show.loading = false
@@ -468,8 +468,11 @@ export default {
         fields = data.length
       }
       for (let i = 0; i <= fields; i++) {
-        this.chart.labels[i] = '"' + data[i].collocate + '" (' + data[i].percentage.toFixed(3) + '%)'
-        this.chart.datasets[0].data[i] = data[i].percentage
+        this.chart.labels[i] = data[i].profile
+        this.chart.datasets[0].data[i] = data[i].frequency
+        //   this.chart.labels[i] = '"' + data[i].collocate + '" (' + data[i].percentage.toFixed(3) + '%)'
+        // this.chart.datasets[0].data[i] = data[i].percentage
+        //
       }
       this.show.chart = true
     }
