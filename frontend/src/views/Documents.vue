@@ -28,7 +28,7 @@ export default {
     startTask: async function () {
       console.log()
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
+        let response = await axios.post(process.env.ROOT_API + 'startTask', {
           task_type: 'dictionaries',
           metadata_filter: [],
           query_parameters: [{
@@ -51,7 +51,7 @@ export default {
     },
     checkStatus: async function (taskId) {
       try {
-        const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 5000})
+        let response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 5000})
         this.task.status = response.data.status
         console.log('task status => ' + this.task.status)
         if (this.task.status === 'DONE') {
@@ -70,7 +70,7 @@ export default {
     },
     getResult: async function (taskId) {
       try {
-        const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        let response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
         // this.task.finished = true
         this.documents = response.data.result.documents
         console.log(response)

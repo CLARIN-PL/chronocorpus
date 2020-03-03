@@ -33,7 +33,7 @@ export default {
   methods: {
     getTaskId: async function () {
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
+        let response = await axios.post(process.env.ROOT_API + 'startTask', {
           task_type: 'dictionaries',
           metadata_filter: [],
           query_parameters: [
@@ -59,7 +59,7 @@ export default {
     checkStatus: async function (taskId, timer) {
       try {
         timer += 100
-        const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
+        let response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
         this.task.status = response.data.status
         if (this.task.status === 'DONE') {
           this.getResult(taskId)
@@ -74,7 +74,7 @@ export default {
     },
     getResult: async function (taskId) {
       try {
-        const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        let response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
         let propertyNames = []
         response.data.result.dictionaries.property_names.forEach(function (value, i) {
           // two exceptions due to much data

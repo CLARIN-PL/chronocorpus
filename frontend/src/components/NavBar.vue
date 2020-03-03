@@ -88,12 +88,12 @@
 </template>
 
 <script>
-import {BNavbar} from 'bootstrap-vue'
+import {BNavBar} from 'bootstrap-vue'
 
 export default {
   name: 'NavBar',
   components: {
-    BNavbar
+    BNavBar
   },
   data () {
     return {

@@ -131,10 +131,10 @@ export default {
         selected: '2',
         options:
             [
-              {value: '1', text: this.$t('adjective')},
+              {value: '1', text: this.$t('verb')},
               {value: '2', text: this.$t('noun')},
-              {value: '3', text: this.$t('verb')},
-              {value: '4', text: this.$t('adverb')}
+              {value: '3', text: this.$t('adverb')},
+              {value: '4', text: this.$t('adjective')}
             ]
       }
     },
@@ -250,7 +250,7 @@ export default {
           }]
       }
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
+        let response = await axios.post(process.env.ROOT_API + 'startTask', {
           task_type: 'time_series',
           metadata_filter: this.metadata_filters,
           query_parameters: [
@@ -285,7 +285,7 @@ export default {
       try {
         timer += 100
         console.log(timer)
-        const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
+        let response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
         this.task.status = response.data.status
         console.log('status => ' + this.task.status)
         if (this.task.status === 'DONE') {
@@ -305,7 +305,7 @@ export default {
     getResult: async function (taskId) {
       try {
         this.task.finished = true
-        const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        let response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
         var jsonResponse = JSON.stringify(response.data.result.rows[0])
         var formattedResponse = JSON.parse(jsonResponse)
         this.mapChartData(formattedResponse.series)
