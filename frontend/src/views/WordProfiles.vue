@@ -108,18 +108,14 @@
                               v-if="word_profiles.length > 0"/>
               </div>
 
-                <div class="content-list col-7 card-img-left" v-if="chart.datasets[0].data.length > 1">
+                <div class="content-list col-5 card-img-left" v-if="chart.datasets[0].data.length > 1">
                   <pie-chart v-if="show.chart" :chart-data="chart"></pie-chart>
                 </div>
-                <div class="content-list col-7 card-img-left" v-if="!(chart.datasets[0].data.length > 1) && task.finished">
+                <div class="content-list col-5 card-img-left" v-if="!(chart.datasets[0].data.length > 1) && task.finished">
                   {{$t('nodata')}}
                 </div>
-              <div class="content-list col-5">
+              <div class="content-list col-7">
               <b-row class="justify-content-md" v-for="(item) in pages" :key="item.id">
-<!--                <b-col col lg="2" class="line_bottom">{{item.collocate}}</b-col>-->
-                <!--<b-col col lg="8" class="line_bottom">{{item.profile}}</b-col>-->
-                <!--<b-col col lg="4" class="line_bottom">{{item.frequency}}</b-col>-->
-<!--                <b-col col lg="2" class="line_bottom">{{item.percentage.toFixed(3)}}</b-col>-->
                 <b-col col lg="2" class="line_bottom">{{item.collocate}}</b-col>
                 <b-col col lg="6" class="line_bottom">{{item.matching.split(',').join(', ')}}</b-col>
                 <b-col col lg="2" class="line_bottom">{{item.frequency}}</b-col>
@@ -447,10 +443,10 @@ export default {
 
         for (var x in response.data.result.rows) {
           this.json_data.push({
-            'collocate': this.word_profiles[x].collocate,
-            'matching': this.word_profiles[x].matching,
-            'frequency': this.word_profiles[x].frequency,
-            'percentage': this.word_profiles[x].percentage
+            'collocate': x.collocate,
+            'matching': x.matching,
+            'frequency': x.frequency,
+            'percentage': x.percentage
           })
         }
         this.mapChartData(response.data.result.rows)
@@ -479,6 +475,7 @@ export default {
       }
     },
     mapChartData: function (data) {
+      console.log(data)
       this.chart =
               {
                 label: 'a',
@@ -491,18 +488,14 @@ export default {
                 ]
               }
       // let left = 100
-      let fields
-      if (data.length > 9) {
-        fields = 9
-      } else {
-        fields = data.length
-      }
-      for (let i = 0; i <= fields; i++) {
-        // this.chart.labels[i] = data[i].profile
-        // this.chart.datasets[0].data[i] = data[i].frequency
+      let fields = (data.length >= 10) ? 10 : data.length
+
+      this.chart.labels = []
+      this.chart.datasets[0].data = []
+
+      for (let i = 0; i < fields; i++) {
         this.chart.labels[i] = '"' + data[i].collocate + '" (' + data[i].percentage.toFixed(3) + '%)'
         this.chart.datasets[0].data[i] = data[i].percentage
-        //
       }
       this.show.chart = true
     }
