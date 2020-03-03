@@ -9,6 +9,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,6 +66,16 @@ public class FrequencyQueryService {
         return frequency.build();
     }
 
+    public Map<FrequencyItem, Integer> calculateFrequencyByBase(Set<Property> metadata) {
+        Map<FrequencyItem, Integer> result =  new ConcurrentHashMap<>();
+        DocumentStore.getInstance()
+                .getDocuments()
+                .parallelStream()
+                .filter(d -> d.getMetadata().matches(metadata))
+                .flatMap(d -> d.documentBaseFrequency().entrySet().stream())
+                .forEach(e -> calculateFrequency(result, e.getKey(), e.getValue()));
+        return result;
+    }
     private void reMapValues(Map<FrequencyItem, Integer> result) {
         result.forEach(FrequencyItem::setFrequency);
     }

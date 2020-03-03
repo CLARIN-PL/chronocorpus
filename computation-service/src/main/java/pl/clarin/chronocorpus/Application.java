@@ -32,42 +32,60 @@ public class Application {
         Application app = new Application();
 
 
-
+/*
         ConcordanceQuery con = new ConcordanceQuery.Builder()
-                .withBase("armia czerwony")
+                .withOrth("NRD")
                 .build();
 
         app.testWithTimer(con, "Geo");
 
         DocumentQuery doc = new DocumentQuery.Builder()
-                .withDocumentId("599")
+                .withDocumentId("23157")
                 .build();
 
         app.testWithTimer(doc, "Document");
 
-/*
+
         GeoNamesQuery g = new GeoNamesQuery.Builder().build();
+        app.testWithTimer(g, "map");
 
 
-
+/*
         TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
                 .withBase("czerwony")
                 .withPartOfSpeech("4")
                 .withUnit(TimeUnit.month)
                 .build();
         app.testWithTimer(ana1l, "Time series");
-*/
 
+
+ */
 /*
-        WordProfileQuery wp = new WordProfileQuery.Builder()
-                .withRightWindowSize("3")
-                .withLeftWindowSize("3")
-                .withPartOfSpeech("2")
-                .withWindowItemPartOfSpeech("4")
-                .withOrth("piec")
+        FrequencyQuery fq  = new FrequencyQuery.Builder()
+                .countByBase(true)
                 .build();
 
-        app.testWithTimer(wp, "Word Profile");*/
+        app.testWithTimer(fq, "FQ");
+
+       WordProfileQuery wp = new WordProfileQuery.Builder()
+                .withRightWindowSize("1")
+                .withLeftWindowSize("1")
+                .withPartOfSpeech("2")
+                .withWindowItemPartOfSpeech("2")
+                .withOrth("Polska")
+                .build();
+
+        app.testWithTimer(wp, "Word Profile");
+
+*/
+
+        QuantityAnalysisQuery qa = new QuantityAnalysisQuery.Builder()
+                .calculationUnit(CalculationUnit.letter)
+                .calculationType(CalculationType.zipf_histogram)
+                .calculationObject(CalculationObject.word)
+                .build();
+
+        app.testWithTimer(qa, "QAQ");
     }
 
     public Application() {

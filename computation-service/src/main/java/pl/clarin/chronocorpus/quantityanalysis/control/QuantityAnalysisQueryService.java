@@ -4,6 +4,8 @@ import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.document.entity.Sentence;
 import pl.clarin.chronocorpus.document.entity.Token;
+import pl.clarin.chronocorpus.frequency.control.FrequencyQueryService;
+import pl.clarin.chronocorpus.frequency.entity.FrequencyItem;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationUnit;
@@ -12,7 +14,13 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -114,10 +122,14 @@ public class QuantityAnalysisQueryService {
         }
 
         if (CalculationObject.word.equals(calculationObject) && CalculationType.zipf_histogram.equals(calculationType)) {
-            List<Long> lengths = getCalculateWordLengths(pos, calculationUnit, metadata);
 
-            Map<Long, Long> freq = frequencyCalculations(lengths);
-            chart = frequencyCalculations(freq.values());
+            Map<FrequencyItem, Integer> frq = FrequencyQueryService.getInstance().calculateFrequencyByBase(metadata);
+
+            Map<Long, Long> calc = frq.values().stream()
+                    .map(Long::valueOf)
+                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+            chart = sortByLongKey(calc);
         }
 
         JsonObjectBuilder j = Json.createObjectBuilder();
@@ -135,7 +147,10 @@ public class QuantityAnalysisQueryService {
         JsonArrayBuilder chartArray = Json.createArrayBuilder();
 
         if (chart != null)
-            chart.forEach((k, v) -> chartArray.add(Json.createObjectBuilder().add(k.toString(), v)));
+            chart.forEach((k, v) ->{
+                chartArray.add(Json.createObjectBuilder().add(k.toString(), v));
+
+            });
 
         j.add("chart", chartArray);
         return j.build();
