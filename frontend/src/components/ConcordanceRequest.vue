@@ -77,9 +77,23 @@
           <b-col class="line_bottom" style="text-align: left" >{{item.value}}</b-col>
         </b-row>
       </b-container>
+      <b-container style="width: 50%; display: inline-block; float: left">
+        <b-row class="mb-2" v-if="documentmodal.data.proper_names">
+          <b-col class="line_bottom" style="text-align: right" ><strong>{{$t('concordance.proper_names')}}</strong></b-col>
+          <b-col class="line_bottom" style="text-align: left; overflow: auto; border-style: outset; border-color: #dee2e6" >
+            <b-container style="width: 100%; height: 48px">
+              <b-row v-if="item.geo_location" v-for="item in documentmodal.data.proper_names" :key="item.name" :title="item.geo_location.name + ' lon:' + item.geo_location.lon + ' lat:' + item.geo_location.lat">
+                <b-col class="sm-8">
+                  {{item.value}}
+                </b-col>
+
+              </b-row>
+            </b-container>
+          </b-col>
+        </b-row>
+      </b-container>
       <b-container class="card" style="padding: 20px">
         <b-row v-if="documentmodal.data.text">
-          <!--<b-col cols="2" style="text-align: right;"><strong> </strong></b-col>-->
           <b-col  style=" text-align: justify; text-justify: inter-word;">
             {{documentmodal.data.text[0]}}
             <span style="color: #8772c3; font-weight: bold">{{documentmodal.data.text[1]}}</span>
@@ -113,8 +127,8 @@ export default {
     concordanceWord: {
       type: String
     },
-    predefinedFilters: {
-      type: Array
+    publicationYear: {
+      type: String
     }
   },
   data () {
@@ -146,6 +160,7 @@ export default {
         data: '',
         properties: []
       },
+      dupa: [],
       metadata_filters: []
     }
   },
@@ -233,19 +248,21 @@ export default {
       this.show.loading = true
       this.concordances = []
       this.json_data = []
+      let task = {
+        corpus: 'chronopress',
+        task_type: 'concordance',
+        metadata_filter: this.metadata_filters,
+        query_parameters: [
+          {
+            name: this.method.selected,
+            value: this.form.word
+          }
+        ],
+        response_parameters: []
+      }
+      console.log('task: ' + JSON.stringify(task))
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
-          corpus: 'chronopress',
-          task_type: 'concordance',
-          metadata_filter: this.metadata_filters,
-          query_parameters: [
-            {
-              name: this.method.selected,
-              value: this.form.word
-            }
-          ],
-          response_parameters: []
-        }, {
+        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -254,7 +271,6 @@ export default {
           timeout: 5000
         })
         this.task.id = response.data.id
-        console.log(response)
         this.checkStatus(this.task.id, 100)
       } catch (e) {
         console.log(Object.keys(e), e.message)
@@ -281,6 +297,7 @@ export default {
       try {
         this.task.finished = true
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        console.log('result: ', response.data.result)
         this.changePage(1)
         this.skip = this.limit
         this.concordances = response.data.result.rows
@@ -344,11 +361,13 @@ export default {
   mounted () {
     try {
       if (this.executeOnMount === true && typeof this.concordanceWord !== 'undefined') {
-        console.log(this.executeOnMount)
         this.form.word = this.concordanceWord
-        // if (this.predefinedFilters !== 'undefined') {
-        //   this.metadata_filters = this.predefinedFilters
-        // }
+        if (this.publicationYear !== '') {
+          this.metadata_filters.push({
+            name: 'publication_year',
+            value: this.publicationYear
+          })
+        }
         this.startTask()
       }
     } catch (e) {

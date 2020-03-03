@@ -3,7 +3,7 @@ import { Pie } from 'vue-chartjs'
 
 export default {
   extends: Pie,
-  name: 'BarChart',
+  name: 'PieChart',
   props: {
     chartData: {
       type: Object,

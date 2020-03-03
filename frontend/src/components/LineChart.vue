@@ -38,14 +38,11 @@ export default {
           let canSplit = function () {
             return (pointLabel || '').split('-').length > 1
           }
-          console.log(canSplit())
           let result = []
           if (canSplit === true) {
             result = pointLabel.split('-')
-            console.log(result[1])
           } else {
             result = this._data._chart.data.labels[item._index] + ''
-            console.log(result)
           }
           this.$emit('on-receive', {
             // index: item._index,

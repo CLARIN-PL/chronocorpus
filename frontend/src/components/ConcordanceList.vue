@@ -35,8 +35,7 @@ export default {
   methods: {
     getTaskId: async function (documentId) {
       try {
-        console.log(documentId)
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
+        let task = {
           corpus: 'chronopress',
           task_type: 'document',
           metadata_filter: [],
@@ -47,7 +46,9 @@ export default {
             }
           ],
           response_parameters: []
-        }, {
+        }
+        console.log(JSON.stringify(task))
+        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json'
           },
@@ -81,19 +82,18 @@ export default {
       }
     },
     getResult: async function (taskId) {
-      console.log(taskId)
       try {
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
         response.data.result.documents[0].text = this.colorizeDocumentText(response.data.result.documents[0].text)
-        console.log(response.data.result)
+        console.log('result: ', response.data.result)
         this.documentRequest(response)
       } catch (e) {
         console.log(Object.keys(e), e.message)
       }
     },
-    colorizeDocumentText (data) {
+    colorizeDocumentText (documentData) {
       let concordance = this.data.concordances[0].left + ' ' + this.data.concordances[0].word + ' ' + this.data.concordances[0].right
-      let text = data.split(concordance)
+      let text = documentData.split(concordance)
       return [text[0], this.data.concordances[0].left, this.data.concordances[0].word, this.data.concordances[0].right, text[1]]
     }
   }

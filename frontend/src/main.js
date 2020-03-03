@@ -9,7 +9,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import BootstrapVue from 'bootstrap-vue'
 
 import VueLocalStorage from 'vue-localstorage'
-import { Nav, Form } from 'bootstrap-vue/es/components'
 import { i18n } from '@/translations'
 
 // import VueLayers from 'vuelayers'
@@ -29,8 +28,8 @@ Icon.Default.mergeOptions({
 })
 
 Vue.use(BootstrapVue)
-Vue.use(Nav)
-Vue.use(Form)
+// Vue.use(Nav)
+// Vue.use(Form)
 Vue.use(VueLocalStorage)
 // Vue.use(VueLayers)
 Vue.config.productionTip = false

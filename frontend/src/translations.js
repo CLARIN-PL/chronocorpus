@@ -8,6 +8,7 @@ export const i18n = new VueI18n({
   fallbackLocale: 'pl',
   messages: {
     pl: {
+      nodata: 'Nie uzyskano żadnych danych dla wybranej konfiguracji',
       scale: {
         title: 'kliknj aby zmienić skalę',
         true: '✔ skala logarytmiczna',
@@ -62,7 +63,7 @@ export const i18n = new VueI18n({
         method: 'Forma wyrazu',
         method_i: 'wskaż formę wprowadzonego wyrazu',
         howmany: 'Liczba wyników na stronie',
-        base: 'Forma bazowa wyrazu',
+        base: 'Forma hasłowa (leksem)',
         orth: 'Forma zmieniona wyrazu',
         submit: 'Wyszukaj konkordancję',
         loading: 'Wczytuję dane...',
@@ -74,7 +75,8 @@ export const i18n = new VueI18n({
         showfilters: 'Pokaż Filtry ⇓ ',
         hidefilters: 'Ukryj filtry ⇑ ',
         modal_title: 'Dane próbki',
-        modal_cancel: 'Wyjdź'
+        modal_cancel: 'Wyjdź',
+        proper_names: 'Nazwy własne'
       },
       footer: {
         copyright: 'Copyright 2019 Clarin-PL. Wszystkie prawa zastrzeżone.'
@@ -82,8 +84,9 @@ export const i18n = new VueI18n({
       frequency: {
         title: 'Lista frekwencyjna',
         submit: 'Utwórz listę frekwencyjną',
-        true: 'Formy hasłowe',
-        false: 'Formy nieodmienione'
+        true: 'Formy hasłowe (leksemy)',
+        false: 'Formy odmienione',
+        stop_list: 'Stop-lista'
       },
       wordprofiles: {
         word: 'Wpisz wyraz',
@@ -97,7 +100,7 @@ export const i18n = new VueI18n({
         submit: 'Generuj statystyki',
         word: 'wyraz',
         sentence: 'zdanie',
-        average: 'średnia',
+        average: 'histogram długości',
         zipf_histogram: 'histogram Zipfa',
         letter: 'litera',
         syllable: 'sylaba',
@@ -164,6 +167,7 @@ export const i18n = new VueI18n({
       }
     },
     en: {
+      nodata: 'No data was obtained for the selected configuration',
       scale: {
         title: 'click to change the scale',
         true: 'logarithmic scale',
@@ -230,13 +234,15 @@ export const i18n = new VueI18n({
         showfilters: '⇓ Show filters',
         hidefilters: '⇑ Hide  filters',
         modal_title: 'Data sample',
-        modal_cancel: 'Close'
+        modal_cancel: 'Close',
+        proper_names: 'Proper names'
       },
       frequency: {
         title: 'Frequency list',
         submit: 'Create frequency list',
         true: 'Frequency Lists of words',
-        false: 'Frequency Lists of lexemes (form slogans)'
+        false: 'Frequency Lists of lexemes (form slogans)',
+        stop_list: 'Stopwords'
       },
       wordprofiles: {
         word: 'Type word',

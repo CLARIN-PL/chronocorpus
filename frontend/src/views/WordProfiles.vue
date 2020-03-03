@@ -50,17 +50,17 @@
                 <!--<b-form-select class="form-input-select" selected="" required v-model="part_of_speech.selected"-->
                                <!--:options="part_of_speech.options"/>-->
               <!--</b-form-group>-->
-              <b-form-group :label="this.$t('wordprofiles.context')">
-                <b-form-select selected="" required v-model="context_part_of_speech.selected"
-                               :options="context_part_of_speech.options"/>
-              </b-form-group>
-              <!--<b-form-group-->
-                <!--:label="this.$t('wordprofiles.context')">-->
-                <!--<b-button class="trigger-button" :pressed.sync="adjective"><span class="trigger-button-ico"></span> {{$t('adjective')}}</b-button>-->
-                <!--<b-button class="trigger-button" :pressed.sync="noun" ><span class="trigger-button-ico"></span>{{$t('noun')}}</b-button>-->
-                <!--<b-button class="trigger-button" :pressed.sync="verb" ><span class="trigger-button-ico"></span>{{$t('verb')}}</b-button>-->
-                <!--<b-button class="trigger-button" :pressed.sync="adverb"><span class="trigger-button-ico"></span>{{$t('adverb')}}</b-button>-->
+              <!--<b-form-group :label="this.$t('wordprofiles.context')">-->
+                <!--<b-form-select selected="" required v-model="context_part_of_speech.selected"-->
+                               <!--:options="context_part_of_speech.options"/>-->
               <!--</b-form-group>-->
+              <b-form-group
+                :label="this.$t('wordprofiles.context')">
+                <b-button class="trigger-button" :pressed.sync="adjective"><span class="trigger-button-ico"></span> {{$t('adjective')}}</b-button>
+                <b-button class="trigger-button" :pressed.sync="noun" ><span class="trigger-button-ico"></span>{{$t('noun')}}</b-button>
+                <b-button class="trigger-button" :pressed.sync="verb" ><span class="trigger-button-ico"></span>{{$t('verb')}}</b-button>
+                <b-button class="trigger-button" :pressed.sync="adverb"><span class="trigger-button-ico"></span>{{$t('adverb')}}</b-button>
+              </b-form-group>
 
               <transition>
                 <b-form-group>
@@ -108,34 +108,36 @@
                               v-if="word_profiles.length > 0"/>
               </div>
 
-              <div class="content-list col-5 card-img-left">
-                <pie-chart v-if="chart.visible" :chart-data="chart"></pie-chart>
-              </div>
-              <div class="content-list col-7">
+                <div class="content-list col-7 card-img-left" v-if="chart.datasets[0].data.length > 1">
+                  <pie-chart v-if="show.chart" :chart-data="chart"></pie-chart>
+                </div>
+                <div class="content-list col-7 card-img-left" v-if="!(chart.datasets[0].data.length > 1) && task.finished">
+                  {{$t('nodata')}}
+                </div>
+              <div class="content-list col-5">
               <b-row class="justify-content-md" v-for="(item) in pages" :key="item.id">
-                <b-col col lg="2" class="line_bottom">{{item.collocate}}</b-col>
-                <b-col col lg="6" class="line_bottom">{{item.matching.split(',').join(', ')}}</b-col>
-                <b-col col lg="2" class="line_bottom">{{item.frequency}}</b-col>
-                <b-col col lg="2" class="line_bottom">{{item.percentage.toFixed(3)}}</b-col>
+<!--                <b-col col lg="2" class="line_bottom">{{item.collocate}}</b-col>-->
+                <b-col col lg="8" class="line_bottom">{{item.profile}}</b-col>
+                <b-col col lg="4" class="line_bottom">{{item.frequency}}</b-col>
+<!--                <b-col col lg="2" class="line_bottom">{{item.percentage.toFixed(3)}}</b-col>-->
               </b-row>
               </div>
-
             </b-card>
           </div>
         </div>
       </div>
     </div>
   </div>
-</template>
+</template>R
 
 <script>
-  import FadeTransition from '@/components/FadeTransition.vue'
-  import axios from 'axios'
-  import TaskFilter from '@/components/TaskFilter'
-  import VueJsonToCsv from 'vue-json-to-csv'
-  import PieChart from '../components/PieChart'
+import FadeTransition from '@/components/FadeTransition.vue'
+import axios from 'axios'
+import TaskFilter from '@/components/TaskFilter'
+import VueJsonToCsv from 'vue-json-to-csv'
+import PieChart from '../components/PieChart'
 
-  export default {
+export default {
   name: 'WordProfiles',
   data () {
     return {
@@ -154,7 +156,8 @@
       },
       show: {
         loading: false,
-        filters: false
+        filters: false,
+        chart: false
       },
       chart:
         {
@@ -165,8 +168,7 @@
               backgroundColor: ['#f44336', '#2196f3', '#ffc107', '#4caf50', '#7e57c2', '#8d6e63', '#ec407a', '#3f51b5', '#7cb342', '#c7c7c7'],
               data: []
             }
-          ],
-          visible: false
+          ]
         },
       word_profiles: [],
       adjective: false,
@@ -334,42 +336,44 @@
       this.task.finished = false
       this.show.loading = true
       this.word_profiles = []
+      this.show.chart = false
       this.json_data = []
+      let task = {
+        task_type: 'word_profile',
+        metadata_filter: this.metadata_filters,
+        query_parameters: [
+          {
+            name: 'orth',
+            value: this.form.orth
+          },
+          {
+            name: 'part_of_speech',
+            value: this.word_part_of_speech.selected
+          },
+          {
+            name: 'window_item_part_of_speech',
+            value: this.part_of_speech
+          },
+          {
+            name: 'left_window_size',
+            value: this.form.left_window_size.toString()
+          },
+          {
+            name: 'right_window_size',
+            value: this.form.right_window_size.toString()
+          }
+        ],
+        response_parameters: []
+      }
+      console.log('task: ' + JSON.stringify(task))
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
-          task_type: 'word_profile',
-          metadata_filter: this.metadata_filters,
-          query_parameters: [
-            {
-              name: 'orth',
-              value: this.form.orth
-            },
-            {
-              name: 'part_of_speech',
-              value: this.word_part_of_speech.selected
-            },
-            {
-              name: 'window_item_part_of_speech',
-              value: this.context_part_of_speech.selected
-            },
-            {
-              name: 'left_window_size',
-              value: this.form.left_window_size.toString()
-            },
-            {
-              name: 'right_window_size',
-              value: this.form.right_window_size.toString()
-            }
-          ],
-          response_parameters: []
-        }, {
+        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json'
           },
           timeout: 5000
         })
         this.task.id = response.data.id
-        console.log(response)
         this.checkStatus(this.task.id, 200)
       } catch (e) {
         this.task.finished = false
@@ -380,19 +384,23 @@
     checkStatus: async function (taskId, timer) {
       try {
         timer += 100
-        console.log(timer)
         const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
         this.task.status = response.data.status
         console.log('status => ' + this.task.status)
         if (this.task.status === 'DONE') {
           this.getResult(taskId)
         } else if (this.task.status === 'QUEUE') {
-          setTimeout(() => {
-            this.checkStatus(taskId, timer)
-          }, timer)
+          if (timer <= 5000) {
+            setTimeout(() => {
+              this.checkStatus(taskId, timer)
+            }, timer)
+          } else {
+            this.task.finished = false
+            this.show.loading = false
+          }
         } else if (this.task.status === 'ERROR') {
           this.task.finished = false
-          this.task.loading = false
+          this.show.loading = false
         }
       } catch (e) {
         console.log(Object.keys(e), e.message)
@@ -402,7 +410,7 @@
       try {
         this.task.finished = true
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
-        console.log(response)
+        console.log('result:', response.data.result)
         this.changePage(1)
         this.skip = this.limit
         this.csv_title = 'word_profiles_' + this.form.orth + '_L' + this.form.left_window_size + '_R' + this.form.right_window_size
@@ -410,13 +418,16 @@
         this.mapChartData(response.data.result.rows)
         for (var x in this.word_profiles) {
           this.json_data.push({
-            'collocate': this.word_profiles[x].collocate,
-            'matching': this.word_profiles[x].matching,
+            // 'collocate': this.word_profiles[x].collocate,
+            // 'matching': this.word_profiles[x].matching,
             'frequency': this.word_profiles[x].frequency,
-            'percentage': this.word_profiles[x].percentage
-            })
+            'profile': this.word_profiles[x].profile
+          })
         }
         this.show.loading = false
+        setTimeout(() => {
+          this.show.chart = true
+        }, 110)
       } catch (e) {
         console.log(Object.keys(e), e.message)
         this.show.loading = false
@@ -438,15 +449,32 @@
       }
     },
     mapChartData: function (data) {
-      let left = 100
-      for (let i = 0; i < 9; i++) {
-        left -= data[i].percentage
-        this.chart.labels[i] = '"' + data[i].collocate + '" (' + data[i].percentage.toFixed(3) + '%)'
-        this.chart.datasets[0].data[i] = data[i].percentage
+      this.chart =
+              {
+                label: 'a',
+                labels: [],
+                datasets: [
+                  {
+                    backgroundColor: ['#f44336', '#2196f3', '#ffc107', '#4caf50', '#7e57c2', '#8d6e63', '#ec407a', '#3f51b5', '#7cb342', '#c7c7c7'],
+                    data: []
+                  }
+                ]
+              }
+      // let left = 100
+      let fields
+      if (data.length > 9) {
+        fields = 9
+      } else {
+        fields = data.length
       }
-      this.chart.labels[9] = '*' + '" (' + left.toFixed(3) + '%)'
-      this.chart.datasets[0].data[9] = left
-      this.chart.visible = true
+      for (let i = 0; i <= fields; i++) {
+        this.chart.labels[i] = data[i].profile
+        this.chart.datasets[0].data[i] = data[i].frequency
+        //   this.chart.labels[i] = '"' + data[i].collocate + '" (' + data[i].percentage.toFixed(3) + '%)'
+        // this.chart.datasets[0].data[i] = data[i].percentage
+        //
+      }
+      this.show.chart = true
     }
   }
 }

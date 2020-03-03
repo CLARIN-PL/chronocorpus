@@ -38,7 +38,7 @@
     </div>
     <div class="box-container-result" v-if="task.finished">
       <div class="content-container">
-        <b-button v-for="(item) in letters" :key=item.id v-on:click="changeLetter(item)" type="button" size="sm" class="btn submit-button btn-secondary" style="margin: 3px; float: right">
+        <b-button v-for="(item) in letters" :key=item v-on:click="changeLetter(item)" type="button" size="sm" :ref="'letter_' + item" :id="'letter_' + item" :class="'btn filter-button btn-secondary' + (item === 'A' ? ' active' : '')" style="margin: 3px; float: right">
           {{item}}
         </b-button>
         <l-map v-if="task.finished" style="min-width: 100%; border-radius: 10px;" :zoom="zoom" :center="center" >
@@ -211,13 +211,15 @@ export default {
         Z: [],
         Ź: [],
         Ż: []}
+      let task = {
+        task_type: 'geo_proper_names',
+        metadata_filter: this.metadata_filters,
+        query_parameters: [],
+        response_parameters: []
+      }
+      console.log('task: ' + JSON.stringify(task))
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
-          task_type: 'geo_proper_names',
-          metadata_filter: this.metadata_filters,
-          query_parameters: [],
-          response_parameters: []
-        }, {
+        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json'
           },
@@ -260,7 +262,6 @@ export default {
           let type = this.points[i].type
           let frequency = this.points[i].frequency
           let letter = name.charAt(0).toUpperCase() + ''
-          // console.log(letter)
           for (var key in this.coordinates) {
             if (letter === key) {
               letters.add(key)
@@ -271,7 +272,6 @@ export default {
                 type: type,
                 frequency: frequency,
                 icon: L.divIcon({
-                  // shadowUrl: 'http://leafletjs.com/examples/custom-icons/leaf-shadow.png',
                   iconAnchor: [0, 24],
                   labelAnchor: [-6, 0],
                   popupAnchor: [0, -36],
@@ -281,11 +281,9 @@ export default {
             }
           }
         }
-        // console.log(this.coordinates)
         this.letters = Array.from(letters)
         this.letters.sort()
         this.letters.reverse()
-        // console.log(this.letters)
         this.task.finished = true
         this.show.loading = false
       } catch (e) {
@@ -320,20 +318,7 @@ export default {
           red--
         }
       }
-      // var color = `#ff0000`
       var color = `rgb(` + red + `,` + green + `,` + blue + `)`
-      // if (frequency >= 5 && frequency < 15) {
-      //   color = `#ff8000`
-      // } else if (frequency >= 15 && frequency < 30) {
-      //   color = `#ffff00`
-      // } else if (frequency >= 30 && frequency < 50) {
-      //   color = `#40ff00`
-      // } else if (frequency >= 50 && frequency < 100) {
-      //   color = `#00bfff`
-      // } else if (frequency >= 100 && frequency < 200) {
-      //   color = `#0000ff`
-      // } else
-
       return `background-color: ` + color + `;
               width: 30px;
               height: 30px;
@@ -346,14 +331,19 @@ export default {
               border: 2px solid #FFFFFF`
     },
     changeLetter (letter) {
+      let prevButton = this.$refs['letter_' + this.letter][0]
+      let nextButton = this.$refs['letter_' + letter][0]
+      prevButton.classList.remove('active')
+      nextButton.classList.add('active')
       this.letter = letter
     }
-  },
-  mounted () {
   }
 }
 </script>
 
 <style scoped>
 
+.filter-button.active {
+  background-color: var(--violet_red) !important;
+}
 </style>

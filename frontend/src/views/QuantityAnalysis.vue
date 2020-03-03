@@ -16,16 +16,16 @@
         <div v-bind:class="{ 'box-container-form': task.finished, 'box-container': !task.finished }">
           <div class="content-container">
             <b-form @submit="startTask">
-
-              <b-form-group :label="this.$t('quantity_analysis.calculation_object')">
+              <b-form-group :label="this.$t('quantity_analysis.calculation_type')">
+                <b-form-select selected="" required v-model="calculation_type.selected"
+                               :options="calculation_type.options" @change="onTypeChange"/>
+              </b-form-group>
+              <b-form-group   v-if="is_average" :label="this.$t('quantity_analysis.calculation_object')">
                 <b-form-select selected="" required v-model="calculation_object.selected"
                                :options="calculation_object.options" @change="onObjectChange"/>
               </b-form-group>
-              <b-form-group :label="this.$t('quantity_analysis.calculation_type')">
-                <b-form-select selected="" required v-model="calculation_type.selected"
-                               :options="calculation_type.options"/>
-              </b-form-group>
-              <b-form-group :label="this.$t('quantity_analysis.calculation_unit')">
+
+              <b-form-group v-if="is_average" :label="this.$t('quantity_analysis.calculation_unit')">
                 <b-form-select selected="" required v-model="calculation_unit.selected"
                                :options="calculation_unit.options"/>
               </b-form-group>
@@ -65,9 +65,6 @@
         <div class="text-center box-container-result" v-if="task.finished">
           <div class="content-container" ref="chartContainer">
             <div v-on:resize="redrawChart()">
-              <!--<b-button v-on:click="export2image" type="button" size="sm" class="btn submit-button btn-secondary" style="margin: 3px; float: left">-->
-                <!--{{$t('download')}} PNG-->
-              <!--</b-button>-->
               <div>
                 <b-collapse id="collapse-1" class="mt-2">
                   <b-card class="mb-2">
@@ -148,6 +145,7 @@ export default {
       log: false,
       metadata_filters: [],
       word_was_chosen: true,
+      is_average: true,
       table: [],
       chart: {},
       chartHeight: 470
@@ -344,6 +342,9 @@ export default {
         this.word_was_chosen = false
       }
     },
+    onTypeChange (value) {
+      this.is_average = value === 'average'
+    },
     showFilters: function () {
       this.show.filters = true
     },
@@ -394,7 +395,7 @@ export default {
           }]
         }}
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', {
+        let task = {
           task_type: 'quantity_analysis',
           metadata_filter: this.metadata_filters,
           query_parameters: [
@@ -416,14 +417,15 @@ export default {
             }
           ],
           response_parameters: []
-        }, {
+        }
+        console.log('task: ' + JSON.stringify(task))
+        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json'
           },
           timeout: 5000
         })
         this.task.id = response.data.id
-        console.log(response)
         this.checkStatus(this.task.id, 200)
       } catch (e) {
         console.log(Object.keys(e), e.message)
@@ -432,7 +434,6 @@ export default {
     checkStatus: async function (taskId, timer) {
       try {
         timer += 100
-        console.log(timer)
         const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
         this.task.status = response.data.status
         console.log('status => ' + this.task.status)
@@ -454,7 +455,7 @@ export default {
       try {
         this.task.finished = true
         const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
-        console.log(response)
+        console.log('result:', response.data.result)
         this.quantity_analysis = response.data.result.rows[0]
         this.mapData(this.quantity_analysis)
         this.mapChartData(this.quantity_analysis.chart)
@@ -466,13 +467,13 @@ export default {
       }
     },
     mapData: function (data) {
+      this.table = []
       try {
         for (let key in data) {
           if (key !== 'chart') {
             this.table.push({key: key, value: data[key]})
           }
         }
-        console.log(this.table)
       } catch (e) {
         console.log(Object.keys(e), e.message)
       }
@@ -481,14 +482,9 @@ export default {
       try {
         for (let i = 0; i <= chartData.length; i++) {
           for (var key in chartData[i]) {
-            if (this.calculation_type_word.selected === 'average') {
-              this.chart.datasets[0].data.push(chartData[i][key])
-              this.chart.labels.push(key)
-            } else {
-              this.chart.datasets[0].data.push(key)
-              this.chart.labels.push(i)
-            }
-
+            // console.log(i, key, chartData[i][key])
+            this.chart.datasets[0].data.push(chartData[i][key])
+            this.chart.labels.push(key)
             this.json_data.push({[this.csv_title]: key, 'quantity': chartData[i][key]})
           }
         }
@@ -498,7 +494,7 @@ export default {
       }
     },
     resizeChart: function () {
-      if (window.innerWidth > 768) {
+      if (window.innerWidth > 768 && this.$refs.chartContainer) {
         this.chartHeight = Math.ceil(this.$refs.chartContainer.clientHeight * 0.8)
       } else {
         this.chartHeight = Math.ceil(470)
@@ -520,7 +516,7 @@ export default {
       var mouseEvent = new MouseEvent('click')
       link.dispatchEvent(mouseEvent)
     },
-    handleResize (event) {
+    handleResize: function (event) {
       if (this.task.finished) {
         this.redrawChart()
       }
@@ -543,10 +539,6 @@ export default {
   }
 
   .line_bottom {
-    /*border-bottom: 1px solid var(--dark_silver);*/
-    /*border-image:*/
-      /*linear-gradient(#e66465, #9198e5);*/
-    /*color: red;*/
     border-width: 1px;
     border-style: solid;
     border-image:

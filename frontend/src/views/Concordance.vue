@@ -13,12 +13,13 @@
         {{ $t('home.service1') }}
       </h3>
     </div>
+
     <div class="view-content">
       <concordance-request
         v-if="isMounted"
         :concordance-word="concordanceWord"
         :execute-on-mount="executeOnMount"
-        :predefined-filers="predefinedFilters"
+        :publication-year="publicationYear"
       ></concordance-request>
     </div>
   </div>
@@ -33,8 +34,8 @@ export default {
     concordanceWord: {
       type: String
     },
-    predefinedFilters: {
-      type: Array
+    publicationYear: {
+      type: String
     }
   },
   components: {ConcordanceRequest},
@@ -49,10 +50,8 @@ export default {
       this.executeOnMount = true
     } else {
       this.executeOnMount = false
+      this.isMounted = true
     }
-    // console.log('executeOnMount con :' + this.executeOnMount)
-    // console.log(this.concordanceWord)
-    // console.log(this.predefinedFilters)
     this.isMounted = true
   }
 }
