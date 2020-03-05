@@ -416,6 +416,7 @@ Example request and response fetching geo proper names
 === Querying time series
 Example request and response fetching time series by base form
 Parameters:
+    base = may contain words separated by ; this will return multi value graph words mus share part of speech
     time_unit = [month, year]
 
 `Time series Request`:
@@ -431,7 +432,7 @@ Parameters:
     "query_parameters":[
         {
             "name":"base",
-            "value":"czerwony"
+            "value":"czerwony;zielony"
         },
         {
             "name":"part_of_speech",
@@ -456,6 +457,15 @@ Parameters:
             "series":[
                 {"2-1954":1},
                 {"7-1955":1}
+            ]
+        },
+        {
+            "word":"zielony",
+            "is_base_form":false,
+            "part_of_speech":4,
+            "series":[
+                {"2-1954":14},
+                {"7-1955":10}
             ]
         }
     ]
