@@ -45,21 +45,17 @@
                   </b-col>
                 </b-row>
               </b-container>
+              <!--<b-form-group-->
+                <!--:label="this.$t('wordprofiles.context')">-->
+                <!--<b-button class="trigger-button" :pressed.sync="adjective"><span class="trigger-button-ico"></span> {{$t('adjective')}}</b-button>-->
+                <!--<b-button class="trigger-button" :pressed.sync="noun" ><span class="trigger-button-ico"></span>{{$t('noun')}}</b-button>-->
+                <!--<b-button class="trigger-button" :pressed.sync="verb" ><span class="trigger-button-ico"></span>{{$t('verb')}}</b-button>-->
+                <!--<b-button class="trigger-button" :pressed.sync="adverb"><span class="trigger-button-ico"></span>{{$t('adverb')}}</b-button>-->
+              <!--</b-form-group>-->
 
-              <!--<b-form-group :label="this.$t('wordprofiles.context')">-->
-                <!--<b-form-select class="form-input-select" selected="" required v-model="part_of_speech.selected"-->
-                               <!--:options="part_of_speech.options"/>-->
-              <!--</b-form-group>-->
-              <!--<b-form-group :label="this.$t('wordprofiles.context')">-->
-                <!--<b-form-select selected="" required v-model="context_part_of_speech.selected"-->
-                               <!--:options="context_part_of_speech.options"/>-->
-              <!--</b-form-group>-->
-              <b-form-group
-                :label="this.$t('wordprofiles.context')">
-                <b-button class="trigger-button" :pressed.sync="adjective"><span class="trigger-button-ico"></span> {{$t('adjective')}}</b-button>
-                <b-button class="trigger-button" :pressed.sync="noun" ><span class="trigger-button-ico"></span>{{$t('noun')}}</b-button>
-                <b-button class="trigger-button" :pressed.sync="verb" ><span class="trigger-button-ico"></span>{{$t('verb')}}</b-button>
-                <b-button class="trigger-button" :pressed.sync="adverb"><span class="trigger-button-ico"></span>{{$t('adverb')}}</b-button>
+              <b-form-group :label="this.$t('wordprofiles.context')">
+                <b-form-select selected="" required v-model="context_part_of_speech.selected"
+                               :options="context_part_of_speech.options"/>
               </b-form-group>
 
               <transition>
@@ -242,31 +238,6 @@ export default {
         console.log(Object.keys(e), e.message)
       }
     },
-    part_of_speech () {
-      let partOfSpeech = ''
-      if (this.adjective) {
-        partOfSpeech += '1'
-      }
-      if (this.noun) {
-        if (partOfSpeech !== '') {
-          partOfSpeech += ';'
-        }
-        partOfSpeech += '2'
-      }
-      if (this.verb) {
-        if (partOfSpeech !== '') {
-          partOfSpeech += ';'
-        }
-        partOfSpeech += '3'
-      }
-      if (this.adverb) {
-        if (partOfSpeech !== '') {
-          partOfSpeech += ';'
-        }
-        partOfSpeech += '4'
-      }
-      return partOfSpeech
-    },
     word_part_of_speech () {
       return {
         selected: '2',
@@ -289,20 +260,6 @@ export default {
                   {value: '3', text: this.$t('adverb')},
                   {value: '4', text: this.$t('adjective')}
                 ]
-      }
-    },
-    chart_options: function () {
-      return {
-        title: {
-          display: true,
-          text: this.$t('charts.lemma.title') + '"' + 'iksde' + '"'
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        pieceLabel: {
-          mode: 'percentage',
-          precision: 1
-        }
       }
     }
   },
@@ -336,7 +293,6 @@ export default {
       this.task.finished = false
       this.show.loading = true
       this.word_profiles = []
-      console.log(this.word_profiles)
       this.show.chart = false
       this.json_data = []
       let task = {
@@ -353,7 +309,8 @@ export default {
           },
           {
             name: 'window_item_part_of_speech',
-            value: this.part_of_speech.toString()
+            value: this.context_part_of_speech.selected.toString()
+            // value: this.part_of_speech.toString()
           },
           {
             name: 'left_window_size',
@@ -376,8 +333,6 @@ export default {
           crossDomain: true,
           timeout: 5000
         })
-        // this.task.id = response.data.id
-        console.log('1:', response.data.id)
         this.checkStatus(response.data.id, 200)
       } catch (e) {
         this.task.finished = false
@@ -392,12 +347,16 @@ export default {
         this.task.status = response.data.status
         console.log('status => ' + this.task.status)
         if (this.task.status === 'DONE') {
-          console.log(process.env.ROOT_API + 'getResult/' + taskId)
           this.getResult(taskId)
         } else if (this.task.status === 'QUEUE') {
-          setTimeout(() => {
-            this.checkStatus(taskId, timer)
-          }, timer)
+          if (timer <= 5000) {
+            setTimeout(() => {
+              this.checkStatus(taskId, timer)
+            }, timer)
+          } else {
+            this.task.finished = false
+            this.show.loading = false
+          }
         } else if (this.task.status === 'ERROR') {
           this.task.finished = false
           this.show.loading = false
@@ -406,31 +365,6 @@ export default {
         console.log(Object.keys(e), e.message)
       }
     },
-    // checkStatus: async function (taskId, timer) {
-    //   try {
-    //     timer += 100
-    //     let response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
-    //     this.task.status = response.data.status
-    //     console.log('status => ' + this.task.status)
-    //     if (this.task.status === 'DONE') {
-    //       this.getResult(taskId)
-    //     } else if (this.task.status === 'QUEUE') {
-    //       if (timer <= 5000) {
-    //         setTimeout(() => {
-    //           this.checkStatus(taskId, timer)
-    //         }, timer)
-    //       } else {
-    //         this.task.finished = false
-    //         this.show.loading = false
-    //       }
-    //     } else if (this.task.status === 'ERROR') {
-    //       this.task.finished = false
-    //       this.show.loading = false
-    //     }
-    //   } catch (e) {
-    //     console.log(Object.keys(e), e.message)
-    //   }
-    // },
     getResult: async function (taskId) {
       try {
         this.task.finished = true

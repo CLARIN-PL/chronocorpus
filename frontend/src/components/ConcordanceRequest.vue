@@ -28,7 +28,7 @@
         <div v-if="show.filters">
           <TaskFilter :output="setFilters"></TaskFilter>
         </div>
-        <b-form-group :label="this.$t('concordance.howmany')" label-for="methodInput">
+        <b-form-group :label="this.$t('concordance.howmany')">
           <b-input-group :prepend="limit.toString()" class="mt-3">
             <b-form-input type="range" min="10" max="100" step="5" v-model="limit" @change="changeLimit"/>
           </b-input-group>
@@ -195,7 +195,7 @@ export default {
     },
     method () {
       return {
-        selected: 'orth',
+        selected: 'base',
         options:
             [
               {value: 'base', text: this.$t('concordance.base')},
@@ -362,7 +362,7 @@ export default {
     try {
       if (this.executeOnMount === true && typeof this.concordanceWord !== 'undefined') {
         this.form.word = this.concordanceWord
-        if (this.publicationYear !== '') {
+        if ( typeof this.publicationYear !== 'undefined') {
           this.metadata_filters.push({
             name: 'publication_year',
             value: this.publicationYear

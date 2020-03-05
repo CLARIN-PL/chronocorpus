@@ -79,7 +79,7 @@ export const i18n = new VueI18n({
         proper_names: 'Nazwy własne'
       },
       footer: {
-        copyright: 'Copyright 2019 Clarin-PL. Wszystkie prawa zastrzeżone.'
+        copyright: 'Copyright 2020 Clarin-PL. Wszystkie prawa zastrzeżone.'
       },
       frequency: {
         title: 'Lista frekwencyjna',
@@ -277,7 +277,7 @@ export const i18n = new VueI18n({
         kurtosis: 'Kurtosis'
       },
       footer: {
-        copyright: 'Copyright 2019 Clarin-PL. All Rights Reserved.'
+        copyright: 'Copyright 2020 Clarin-PL. All Rights Reserved.'
       },
       exp: {
         first: 'First page',

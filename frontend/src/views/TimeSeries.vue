@@ -91,13 +91,13 @@
 </template>
 
 <script>
-import FadeTransition from '@/components/FadeTransition.vue'
-import axios from 'axios'
-import TaskFilter from '@/components/TaskFilter'
-import LineChart from '@/components/LineChart'
-import VueJsonToCsv from 'vue-json-to-csv'
+  import FadeTransition from '@/components/FadeTransition.vue'
+  import axios from 'axios'
+  import TaskFilter from '@/components/TaskFilter'
+  import LineChart from '@/components/LineChart'
+  import VueJsonToCsv from 'vue-json-to-csv'
 
-export default {
+  export default {
   name: 'TimeSeries',
   components: {LineChart, TaskFilter, axios, FadeTransition, VueJsonToCsv},
   data () {
@@ -306,9 +306,15 @@ export default {
       try {
         this.task.finished = true
         let response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
-        var jsonResponse = JSON.stringify(response.data.result.rows[0])
-        var formattedResponse = JSON.parse(jsonResponse)
-        this.mapChartData(formattedResponse.series)
+        console.log(response)
+        var formattedResponse = []
+        response.data.result.rows.forEach((item) => {
+          let rowJson = JSON.stringify(item)
+          let row = JSON.parse(rowJson)
+          formattedResponse.push(row)
+        })
+        console.log(formattedResponse)
+        this.mapChartData(formattedResponse[0].series)
         this.resizeChart()
         this.show.loading = false
       } catch (e) {

@@ -10,12 +10,9 @@
 
       <!--</div>-->
 
-      <b-nav-form id="nav2" class="navbar-form" v-on:submit.prevent="findConcordance">
+      <b-nav-form id="nav2" v-if="!this.$route.name.includes('Concordance')" class="navbar-form" v-on:submit.prevent="findConcordance">
         <b-form-input :title="this.$t('navbar.form_tooltip')" class="mr-sm-2 nav-concordance-submit" data-tip="This is the text of the tooltip" :placeholder="this.$t('concordance.word_i')" required
                       v-model="concordanceWord" ></b-form-input>
-        <!--<b-button @submit="findConcordance" class="my-2 my-sm-0 nav-concordance-submit" type="submit" variant="primary">-->
-        <!--{{$t('concordance.submit')}}-->
-        <!--</b-button>-->
       </b-nav-form>
 
       <!--<b-button block class=""></b-button>-->
@@ -102,7 +99,8 @@ export default {
       changeLanguage: function (event) {
         this.$i18n.locale = event.toString()
         this.$forceUpdate()
-      }
+      },
+      showForm: true
     }
   },
   methods: {
@@ -255,7 +253,10 @@ export default {
       display: -ms-flexbox;      /* TWEENER - IE 10 */
       display: -webkit-flex;     /* NEW - Chrome */
       display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
-      flex-direction: row
+      /*flex-direction: row*/
+    }
+    .nav-concordance-submit {
+        width: 100% !important;
     }
   }
 </style>
