@@ -108,18 +108,19 @@
                               v-if="word_profiles.length > 0"/>
               </div>
 
-                <div class="content-list col-7 card-img-left" v-if="chart.datasets[0].data.length > 1">
+                <div class="content-list col-5 card-img-left" v-if="chart.datasets[0].data.length > 1">
                   <pie-chart v-if="show.chart" :chart-data="chart"></pie-chart>
                 </div>
-                <div class="content-list col-7 card-img-left" v-if="!(chart.datasets[0].data.length > 1) && task.finished">
+                <div class="content-list col-5 card-img-left" v-if="!(chart.datasets[0].data.length > 1) && task.finished">
                   {{$t('nodata')}}
                 </div>
-              <div class="content-list col-5">
+              <div class="content-list col-7">
               <b-row class="justify-content-md" v-for="(item) in pages" :key="item.id">
-<!--                <b-col col lg="2" class="line_bottom">{{item.collocate}}</b-col>-->
-                <b-col col lg="8" class="line_bottom">{{item.profile}}</b-col>
-                <b-col col lg="4" class="line_bottom">{{item.frequency}}</b-col>
-<!--                <b-col col lg="2" class="line_bottom">{{item.percentage.toFixed(3)}}</b-col>-->
+                <b-col col lg="2" class="line_bottom">{{item.collocate}}</b-col>
+                <b-col col lg="6" class="line_bottom">{{item.matching.split(',').join(', ')}}</b-col>
+                <b-col col lg="2" class="line_bottom">{{item.frequency}}</b-col>
+                <b-col col lg="2" class="line_bottom">{{item.percentage.toFixed(3)}}</b-col>
+
               </b-row>
               </div>
             </b-card>
@@ -230,11 +231,10 @@ export default {
   computed: {
     pages: function () {
       try {
-        let wordProfiles = this.word_profiles
         let result = []
         for (var i = this.skip - this.limit; i < this.skip; i++) {
-          if (typeof wordProfiles[i] !== 'undefined') {
-            result.push(wordProfiles[i])
+          if (typeof this.word_profiles[i] !== 'undefined') {
+            result.push(this.word_profiles[i])
           }
         }
         return result
@@ -336,6 +336,7 @@ export default {
       this.task.finished = false
       this.show.loading = true
       this.word_profiles = []
+      console.log(this.word_profiles)
       this.show.chart = false
       this.json_data = []
       let task = {
@@ -344,15 +345,15 @@ export default {
         query_parameters: [
           {
             name: 'orth',
-            value: this.form.orth
+            value: this.form.orth.toString()
           },
           {
             name: 'part_of_speech',
-            value: this.word_part_of_speech.selected
+            value: this.word_part_of_speech.selected.toString()
           },
           {
             name: 'window_item_part_of_speech',
-            value: this.part_of_speech
+            value: this.part_of_speech.toString()
           },
           {
             name: 'left_window_size',
@@ -367,14 +368,17 @@ export default {
       }
       console.log('task: ' + JSON.stringify(task))
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
+        let response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
           },
+          crossDomain: true,
           timeout: 5000
         })
-        this.task.id = response.data.id
-        this.checkStatus(this.task.id, 200)
+        // this.task.id = response.data.id
+        console.log('1:', response.data.id)
+        this.checkStatus(response.data.id, 200)
       } catch (e) {
         this.task.finished = false
         this.show.loading = true
@@ -384,20 +388,16 @@ export default {
     checkStatus: async function (taskId, timer) {
       try {
         timer += 100
-        const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
+        let response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
         this.task.status = response.data.status
         console.log('status => ' + this.task.status)
         if (this.task.status === 'DONE') {
+          console.log(process.env.ROOT_API + 'getResult/' + taskId)
           this.getResult(taskId)
         } else if (this.task.status === 'QUEUE') {
-          if (timer <= 5000) {
-            setTimeout(() => {
-              this.checkStatus(taskId, timer)
-            }, timer)
-          } else {
-            this.task.finished = false
-            this.show.loading = false
-          }
+          setTimeout(() => {
+            this.checkStatus(taskId, timer)
+          }, timer)
         } else if (this.task.status === 'ERROR') {
           this.task.finished = false
           this.show.loading = false
@@ -406,24 +406,50 @@ export default {
         console.log(Object.keys(e), e.message)
       }
     },
+    // checkStatus: async function (taskId, timer) {
+    //   try {
+    //     timer += 100
+    //     let response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
+    //     this.task.status = response.data.status
+    //     console.log('status => ' + this.task.status)
+    //     if (this.task.status === 'DONE') {
+    //       this.getResult(taskId)
+    //     } else if (this.task.status === 'QUEUE') {
+    //       if (timer <= 5000) {
+    //         setTimeout(() => {
+    //           this.checkStatus(taskId, timer)
+    //         }, timer)
+    //       } else {
+    //         this.task.finished = false
+    //         this.show.loading = false
+    //       }
+    //     } else if (this.task.status === 'ERROR') {
+    //       this.task.finished = false
+    //       this.show.loading = false
+    //     }
+    //   } catch (e) {
+    //     console.log(Object.keys(e), e.message)
+    //   }
+    // },
     getResult: async function (taskId) {
       try {
         this.task.finished = true
-        const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
-        console.log('result:', response.data.result)
+        let response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        console.log(process.env.ROOT_API + 'getResult/' + taskId)
         this.changePage(1)
         this.skip = this.limit
         this.csv_title = 'word_profiles_' + this.form.orth + '_L' + this.form.left_window_size + '_R' + this.form.right_window_size
         this.word_profiles = response.data.result.rows
-        this.mapChartData(response.data.result.rows)
-        for (var x in this.word_profiles) {
+
+        for (var x in response.data.result.rows) {
           this.json_data.push({
-            // 'collocate': this.word_profiles[x].collocate,
-            // 'matching': this.word_profiles[x].matching,
-            'frequency': this.word_profiles[x].frequency,
-            'profile': this.word_profiles[x].profile
+            'collocate': x.collocate,
+            'matching': x.matching,
+            'frequency': x.frequency,
+            'percentage': x.percentage
           })
         }
+        this.mapChartData(response.data.result.rows)
         this.show.loading = false
         setTimeout(() => {
           this.show.chart = true
@@ -449,6 +475,7 @@ export default {
       }
     },
     mapChartData: function (data) {
+      console.log(data)
       this.chart =
               {
                 label: 'a',
@@ -461,18 +488,14 @@ export default {
                 ]
               }
       // let left = 100
-      let fields
-      if (data.length > 9) {
-        fields = 9
-      } else {
-        fields = data.length
-      }
-      for (let i = 0; i <= fields; i++) {
-        this.chart.labels[i] = data[i].profile
-        this.chart.datasets[0].data[i] = data[i].frequency
-        //   this.chart.labels[i] = '"' + data[i].collocate + '" (' + data[i].percentage.toFixed(3) + '%)'
-        // this.chart.datasets[0].data[i] = data[i].percentage
-        //
+      let fields = (data.length >= 10) ? 10 : data.length
+
+      this.chart.labels = []
+      this.chart.datasets[0].data = []
+
+      for (let i = 0; i < fields; i++) {
+        this.chart.labels[i] = '"' + data[i].collocate + '" (' + data[i].percentage.toFixed(3) + '%)'
+        this.chart.datasets[0].data[i] = data[i].percentage
       }
       this.show.chart = true
     }

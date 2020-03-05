@@ -419,7 +419,7 @@ export default {
           response_parameters: []
         }
         console.log('task: ' + JSON.stringify(task))
-        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
+        let response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json'
           },
@@ -434,7 +434,7 @@ export default {
     checkStatus: async function (taskId, timer) {
       try {
         timer += 100
-        const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
+        let response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 1000})
         this.task.status = response.data.status
         console.log('status => ' + this.task.status)
         if (this.task.status === 'DONE') {
@@ -454,7 +454,7 @@ export default {
     getResult: async function (taskId) {
       try {
         this.task.finished = true
-        const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        let response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
         console.log('result:', response.data.result)
         this.quantity_analysis = response.data.result.rows[0]
         this.mapData(this.quantity_analysis)

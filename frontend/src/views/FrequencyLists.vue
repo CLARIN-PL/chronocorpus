@@ -182,7 +182,7 @@ export default {
     getPage: async function () {
       try {
         console.log('task: ' + process.env.ROOT_API + 'getPagination/' + this.count_by_base.selected + '?page=' + (this.page - 1) + '&size=' + this.limit)
-        const response = await axios.get(process.env.ROOT_API + 'getPagination/' + this.count_by_base.selected + '?page=' + (this.page - 1) + '&size=' + this.limit, {}, {
+        let response = await axios.get(process.env.ROOT_API + 'getPagination/' + this.count_by_base.selected + '?page=' + (this.page - 1) + '&size=' + this.limit, {}, {
           headers: {
             'Content-Type': 'application/json'
           },
@@ -231,7 +231,7 @@ export default {
       }
       console.log('task: ' + JSON.stringify(task))
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
+        let response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json'
           },
@@ -247,7 +247,7 @@ export default {
       try {
         timer += 200
         console.log(timer)
-        const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 10000})
+        let response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 10000})
         this.task.status = response.data.status
         console.log('status => ' + this.task.status)
         if (this.task.status === 'DONE') {
@@ -264,7 +264,7 @@ export default {
     getResult: async function (taskId) {
       try {
         this.task.finished = true
-        const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        let response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
         this.changePage(1)
         this.skip = this.limit
         for (let i = 0; i < 1000; i++) {
@@ -371,7 +371,7 @@ export default {
           response_parameters: []
         }
         console.log('task: ' + JSON.stringify(task))
-        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
+        let response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json'
           },
@@ -386,7 +386,7 @@ export default {
     checkStopListStatus: async function (taskId, timer) {
       try {
         timer += 200
-        const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 10000})
+        let response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 10000})
         if (response.data.status === 'DONE') {
           this.getStopListResult(taskId)
         } else if (response.data.status === 'QUEUE') {
@@ -400,7 +400,7 @@ export default {
     },
     getStopListResult: async function (taskId) {
       try {
-        const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        let response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
         this.stop_list_default = response.data.result.dictionaries.default_stop_list
         this.stop_list = response.data.result.dictionaries.default_stop_list
       } catch (e) {

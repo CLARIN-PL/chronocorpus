@@ -219,7 +219,7 @@ export default {
       }
       console.log('task: ' + JSON.stringify(task))
       try {
-        const response = await axios.post(process.env.ROOT_API + 'startTask', task, {
+        let response = await axios.post(process.env.ROOT_API + 'startTask', task, {
           headers: {
             'Content-Type': 'application/json'
           },
@@ -235,7 +235,7 @@ export default {
       try {
         timer += 200
         console.log(timer)
-        const response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 10000})
+        let response = await axios.get(process.env.ROOT_API + 'getStatus/' + taskId, {timeout: 10000})
         this.task.status = response.data.status
         console.log('status => ' + this.task.status)
         if (this.task.status === 'DONE') {
@@ -252,7 +252,7 @@ export default {
     getResult: async function (taskId) {
       try {
         let letters = new Set()
-        const response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
+        let response = await axios.get(process.env.ROOT_API + 'getResult/' + taskId, {timeout: 5000})
         this.points = response.data.result.rows
         for (let i = 0; i < this.points.length; i++) {
         // for (let i = 0; i < 2000; i++) {
