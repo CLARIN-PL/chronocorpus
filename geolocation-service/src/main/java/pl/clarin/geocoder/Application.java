@@ -1,6 +1,7 @@
 package pl.clarin.geocoder;
 
 import org.ini4j.Ini;
+import pl.clarin.geocoder.service.GeolocationService;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,10 +15,10 @@ public class Application {
     private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
 
     public static void main(String... args) {
-            new Application();
 
-            Path p = Paths.get("/home/tnaskret/Dane/test/ch/");
-            GeolocationService.getInstance().process(p, 1);
+        new Application();
+        Path p = Paths.get("/home/tnaskret/Dane/test/ch/");
+        GeolocationService.getInstance().process(p, 1);
 
     }
 
