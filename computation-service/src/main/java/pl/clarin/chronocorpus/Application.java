@@ -1,6 +1,7 @@
 package pl.clarin.chronocorpus;
 
 import org.ini4j.Ini;
+import pl.clarin.chronocorpus.document.control.DocumentFileFilter;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
@@ -32,31 +33,18 @@ public class Application {
         Application app = new Application();
 
 
-/*
-        ConcordanceQuery con = new ConcordanceQuery.Builder()
-                .withOrth("NRD")
+       ConcordanceQuery con = new ConcordanceQuery.Builder()
+                .withBase("WHO")
                 .build();
 
-        app.testWithTimer(con, "Geo");
+        app.testWithTimer(con, "Concordance");
 
-        DocumentQuery doc = new DocumentQuery.Builder()
-                .withDocumentId("23157")
+/*        TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
+                .withBase("WHO")
+                .withPartOfSpeech("2")
+                .withUnit(TimeUnit.month)
                 .build();
-
-        app.testWithTimer(doc, "Document");
-
-
-        GeoNamesQuery g = new GeoNamesQuery.Builder().build();
-        app.testWithTimer(g, "map");
-
-*/
-
-        TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
-                .withBase("radziecki")
-                .withPartOfSpeech("4")
-                .withUnit(TimeUnit.year)
-                .build();
-        app.testWithTimer(ana1l, "Time series");
+        app.testWithTimer(ana1l, "Time series");*/
 
 
 

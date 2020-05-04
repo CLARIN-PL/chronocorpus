@@ -90,7 +90,7 @@ public class DocumentFileLoader {
 
                 JsonArray properties = obj.getJsonArray("metadata");
 
-                Metadata m = new Metadata("chronopress", "apawłow", true);
+                Metadata m = new Metadata("monco", "nn", true);
                 properties.forEach(jsonValue -> {
                     if (jsonValue instanceof JsonObject) {
                         String name = ((JsonObject) jsonValue).getString("name");
