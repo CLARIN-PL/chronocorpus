@@ -1,12 +1,12 @@
-version: '3.7'
+version: '3.3'
 services:
   base:
-    image: chronocorpus
+    image: chronocorpus-monco
     build:
         context:  ./
         dockerfile: Dockerfile_computation-service
   chronopress:    
-    container_name: chrono-chronopress
+    container_name: chrono-chronopress-monco
     build: ./chronopress
     depends_on:
       - base
@@ -25,12 +25,12 @@ services:
     
          
   rest:
-    container_name: chrono-rest
+    container_name: chrono-rest-monco
     build:
         context:  ./
         dockerfile: Dockerfile_rest-service
     ports:
-        - "8080:8080"
+        - "8081:8080"
     volumes:
         - ./rest-service/config.ini:/home/worker/config.ini
     working_dir: /home/worker/    
@@ -43,8 +43,8 @@ services:
     restart: always
     
   frontend: 
-    container_name: chrono-frontend
+    container_name: chrono-frontend-monco
     build: ./frontend
     ports:
-        - "80:80"
+        - "8082:80"
         
