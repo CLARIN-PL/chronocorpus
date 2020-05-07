@@ -22,7 +22,23 @@ services:
          - -jar 
          - chronocorpus.jar
     restart: always
-    
+  monco:
+    container_name: chrono-monco
+    build: ./monco
+    depends_on:
+      - base
+    volumes:
+        - ./monco/config.ini:/home/worker/config.ini
+        - ./monco/chronopress:/home/worker/ccl
+        - ./monco/data:/home/worker/data
+    working_dir: /home/worker/
+    entrypoint:
+         - java
+         - -Xms4g
+         - -Xmx24g
+         - -jar
+         - chronocorpus.jar
+    restart: always
          
   rest:
     container_name: chrono-rest
@@ -47,4 +63,4 @@ services:
     build: ./frontend
     ports:
         - "80:80"
-        
+    restart: always        
