@@ -27,11 +27,11 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class DocumentFileLoader {
+public class DocumentFileFilter {
 
-    private static final Logger LOGGER = Logger.getLogger(DocumentFileLoader.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DocumentFileFilter.class.getName());
 
-    private static volatile DocumentFileLoader instance;
+    private static volatile DocumentFileFilter  instance;
 
     private static Map<String, Token> wordCache = new HashMap<>();
     private static Map<String, Property> propertyCache = new HashMap<>();
@@ -60,11 +60,11 @@ public class DocumentFileLoader {
         return name+"_"+value;
     }
 
-    public static DocumentFileLoader getInstance() {
+    public static DocumentFileFilter  getInstance() {
         if (instance == null) {
-            synchronized (DocumentFileLoader.class) {
+            synchronized (DocumentFileFilter .class) {
                 if (instance == null) {
-                    instance = new DocumentFileLoader();
+                    instance = new DocumentFileFilter();
                 }
             }
         }

@@ -1,8 +1,10 @@
 package pl.clarin.geocoder.worker;
 
+import com.rabbitmq.client.*;
 import com.rabbitmq.client.AMQP.BasicProperties;
 import org.ini4j.Ini;
-import pl.clarin.chronocorpus.Configuration;
+import pl.clarin.geocoder.Configuration;
+
 
 import javax.json.Json;
 import javax.json.JsonObject;
