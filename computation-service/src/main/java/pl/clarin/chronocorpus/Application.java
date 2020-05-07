@@ -52,9 +52,9 @@ public class Application {
 */
 
         TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
-                .withBase("radziecki")
-                .withPartOfSpeech("4")
-                .withUnit(TimeUnit.year)
+                .withBase("epidemia")
+                .withPartOfSpeech("2")
+                .withUnit(TimeUnit.day)
                 .build();
         app.testWithTimer(ana1l, "Time series");
 
