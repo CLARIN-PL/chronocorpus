@@ -212,6 +212,7 @@ export default {
         Ź: [],
         Ż: []}
       let task = {
+        corpus: document.querySelector('#methodInput').options[document.querySelector('#methodInput').selectedIndex].value,
         task_type: 'geo_proper_names',
         metadata_filter: this.metadata_filters,
         query_parameters: [],

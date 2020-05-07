@@ -91,13 +91,13 @@
 </template>
 
 <script>
-  import FadeTransition from '@/components/FadeTransition.vue'
-  import axios from 'axios'
-  import TaskFilter from '@/components/TaskFilter'
-  import LineChart from '@/components/LineChart'
-  import VueJsonToCsv from 'vue-json-to-csv'
+import FadeTransition from '@/components/FadeTransition.vue'
+import axios from 'axios'
+import TaskFilter from '@/components/TaskFilter'
+import LineChart from '@/components/LineChart'
+import VueJsonToCsv from 'vue-json-to-csv'
 
-  export default {
+export default {
   name: 'TimeSeries',
   components: {LineChart, TaskFilter, axios, FadeTransition, VueJsonToCsv},
   data () {
@@ -144,7 +144,8 @@
         options:
             [
               {value: 'month', text: this.$t('month')},
-              {value: 'year', text: this.$t('year')}
+              {value: 'year', text: this.$t('year')},
+              {value: 'day', text: this.$t('day')}
             ]
       }
     },
@@ -251,6 +252,7 @@
       }
       try {
         let response = await axios.post(process.env.ROOT_API + 'startTask', {
+          corpus: document.querySelector('#methodInput').options[document.querySelector('#methodInput').selectedIndex].value,
           task_type: 'time_series',
           metadata_filter: this.metadata_filters,
           query_parameters: [

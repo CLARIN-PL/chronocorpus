@@ -396,6 +396,7 @@ export default {
         }}
       try {
         let task = {
+          corpus: document.querySelector('#methodInput').options[document.querySelector('#methodInput').selectedIndex].value,
           task_type: 'quantity_analysis',
           metadata_filter: this.metadata_filters,
           query_parameters: [

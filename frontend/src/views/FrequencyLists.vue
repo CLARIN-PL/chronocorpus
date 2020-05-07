@@ -215,6 +215,7 @@ export default {
         stopList += element + ';'
       })
       let task = {
+        corpus: document.querySelector('#methodInput').options[document.querySelector('#methodInput').selectedIndex].value,
         task_type: 'frequency',
         metadata_filter: [],
         query_parameters: [
@@ -360,6 +361,7 @@ export default {
     getStopList: async function () {
       try {
         let task = {
+          corpus: document.querySelector('#methodInput').options[document.querySelector('#methodInput').selectedIndex].value,
           task_type: 'dictionaries',
           metadata_filter: [],
           query_parameters: [

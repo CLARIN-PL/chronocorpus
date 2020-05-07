@@ -249,7 +249,7 @@ export default {
       this.concordances = []
       this.json_data = []
       let task = {
-        corpus: 'chronopress',
+        corpus: document.querySelector('#methodInput').options[document.querySelector('#methodInput').selectedIndex].value,
         task_type: 'concordance',
         metadata_filter: this.metadata_filters,
         query_parameters: [
@@ -362,7 +362,7 @@ export default {
     try {
       if (this.executeOnMount === true && typeof this.concordanceWord !== 'undefined') {
         this.form.word = this.concordanceWord
-        if ( typeof this.publicationYear !== 'undefined') {
+        if (typeof this.publicationYear !== 'undefined') {
           this.metadata_filters.push({
             name: 'publication_year',
             value: this.publicationYear

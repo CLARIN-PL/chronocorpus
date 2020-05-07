@@ -6,7 +6,9 @@
       <b-navbar-brand id="nav1" href="#" @click="redirectUser('/')" >
         <!--<img src="../assets/images/logo.png" class="d-inline-block align-top" style="height: 30px; margin-left: 20%;"/>-->
         <img src="../assets/images/logo2.png" class="d-inline-block align-top brand-image"/>
+<!--        <b-form-group :label="this.$t('concordance.method')" label-for="methodInput">-->
       </b-navbar-brand>
+      <b-form-select class="corpora" selected="" id="methodInput" required v-model="corpus.selected" :options="corpus.options"/>
 
       <!--</div>-->
 
@@ -85,12 +87,12 @@
 </template>
 
 <script>
-import {BNavBar} from 'bootstrap-vue'
+import {BNavbar} from 'bootstrap-vue'
 
 export default {
   name: 'NavBar',
   components: {
-    BNavBar
+    BNavbar
   },
   data () {
     return {
@@ -100,7 +102,15 @@ export default {
         this.$i18n.locale = event.toString()
         this.$forceUpdate()
       },
-      showForm: true
+      corpus: {
+        selected: 'monco',
+        options:
+                  [
+                    {value: 'monco', text: 'monco'},
+                    {value: 'chronocorpus', text: 'chronocorpus'}
+                  ]
+      }
+
     }
   },
   methods: {
@@ -125,7 +135,7 @@ export default {
     grid-gap: 30px;
     grid-template-columns:1fr 1fr;
     grid-template-areas:
-      "nav1 nav4"
+      "nav1 methodInput nav4"
   ;
   }
   #nav1 {
@@ -149,6 +159,9 @@ export default {
   #nav4 {
     grid-area: nav4;
     position: relative
+  }
+  .corpora {
+    width: 80%;
   }
   .navbar-container {
     height: 66px;
@@ -216,8 +229,8 @@ export default {
   }
   @media only screen and (min-width: 1020px) {
     .wrapper {
-      grid-template-columns: 1fr 1fr;
-      grid-template-areas: "nav1 nav3";
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-areas: "nav1 methodInput nav3";
     }
     #nav3 {
       grid-area: nav3;
@@ -235,9 +248,9 @@ export default {
   }
   @media only screen and (min-width: 1300px) {
     .wrapper {
-      grid-template-columns:1fr 1fr 1fr;
+      grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;
       grid-template-areas:
-        "nav1 nav2 nav3"
+        "nav1 methodInput nav2 nav2 nav3 nav3"
     ;
     }
     #nav2 {

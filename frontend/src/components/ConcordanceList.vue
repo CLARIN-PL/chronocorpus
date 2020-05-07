@@ -36,7 +36,7 @@ export default {
     getTaskId: async function (documentId) {
       try {
         let task = {
-          corpus: 'chronopress',
+          corpus: document.querySelector('#methodInput').options[document.querySelector('#methodInput').selectedIndex].value,
           task_type: 'document',
           metadata_filter: [],
           query_parameters: [

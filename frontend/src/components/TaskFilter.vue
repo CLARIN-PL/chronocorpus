@@ -34,6 +34,7 @@ export default {
     getTaskId: async function () {
       try {
         let response = await axios.post(process.env.ROOT_API + 'startTask', {
+          corpus: document.querySelector('#methodInput').options[document.querySelector('#methodInput').selectedIndex].value,
           task_type: 'dictionaries',
           metadata_filter: [],
           query_parameters: [
