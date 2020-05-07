@@ -1,4 +1,4 @@
-package pl.clarin.geocoder;
+package pl.clarin.geocoder.service;
 
 import java.io.IOException;
 import java.util.List;

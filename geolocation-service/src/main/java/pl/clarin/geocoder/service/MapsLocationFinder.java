@@ -1,4 +1,4 @@
-package pl.clarin.geocoder;
+package pl.clarin.geocoder.service;
 
 import fr.dudie.nominatim.client.JsonNominatimClient;
 import fr.dudie.nominatim.client.NominatimClient;

@@ -1,9 +1,10 @@
-package pl.clarin.geocoder;
+package pl.clarin.geocoder.service;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.google.common.collect.Lists;
+import pl.clarin.geocoder.Configuration;
 
 import java.io.*;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class MapsLocationStore {
         super();
         kryo.register(java.util.HashMap.class);
         kryo.register(java.util.ArrayList.class);
-        kryo.register(pl.clarin.geocoder.Location.class);
+        kryo.register(Location.class);
         restore();
     }
 

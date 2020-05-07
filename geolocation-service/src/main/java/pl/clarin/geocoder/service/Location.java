@@ -1,4 +1,4 @@
-package pl.clarin.geocoder;
+package pl.clarin.geocoder.service;
 
 import java.io.Serializable;
 import java.util.Arrays;

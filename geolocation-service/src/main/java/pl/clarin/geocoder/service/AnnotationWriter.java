@@ -1,4 +1,4 @@
-package pl.clarin.geocoder;
+package pl.clarin.geocoder.service;
 
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
@@ -7,7 +7,6 @@ import g419.corpus.structure.Document;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

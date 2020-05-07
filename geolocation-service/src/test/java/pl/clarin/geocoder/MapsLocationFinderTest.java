@@ -1,6 +1,7 @@
 package pl.clarin.geocoder;
 
 import org.junit.Test;
+import pl.clarin.geocoder.service.MapsLocationFinder;
 
 import java.io.IOException;
 

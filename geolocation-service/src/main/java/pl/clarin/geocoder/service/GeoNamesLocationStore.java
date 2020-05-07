@@ -1,9 +1,10 @@
-package pl.clarin.geocoder;
+package pl.clarin.geocoder.service;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.google.common.collect.Lists;
+import pl.clarin.geocoder.Configuration;
 
 import java.io.*;
 import java.nio.file.Files;
