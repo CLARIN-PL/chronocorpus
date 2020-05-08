@@ -315,7 +315,6 @@ export default {
           let row = JSON.parse(rowJson)
           formattedResponse.push(row)
         })
-        console.log(formattedResponse)
         this.mapChartData(formattedResponse[0].series)
         this.resizeChart()
         this.show.loading = false
@@ -326,14 +325,16 @@ export default {
     },
     mapChartData: function (chartData) {
       try {
-        let years = this.getYears(chartData)
+        let ti = this.getTimeInterval(chartData)
+        let id = 0
+        console.log('ti', ti)
 
         if (this.time_unit.selected === 'year') {
-          for (let y = years[0]; y <= years[1]; y++) {
+          for (let y = ti[0]; y <= ti[1]; y++) {
             this.time_series[y] = {'value': 0, 'label': y}
           }
         } else if (this.time_unit.selected === 'month') {
-          for (let y = years[0]; y <= years[1]; y++) {
+          for (let y = ti[0]; y <= ti[1]; y++) {
             this.time_series[y] = {
               1: {'value': 0, 'label': '1-' + y},
               2: {'value': 0, 'label': '2-' + y},
@@ -350,14 +351,12 @@ export default {
             }
           }
         } else if (this.time_unit.selected === 'day') {
-          chartData.forEach((item, index) => {
-            this.time_series[index] =
-              {
-                'value': item[Object.keys(item)[0]], 'label': Object.keys(item)[0]
-              }
-          })
+          for (let y = new Date(ti[0]); y <= new Date(ti[1]); y.setDate(y.getDate() + 1)) {
+            let label = '' + y.getDate() + '-' + (y.getMonth() + 1) + '-' + y.getFullYear()
+            this.time_series[id] = {'value': 0, 'label': label}
+            id++
+          }
         }
-
         for (let i = 0; i <= chartData.length; i++) {
           for (var key in chartData[i]) {
             if (this.time_unit.selected === 'year') {
@@ -366,11 +365,17 @@ export default {
               let date = key
               let splittedDate = date.split('-')
               this.time_series[splittedDate[1]][splittedDate[0]].value = chartData[i][key]
+            } else if (this.time_unit.selected === 'day') {
+              for (let j = 0; j < id; j++) {
+                if (this.time_series[j].label === key) {
+                  this.time_series[j].value = chartData[i][key]
+                }
+              }
             }
           }
         }
         for (var x in this.time_series) {
-          if (this.time_unit.selected === 'year' || this.time_unit.selected === 'day') {
+          if (this.time_unit.selected === 'year') {
             this.chart.datasets[0].data.push(this.time_series[x].value)
             this.chart.labels.push(this.time_series[x].label)
             this.json_data.push({'year': x, 'frequency': this.time_series[x].value})
@@ -380,6 +385,10 @@ export default {
               this.chart.labels.push(this.time_series[x][i].label)
               this.json_data.push({'year': x, 'month': i, 'frequency': this.time_series[x][i].value})
             }
+          } else if (this.time_unit.selected === 'day') {
+            this.chart.datasets[0].data.push(this.time_series[x].value)
+            this.chart.labels.push(this.time_series[x].label)
+            this.json_data.push({'year': x, 'frequency': this.time_series[x].value})
           }
         }
         console.log(this.chart)
@@ -388,21 +397,30 @@ export default {
         console.log(Object.keys(e), e.message)
       }
     },
-    getYears: function (data) {
+    getTimeInterval: function (data) {
       try {
-        let years = []
+        let dates = []
+        let result
         for (let i = 0; i <= data.length; i++) {
           for (var key in data[i]) {
             if (this.time_unit.selected === 'year') {
-              years.push(parseInt(key))
+              dates.push(parseInt(key))
             } else if (this.time_unit.selected === 'month') {
               let fullDate = key
               let splittedDate = fullDate.split('-')
-              years.push(parseInt(splittedDate[1]))
+              dates.push(parseInt(splittedDate[1]))
+            } else if (this.time_unit.selected === 'day') {
+              let oldDate = key.split('-')
+              dates.push(new Date(oldDate[2], (oldDate[1] - 1), oldDate[0]))
             }
           }
         }
-        return [Math.min.apply(null, years), Math.max.apply(null, years)]
+        if (this.time_unit.selected === 'day') {
+          result = [new Date(Math.min.apply(null, dates)), new Date(Math.max.apply(null, dates))]
+        } else {
+          result = [Math.min.apply(null, dates), Math.max.apply(null, dates)]
+        }
+        return result
       } catch (e) {
         console.log(Object.keys(e), e.message)
       }
@@ -411,7 +429,7 @@ export default {
       event.preventDefault()
       let canvas = document.getElementById('line-chart').toDataURL('image/png')
       let link = document.createElement('a')
-      link.download = 'time_seres_chart'
+      link.download = 'time_series_chart'
       link.href = canvas
       console.log(canvas)
       console.log(link)
