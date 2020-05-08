@@ -327,10 +327,13 @@ export default {
     mapChartData: function (chartData) {
       try {
         let years = this.getYears(chartData)
-        for (let y = years[0]; y <= years[1]; y++) {
-          if (this.time_unit.selected === 'year') {
+
+        if (this.time_unit.selected === 'year') {
+          for (let y = years[0]; y <= years[1]; y++) {
             this.time_series[y] = {'value': 0, 'label': y}
-          } else if (this.time_unit.selected === 'month') {
+          }
+        } else if (this.time_unit.selected === 'month') {
+          for (let y = years[0]; y <= years[1]; y++) {
             this.time_series[y] = {
               1: {'value': 0, 'label': '1-' + y},
               2: {'value': 0, 'label': '2-' + y},
@@ -346,7 +349,15 @@ export default {
               12: {'value': 0, 'label': '12-' + y}
             }
           }
+        } else if (this.time_unit.selected === 'day') {
+          chartData.forEach((item, index) => {
+            this.time_series[index] =
+              {
+                'value': item[Object.keys(item)[0]], 'label': Object.keys(item)[0]
+              }
+          })
         }
+
         for (let i = 0; i <= chartData.length; i++) {
           for (var key in chartData[i]) {
             if (this.time_unit.selected === 'year') {
@@ -359,7 +370,7 @@ export default {
           }
         }
         for (var x in this.time_series) {
-          if (this.time_unit.selected === 'year') {
+          if (this.time_unit.selected === 'year' || this.time_unit.selected === 'day') {
             this.chart.datasets[0].data.push(this.time_series[x].value)
             this.chart.labels.push(this.time_series[x].label)
             this.json_data.push({'year': x, 'frequency': this.time_series[x].value})
@@ -371,6 +382,7 @@ export default {
             }
           }
         }
+        console.log(this.chart)
         this.show.chart = true
       } catch (e) {
         console.log(Object.keys(e), e.message)

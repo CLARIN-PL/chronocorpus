@@ -8,7 +8,7 @@
         <img src="../assets/images/logo2.png" class="d-inline-block align-top brand-image"/>
 <!--        <b-form-group :label="this.$t('concordance.method')" label-for="methodInput">-->
       </b-navbar-brand>
-      <b-form-select class="corpora" selected="" id="methodInput" required v-model="corpus.selected" :options="corpus.options"/>
+      <b-form-select title="wybierz korpus z którego będą pobierane dane" class="corpora" selected="" id="methodInput" required v-model="corpus.selected" :options="corpus.options"/>
 
       <!--</div>-->
 
@@ -159,6 +159,10 @@ export default {
   #nav4 {
     grid-area: nav4;
     position: relative
+  }
+  methodInput {
+    grid-area: methodInput;
+    position: relative;
   }
   .corpora {
     width: 80%;
