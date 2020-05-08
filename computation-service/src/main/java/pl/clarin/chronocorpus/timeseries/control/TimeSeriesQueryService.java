@@ -65,6 +65,20 @@ public class TimeSeriesQueryService {
                                 result.get(row).addCount(row.getCount());
                             }
                         });
+                    } else if (TimeUnit.day.equals(u)) {
+                        pos.ifPresent(p -> {
+                            String year = d.getMetadata().getProperty("publication_year");
+                            String month = d.getMetadata().getProperty("publication_month");
+                            String day = d.getMetadata().getProperty("publication_day");
+                            Integer count = byBase ? d.documentBaseFrequency().get(keyWord).getValue(p) :
+                                    d.documentOrthFrequency().get(keyWord).getValue(p);
+                            TimeSeriesRow row = new TimeSeriesRow(Integer.parseInt(year),Integer.parseInt(month), Integer.parseInt(day), count);
+                            if(!result.containsKey(row)){
+                                result.put(row, row);
+                            } else {
+                                result.get(row).addCount(row.getCount());
+                            }
+                        });
                     }
                 });
             }
