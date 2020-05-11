@@ -106,7 +106,7 @@ export default {
         selected: 'monco',
         options:
                   [
-                    {value: 'monco', text: 'monco'},
+                    {value: 'monco', text: 'corona'},
                     {value: 'chronocorpus', text: 'chronocorpus'}
                   ]
       }
