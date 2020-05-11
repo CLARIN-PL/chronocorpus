@@ -27,33 +27,44 @@ public class Frequency {
     };
 
     private final HashMap<String, String> tasks = new HashMap<>();
-
     private final HashMap<String, Storage> storages = new HashMap<>();
+    
+    
+    
     private final Resulter resulter;
+    
 
-    Frequency(Resulter resulter) {
+    public Frequency(Resulter resulter) {
         this.resulter = resulter;
+    
     }
 
-    JSONObject get(String taskID, int page, int size) {
+    private String toId(String corpus,String taskID)
+    {
+        return corpus+"_"+taskID;
+    }
+    public JSONObject get(String corpus,String task, int page, int size) {
+        String taskID=toId(corpus, task);
         JSONObject result = new JSONObject();
         result.put("id", taskID);
         result.put("error", "");
         //unknown 
-        if (taskDescr.get(taskID) == null) {
+        if (taskDescr.get(task) == null) {
             result.put("error", "Not existing task");
             return result;
         }
 
-        //not started
+        //not finished
         if (storages.get(taskID) == null) {
             String resulterID = tasks.get(taskID);
 
+            //if finished then get data from resulter
             if (resulter.checkstatus(resulterID).equals("DONE")) {
                 JSONObject res = resulter.result(resulterID);
                 if (res != null && res.has("result") && res.getJSONObject("result").has("rows")) {
                     storages.put(taskID, new Storage(res.getJSONObject("result").getJSONArray("rows")));
-                    tasks.remove(resulterID);
+                    //tasks.remove(resulterID);
+                    
                 } else {
                     result.put("error", "Problems with task execution");
                     return result;
@@ -73,23 +84,32 @@ public class Frequency {
 
     }
 
-    String getData(String taskID) {
-        return taskDescr.get(taskID);
+    public String getTeskDescription(String corpus,String taskID) {
+        String task=taskDescr.get(taskID);
+        ///
+        JSONObject result=new JSONObject(task);
+        result.put("corpus", corpus);
+        
+        return result.toString();
     }
-
-    boolean doprocess(String taskID) {
-        if (taskDescr.get(taskID) == null) {
+    
+    //true = not yet processed ?
+    public boolean doprocess(String corpus,String task) {
+        String taskID=toId(corpus, task);
+        if (taskDescr.get(task) == null) {
             return false;
         }
         return !tasks.containsKey(taskID);
     }
 
-    void started(String taskID, String taskerID) {
+    public void started(String corpus,String task, String taskerID) {
+        String taskID=toId(corpus, task);
         tasks.put(taskID, taskerID);
     }
 
-    byte[] toXLSX(String taskID) 
-    {   Storage storage=storages.get(taskID);
+    public byte[] toXLSX(String corpus,String task) 
+    {   String taskID=toId(corpus, task);
+        Storage storage=storages.get(taskID);
         if (storage==null)
             return null;
         byte [] res=null;

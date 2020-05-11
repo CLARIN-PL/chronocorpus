@@ -22,6 +22,8 @@ import java.util.concurrent.TimeoutException;
 @Path("")
 public class RESTService {
 
+    private String defaultCorpus;
+
     @POST
     @Consumes("application/json")
     @Path("/process")
@@ -107,26 +109,26 @@ public class RESTService {
     }
     
     
-    Frequency frequency=new Frequency(resulter);
+    Frequency frequency;
     
     
     @GET
-    @Path("getPagination/{taskID}")
-    public String getPagination(@PathParam("taskID") String taskID, @QueryParam("page") int page,@QueryParam("size") int size)
+    @Path("getPagination/{corpus}/{taskID}")
+    public String getPaginationbyCorpus(@PathParam("corpus") String corpus,@PathParam("taskID") String taskID, @QueryParam("page") int page,@QueryParam("size") int size)
     {    
         
-        if (frequency.doprocess(taskID))
+        if (frequency.doprocess(corpus,taskID))
         {
-            JSONObject result = SendTask.send(frequency.getData(taskID), connection, init);
+            JSONObject result = SendTask.send(frequency.getTeskDescription(corpus,taskID), connection, init);
             if (result.has("id")) {
                 resulter.started(result.getString("id"));
-                frequency.started(taskID,result.getString("id"));
+                frequency.started(corpus,taskID,result.getString("id"));
             }    
         }    
         
         long start = System.currentTimeMillis();
 
-        JSONObject res = frequency.get(taskID,page,size);
+        JSONObject res = frequency.get(corpus,taskID,page,size);
         if ((System.currentTimeMillis() - start) / 1000.0 > 0.1) {
             Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Status in " + (System.currentTimeMillis() - start) / 1000.0 + "s");
         }
@@ -135,10 +137,24 @@ public class RESTService {
     }
     
     @GET
+    @Path("getPagination/{taskID}")
+    public String getPagination(@PathParam("taskID") String taskID, @QueryParam("page") int page,@QueryParam("size") int size)
+    {    return getPaginationbyCorpus(defaultCorpus, taskID, page, size);
+        
+    }
+    
+   
+     @GET
     @Path("getXLSX/{taskID}")
     public byte[] getXLSX(@PathParam("taskID") String taskID)
+    {
+        return getXLSXbyCorpus(defaultCorpus,taskID);
+    }
+    @GET
+    @Path("getXLSX/{corpus}/{taskID}")
+    public byte[] getXLSXbyCorpus(@PathParam("corpus") String corpus,@PathParam("taskID") String taskID)
     {   try {
-        return frequency.toXLSX(taskID);
+        return frequency.toXLSX(corpus,taskID);
         }
       catch(Exception ex)
       {
@@ -176,7 +192,9 @@ public class RESTService {
         connection = initRabbit();
 
         resulter.start(connection, init.get("service", "queue_prefix") + init.get("service", "result"));
-
+        frequency=new Frequency(resulter);
+        defaultCorpus=init.get("service", "default");
+        
         Logger.getLogger(RESTApplication.class.getName()).log(Level.INFO, "Starting REST service");
 
     }
