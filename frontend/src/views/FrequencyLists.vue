@@ -181,13 +181,19 @@ export default {
     },
     getPage: async function () {
       try {
-        console.log('task: ' + process.env.ROOT_API + 'getPagination/' + this.count_by_base.selected + '?page=' + (this.page - 1) + '&size=' + this.limit)
-        let response = await axios.get(process.env.ROOT_API + 'getPagination/' + this.count_by_base.selected + '?page=' + (this.page - 1) + '&size=' + this.limit, {}, {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          timeout: 10000
-        })
+        let selectedCorpora = document.querySelector('#methodInput').options[document.querySelector('#methodInput').selectedIndex].value
+        let corpora = ''
+        if (selectedCorpora !== 'chronocorpus') {
+          corpora = selectedCorpora + '/'
+        }
+        console.log('task: ' + process.env.ROOT_API + 'getPagination/' + corpora + this.count_by_base.selected + '?page=' + (this.page - 1) + '&size=' + this.limit)
+        let response = await axios.get(process.env.ROOT_API + 'getPagination/' + corpora + this.count_by_base.selected + '?page=' + (this.page - 1) + '&size=' + this.limit,
+          {}, {
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            timeout: 5000
+          })
         this.task.status = response.data.status
         console.log('status => ' + this.task.status)
         if (this.task.status === 'DONE') {

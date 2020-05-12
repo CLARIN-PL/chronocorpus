@@ -133,7 +133,7 @@ export default {
     width: 100%;
     display: grid;
     grid-gap: 30px;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:1fr 1fr 1fr;
     grid-template-areas:
       "nav1 methodInput nav4"
   ;
