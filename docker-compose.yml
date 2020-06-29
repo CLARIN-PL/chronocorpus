@@ -39,7 +39,23 @@ services:
          - -jar
          - chronocorpus.jar
     restart: always
-         
+  climate:
+    container_name: chrono-climate
+    build: ./climate
+    depends_on:
+      - base
+    volumes:
+      - ./climate/config.ini:/home/worker/config.ini
+      - ./climate/climate:/home/worker/ccl
+      - ./climate/data:/home/worker/data
+    working_dir: /home/worker/
+    entrypoint:
+      - java
+      - -Xms2g
+      - -Xmx14g
+      - -jar
+      - chronocorpus.jar
+    restart: always
   rest:
     container_name: chrono-rest
     build:
