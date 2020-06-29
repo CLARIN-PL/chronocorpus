@@ -106,6 +106,7 @@ export default {
         selected: 'monco',
         options:
                   [
+                    {value: 'climate', text: 'zmiany klimatyczne'},
                     {value: 'monco', text: 'corona'},
                     {value: 'chronocorpus', text: 'chronocorpus'}
                   ]
@@ -276,4 +277,5 @@ export default {
         width: 100% !important;
     }
   }
+
 </style>
