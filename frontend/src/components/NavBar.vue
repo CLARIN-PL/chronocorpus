@@ -108,7 +108,7 @@ export default {
                   [
                     {value: 'climate', text: 'zmiany klimatyczne'},
                     {value: 'monco', text: 'corona'},
-                    {value: 'chronocorpus', text: 'chronocorpus'}
+                    {value: 'chronopress', text: 'chronopress'}
                   ]
       }
 
