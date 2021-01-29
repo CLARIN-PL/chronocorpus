@@ -138,6 +138,18 @@ public class DocumentFileLoader {
 
         Map<String, Metadata> metadata = loadMetadata(Configuration.METADATA_ZIP_FILE);
 
+        Map<String, AtomicInteger> counted = new HashMap<>();
+
+        metadata.forEach((k,v) -> {
+            String i =  v.getProperty("journal_title");
+            if(!counted.containsKey(i)){
+                counted.put(i , new AtomicInteger(0));
+            }
+            counted.get(i).getAndIncrement();
+        });
+
+        System.out.println(counted);
+
         LOGGER.info("Loading documents from files please wait .....");
         ZipFile zipFile = new ZipFile(String.valueOf(Paths.get(Configuration.DATA_ZIP_FILE)));
 

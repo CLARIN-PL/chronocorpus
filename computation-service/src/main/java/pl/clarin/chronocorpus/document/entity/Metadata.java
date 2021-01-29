@@ -66,4 +66,11 @@ public class Metadata implements Serializable {
                 .build();
     }
 
+    public JsonObject toForListJson(){
+        JsonArrayBuilder props = Json.createArrayBuilder();
+        properties.forEach(p -> props.add(p.toJson()));
+        return Json.createObjectBuilder()
+                .add("properties", props)
+                .build();
+    }
 }

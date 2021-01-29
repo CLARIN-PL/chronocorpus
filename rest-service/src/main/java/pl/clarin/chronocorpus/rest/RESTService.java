@@ -10,7 +10,6 @@ import pl.clarin.chronocorpus.rest.resulter.Resulter;
 
 import javax.inject.Singleton;
 import javax.ws.rs.*;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import java.io.File;
@@ -27,39 +26,36 @@ public class RESTService {
     @POST
     @Consumes("application/json")
     @Path("/process")
-    public String process(String data) throws InterruptedException  {
+    public String process(String data) throws InterruptedException {
         long start = System.currentTimeMillis();
-        JSONObject result=SendTask.send(data,connection,init);
-        Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Starting in "+(System.currentTimeMillis() - start) / 1000.0 +"s");    
-        if (result.has("id"))
-        {   String id=result.getString("id");
+        JSONObject result = SendTask.send(data, connection, init);
+        Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Starting in " + (System.currentTimeMillis() - start) / 1000.0 + "s");
+        if (result.has("id")) {
+            String id = result.getString("id");
             resulter.started(id);
-            Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Task started "+result.getString("id"));
-            int number=0;
-            int delay=100;
-            while (number<200)
-            {   Thread.sleep(delay);
-                JSONObject status=resulter.status(id);
-                if (status.getString("status").equals("ERROR"))
-                { 
+            Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Task started " + result.getString("id"));
+            int number = 0;
+            int delay = 100;
+            while (number < 200) {
+                Thread.sleep(delay);
+                JSONObject status = resulter.status(id);
+                if (status.getString("status").equals("ERROR")) {
                     return resulter.result(id).toString();
-                }                
-                if (status.getString("status").equals("DONE"))
-                {    
+                }
+                if (status.getString("status").equals("DONE")) {
                     return resulter.result(id).toString();
-                }  
-                delay=delay+200;
-                if (delay>1000) delay=1000;
+                }
+                delay = delay + 200;
+                if (delay > 1000) delay = 1000;
                 number++;
             }
         }
-        
-        
-        
+
+
         return result.toString();
     }
-    
-        
+
+
     private Ini init;
 
     private Resulter resulter = new Resulter();
@@ -107,63 +103,59 @@ public class RESTService {
         //base.close();
         return res.toString();
     }
-    
-    
+
+
     Frequency frequency;
-    
-    
+
+
     @GET
     @Path("getPagination/{corpus}/{taskID}")
-    public String getPaginationbyCorpus(@PathParam("corpus") String corpus,@PathParam("taskID") String taskID, @QueryParam("page") int page,@QueryParam("size") int size)
-    {    
-        
-        if (frequency.doprocess(corpus,taskID))
-        {
-            JSONObject result = SendTask.send(frequency.getTeskDescription(corpus,taskID), connection, init);
+    public String getPaginationbyCorpus(@PathParam("corpus") String corpus, @PathParam("taskID") String taskID, @QueryParam("page") int page, @QueryParam("size") int size) {
+
+        if (frequency.doprocess(corpus, taskID)) {
+            JSONObject result = SendTask.send(frequency.getTeskDescription(corpus, taskID), connection, init);
             if (result.has("id")) {
                 resulter.started(result.getString("id"));
-                frequency.started(corpus,taskID,result.getString("id"));
-            }    
-        }    
-        
+                frequency.started(corpus, taskID, result.getString("id"));
+            }
+        }
+
         long start = System.currentTimeMillis();
 
-        JSONObject res = frequency.get(corpus,taskID,page,size);
+        JSONObject res = frequency.get(corpus, taskID, page, size);
         if ((System.currentTimeMillis() - start) / 1000.0 > 0.1) {
             Logger.getLogger(RESTService.class.getName()).log(Level.DEBUG, "Status in " + (System.currentTimeMillis() - start) / 1000.0 + "s");
         }
 
         return res.toString();
     }
-    
+
     @GET
     @Path("getPagination/{taskID}")
-    public String getPagination(@PathParam("taskID") String taskID, @QueryParam("page") int page,@QueryParam("size") int size)
-    {    return getPaginationbyCorpus(defaultCorpus, taskID, page, size);
-        
+    public String getPagination(@PathParam("taskID") String taskID, @QueryParam("page") int page, @QueryParam("size") int size) {
+        return getPaginationbyCorpus(defaultCorpus, taskID, page, size);
+
     }
-    
-   
-     @GET
+
+
+    @GET
     @Path("getXLSX/{taskID}")
-    public byte[] getXLSX(@PathParam("taskID") String taskID)
-    {
-        return getXLSXbyCorpus(defaultCorpus,taskID);
+    public byte[] getXLSX(@PathParam("taskID") String taskID) {
+        return getXLSXbyCorpus(defaultCorpus, taskID);
     }
+
     @GET
     @Path("getXLSX/{corpus}/{taskID}")
-    public byte[] getXLSXbyCorpus(@PathParam("corpus") String corpus,@PathParam("taskID") String taskID)
-    {   try {
-        return frequency.toXLSX(corpus,taskID);
+    public byte[] getXLSXbyCorpus(@PathParam("corpus") String corpus, @PathParam("taskID") String taskID) {
+        try {
+            return frequency.toXLSX(corpus, taskID);
+        } catch (Exception ex) {
+            Logger.getLogger(RESTService.class.getName()).log(Level.FATAL, null, ex);
+
         }
-      catch(Exception ex)
-      {
-           Logger.getLogger(RESTService.class.getName()).log(Level.FATAL, null, ex);
-          
-      }
-      return null;
+        return null;
     }
-    
+
 
     @GET
     @Path("/test")
@@ -192,9 +184,9 @@ public class RESTService {
         connection = initRabbit();
 
         resulter.start(connection, init.get("service", "queue_prefix") + init.get("service", "result"));
-        frequency=new Frequency(resulter);
-        defaultCorpus=init.get("service", "default");
-        
+        frequency = new Frequency(resulter);
+        defaultCorpus = init.get("service", "default");
+
         Logger.getLogger(RESTApplication.class.getName()).log(Level.INFO, "Starting REST service");
 
     }

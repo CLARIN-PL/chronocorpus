@@ -30,15 +30,19 @@ public class Application {
     public static void main(String... args) {
 
         Application app = new Application();
-
-
 /*
         ConcordanceQuery con = new ConcordanceQuery.Builder()
-                .withOrth("NRD")
+                .withOrth("powietrza")
                 .build();
+        app.testWithTimer(con, "CLimate");
+        */
 
-        app.testWithTimer(con, "Geo");
+        DocumentListQuery l = new DocumentListQuery.Builder()
+                .withMetaPublicationYear("1953")
+                .build();
+        app.testWithTimer(l, "List doc:");
 
+ /*
         DocumentQuery doc = new DocumentQuery.Builder()
                 .withDocumentId("23157")
                 .build();
@@ -51,15 +55,12 @@ public class Application {
 
 */
 
-        TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
+/*        TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
                 .withBase("epidemia")
                 .withPartOfSpeech("2")
                 .withUnit(TimeUnit.day)
                 .build();
-        app.testWithTimer(ana1l, "Time series");
-
-
-
+        app.testWithTimer(ana1l, "Time series");*/
 
 //        FrequencyQuery fq  = new FrequencyQuery.Builder()
 //                .countByBase(true)

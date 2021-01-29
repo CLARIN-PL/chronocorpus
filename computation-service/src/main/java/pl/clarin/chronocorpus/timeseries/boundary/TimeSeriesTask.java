@@ -26,6 +26,13 @@ public class TimeSeriesTask extends Task {
                 .findFirst();
     }
 
+    private Optional<Boolean> find_combine_graph() {
+        return queryParameters.stream()
+                .filter(p -> p.getName().equals("combine_graph"))
+                .map(p -> Boolean.valueOf(p.getValueAsString()))
+                .findFirst();
+    }
+
     private Optional<Integer> findPartOfSpeechParameter() {
         return queryParameters.stream()
                 .filter(p -> p.getName().equals("part_of_speech"))

@@ -40,6 +40,10 @@ public class DocumentQueryService {
                 .collect(Collectors.toList());
     }
 
+    public List<Document> getDocumentItemList(){
+        return new ArrayList<>(DocumentStore.getInstance().getDocuments());
+    }
+
     public Optional<Document> findDocumentById(int id) {
         return DocumentStore.getInstance()
                 .getDocuments()
