@@ -37,10 +37,12 @@ public class Application {
         app.testWithTimer(con, "CLimate");
         */
 
+/*
         DocumentListQuery l = new DocumentListQuery.Builder()
                 .withMetaPublicationYear("1953")
                 .build();
         app.testWithTimer(l, "List doc:");
+*/
 
  /*
         DocumentQuery doc = new DocumentQuery.Builder()
@@ -55,12 +57,12 @@ public class Application {
 
 */
 
-/*        TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
-                .withBase("epidemia")
+        TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
+                .withBase("dom;mieszkanie;chałupa")
                 .withPartOfSpeech("2")
                 .withUnit(TimeUnit.day)
                 .build();
-        app.testWithTimer(ana1l, "Time series");*/
+        app.testWithTimer(ana1l, "Time series");
 
 //        FrequencyQuery fq  = new FrequencyQuery.Builder()
 //                .countByBase(true)

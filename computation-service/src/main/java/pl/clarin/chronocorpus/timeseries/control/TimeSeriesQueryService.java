@@ -33,20 +33,21 @@ public class TimeSeriesQueryService {
     }
 
     public JsonArray findTimeSeries(List<String> keyWords, Optional<Integer> pos, Optional<TimeUnit> unit,
-                                    Set<Property> metadata, boolean byBase, Boolean combine) {
+                                    Set<Property> metadata, boolean byBase, boolean addCombinedGraph) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-        if(combine){
-            List<TimeSeriesRow> all = new ArrayList<>();
-            keyWords.parallelStream().forEach(kw -> {
-                all.addAll(findByKeyWord(kw, pos, unit, metadata, byBase));
+        List<TimeSeriesRow> all = new ArrayList<>();
 
-            });
+        keyWords.parallelStream().forEach(kw -> {
+            List<TimeSeriesRow> r = findByKeyWord(kw, pos, unit, metadata, byBase);
+            all.addAll(r);
+            arrayBuilder.add(new TimeSeries(kw, byBase, pos.orElse(0), r).toJson());
+        });
 
-        } else {
-            keyWords.parallelStream().forEach(kw -> {
-                List<TimeSeriesRow> r = findByKeyWord(kw, pos, unit, metadata, byBase);
-                arrayBuilder.add(new TimeSeries(kw, byBase, pos.orElse(0), r).toJson());
-            });
+        if(addCombinedGraph) {
+            all.sort(Comparator.comparing(TimeSeriesRow::getYear).thenComparing(TimeSeriesRow::getMonth));
+            Map<String, Integer> sum = all.stream().collect(
+                    Collectors.groupingBy(TimeSeriesRow::getKey, Collectors.summingInt(TimeSeriesRow::getCount)));
+            arrayBuilder.add(new TimeSeries("all", byBase, pos.orElse(0), sum).toJsonMergedGraphs());
         }
         return arrayBuilder.build();
     }
@@ -65,9 +66,9 @@ public class TimeSeriesQueryService {
                             String year = d.getMetadata().getProperty("publication_year");
                             Integer count = byBase ? d.documentBaseFrequency().get(keyWord).getValue(p) :
                                     d.documentOrthFrequency().get(keyWord).getValue(p);
-                            if(year != null) {
-                                TimeSeriesRow row = new TimeSeriesRow(Integer.parseInt(year),0, count);
-                                if(!result.containsKey(row)){
+                            if (year != null) {
+                                TimeSeriesRow row = new TimeSeriesRow(Integer.parseInt(year), 0, count);
+                                if (!result.containsKey(row)) {
                                     result.put(row, row);
                                 } else {
                                     result.get(row).addCount(row.getCount());
@@ -80,8 +81,8 @@ public class TimeSeriesQueryService {
                             String month = d.getMetadata().getProperty("publication_month");
                             Integer count = byBase ? d.documentBaseFrequency().get(keyWord).getValue(p) :
                                     d.documentOrthFrequency().get(keyWord).getValue(p);
-                            TimeSeriesRow row = new TimeSeriesRow(Integer.parseInt(year),Integer.parseInt(month), count);
-                            if(!result.containsKey(row)){
+                            TimeSeriesRow row = new TimeSeriesRow(Integer.parseInt(year), Integer.parseInt(month), count);
+                            if (!result.containsKey(row)) {
                                 result.put(row, row);
                             } else {
                                 result.get(row).addCount(row.getCount());
@@ -94,8 +95,8 @@ public class TimeSeriesQueryService {
                             String day = d.getMetadata().getProperty("publication_day");
                             Integer count = byBase ? d.documentBaseFrequency().get(keyWord).getValue(p) :
                                     d.documentOrthFrequency().get(keyWord).getValue(p);
-                            TimeSeriesRow row = new TimeSeriesRow(Integer.parseInt(year),Integer.parseInt(month), Integer.parseInt(day), count);
-                            if(!result.containsKey(row)){
+                            TimeSeriesRow row = new TimeSeriesRow(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), count);
+                            if (!result.containsKey(row)) {
                                 result.put(row, row);
                             } else {
                                 result.get(row).addCount(row.getCount());
