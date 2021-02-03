@@ -7,6 +7,9 @@ import pl.clarin.chronocorpus.timeseries.entity.TimeSeries;
 import pl.clarin.chronocorpus.timeseries.entity.TimeSeriesRow;
 import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,8 +32,27 @@ public class TimeSeriesQueryService {
         return instance;
     }
 
+    public JsonArray findTimeSeries(List<String> keyWords, Optional<Integer> pos, Optional<TimeUnit> unit,
+                                    Set<Property> metadata, boolean byBase, Boolean combine) {
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        if(combine){
+            List<TimeSeriesRow> all = new ArrayList<>();
+            keyWords.parallelStream().forEach(kw -> {
+                all.addAll(findByKeyWord(kw, pos, unit, metadata, byBase));
+
+            });
+
+        } else {
+            keyWords.parallelStream().forEach(kw -> {
+                List<TimeSeriesRow> r = findByKeyWord(kw, pos, unit, metadata, byBase);
+                arrayBuilder.add(new TimeSeries(kw, byBase, pos.orElse(0), r).toJson());
+            });
+        }
+        return arrayBuilder.build();
+    }
+
     //TODO needs solution for multi word expressions like Armia Czerwona
-    public JsonObject findTimeSeries(String keyWord, Optional<Integer> pos, Optional<TimeUnit> unit, Set<Property> metadata, boolean byBase) {
+    public List<TimeSeriesRow> findByKeyWord(String keyWord, Optional<Integer> pos, Optional<TimeUnit> unit, Set<Property> metadata, boolean byBase) {
 
         Map<TimeSeriesRow, TimeSeriesRow> result = new HashMap<>();
 
@@ -87,7 +109,8 @@ public class TimeSeriesQueryService {
         List<TimeSeriesRow> r = new ArrayList<>(result.values());
         r.sort(Comparator.comparing(TimeSeriesRow::getYear).thenComparing(TimeSeriesRow::getMonth));
 
-        return new TimeSeries(keyWord, byBase, pos.orElse(0), r).toJson();
+        return r;
+
     }
 
 }

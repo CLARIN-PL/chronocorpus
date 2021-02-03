@@ -7,9 +7,7 @@ import pl.clarin.chronocorpus.timeseries.control.TimeSeriesQueryService;
 import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
 
 import javax.json.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -26,11 +24,11 @@ public class TimeSeriesTask extends Task {
                 .findFirst();
     }
 
-    private Optional<Boolean> find_combine_graph() {
+    private  Boolean findCombineGraph() {
         return queryParameters.stream()
                 .filter(p -> p.getName().equals("combine_graph"))
                 .map(p -> Boolean.valueOf(p.getValueAsString()))
-                .findFirst();
+                .findFirst().orElse(Boolean.FALSE);
     }
 
     private Optional<Integer> findPartOfSpeechParameter() {
@@ -56,31 +54,26 @@ public class TimeSeriesTask extends Task {
 
     @Override
     public JsonObject doTask(Progress pr) {
-
-        List<JsonObject> items = new ArrayList<>();
+        AtomicReference<JsonArray> rows = new AtomicReference<>();
 
         findOrthParameter().ifPresent(w -> {
             String[] words = w.split(";");
-            Arrays.asList(words).forEach(i -> {
-                items.add(TimeSeriesQueryService.getInstance()
-                        .findTimeSeries(i, findPartOfSpeechParameter(), findTimeUnit(), metadata, false));
-            });
+            rows.set(TimeSeriesQueryService.getInstance()
+                    .findTimeSeries(Arrays.asList(words), findPartOfSpeechParameter(), findTimeUnit(),
+                            metadata, false, findCombineGraph()));
         });
 
         findBaseParameter().ifPresent(w -> {
             String[] words = w.split(";");
-            Arrays.asList(words).forEach(i -> {
-                items.add(TimeSeriesQueryService.getInstance()
-                        .findTimeSeries(i, findPartOfSpeechParameter(), findTimeUnit(), metadata, true));
-            });
-        });
 
-        JsonArrayBuilder rows = Json.createArrayBuilder();
-        items.forEach(rows::add);
+            rows.set(TimeSeriesQueryService.getInstance()
+                    .findTimeSeries(Arrays.asList(words), findPartOfSpeechParameter(), findTimeUnit(),
+                            metadata, true, findCombineGraph()));
+        });
 
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id)
-                .add("rows", rows);
+                .add("rows", rows.get());
 
         return json.build();
     }
