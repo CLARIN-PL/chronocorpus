@@ -24,13 +24,6 @@ public class TimeSeriesTask extends Task {
                 .findFirst();
     }
 
-    private  Boolean findCombineGraph() {
-        return queryParameters.stream()
-                .filter(p -> p.getName().equals("combine_graph"))
-                .map(p -> Boolean.valueOf(p.getValueAsString()))
-                .findFirst().orElse(Boolean.FALSE);
-    }
-
     private Optional<Integer> findPartOfSpeechParameter() {
         return queryParameters.stream()
                 .filter(p -> p.getName().equals("part_of_speech"))
@@ -60,7 +53,7 @@ public class TimeSeriesTask extends Task {
             String[] words = w.split(";");
             rows.set(TimeSeriesQueryService.getInstance()
                     .findTimeSeries(Arrays.asList(words), findPartOfSpeechParameter(), findTimeUnit(),
-                            metadata, false, findCombineGraph()));
+                            metadata, false));
         });
 
         findBaseParameter().ifPresent(w -> {
@@ -68,7 +61,7 @@ public class TimeSeriesTask extends Task {
 
             rows.set(TimeSeriesQueryService.getInstance()
                     .findTimeSeries(Arrays.asList(words), findPartOfSpeechParameter(), findTimeUnit(),
-                            metadata, true, findCombineGraph()));
+                            metadata, true));
         });
 
         JsonObjectBuilder json = Json.createObjectBuilder()

@@ -14,6 +14,8 @@ public class Statistic implements Serializable {
     }
 
     public int getValue(int pos) {
+        if (pos == 0)
+            return verbs + nouns + adverbs + adjectives;
         if (pos == 1)
             return verbs;
         if (pos == 2)

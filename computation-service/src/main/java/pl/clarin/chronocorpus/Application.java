@@ -30,35 +30,43 @@ public class Application {
     public static void main(String... args) {
 
         Application app = new Application();
-/*
-        ConcordanceQuery con = new ConcordanceQuery.Builder()
-                .withOrth("powietrza")
-                .build();
-        app.testWithTimer(con, "CLimate");
-        */
+       /* DocumentStore.getInstance().getDocuments()
+                .stream()
+                .map(d -> d.getMetadata().getProperty("authors"))
+                .forEach(System.out::println);*/
 
-        DocumentListQuery l = new DocumentListQuery.Builder()
-                .withMetaPublicationYear("1953")
+/*        DictionaryQuery d = new DictionaryQuery.Builder()
+                .propertyValueList("authors")
                 .build();
-        app.testWithTimer(l, "List doc:");
+        app.testWithTimer(d, "CLimate");*/
 
- /*
+/*        ConcordanceQuery con = new ConcordanceQuery.Builder()
+                .withOrth("niebieski")
+                .build();
+        app.testWithTimer(con, "CLimate");*/
+
+  //      DocumentListQuery l = new DocumentListQuery.Builder()
+  //              .withMetaPublicationYear("1953")
+  //              .build();
+   //     app.testWithTimer(l, "List doc:");
+
+
         DocumentQuery doc = new DocumentQuery.Builder()
-                .withDocumentId("23157")
+                .withMetaJurnalTitle("Chłopi;Gromada;Piast")
                 .build();
 
         app.testWithTimer(doc, "Document");
 
-
+/*
         GeoNamesQuery g = new GeoNamesQuery.Builder().build();
         app.testWithTimer(g, "map");
 
 */
 
-/*        TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
-                .withBase("epidemia")
-                .withPartOfSpeech("2")
-                .withUnit(TimeUnit.day)
+/*       TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
+                .withBase("niebieski")
+                .withPartOfSpeech("0")
+                .withUnit(TimeUnit.year)
                 .build();
         app.testWithTimer(ana1l, "Time series");*/
 
