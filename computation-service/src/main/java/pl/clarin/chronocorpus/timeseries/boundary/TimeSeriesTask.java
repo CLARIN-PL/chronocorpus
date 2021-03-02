@@ -62,6 +62,7 @@ public class TimeSeriesTask extends Task {
             rows.set(TimeSeriesQueryService.getInstance()
                     .findTimeSeries(Arrays.asList(words), findPartOfSpeechParameter(), findTimeUnit(),
                             metadata, true));
+
         });
 
         JsonObjectBuilder json = Json.createObjectBuilder()

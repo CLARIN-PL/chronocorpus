@@ -39,7 +39,6 @@ public class TimeSeriesQueryService {
             List<TimeSeriesRow> r = findByKeyWord(kw, pos, unit, metadata, byBase);
             arrayBuilder.add(new TimeSeries(kw, byBase, pos.orElse(0), r).toJson());
         });
-
         return arrayBuilder.build();
     }
 

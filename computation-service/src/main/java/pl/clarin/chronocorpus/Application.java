@@ -10,6 +10,7 @@ import pl.clarin.chronocorpus.query.boundary.*;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
 import pl.clarin.chronocorpus.task.entity.Task;
+import pl.clarin.chronocorpus.timeseries.entity.TimeSeries;
 import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
 import pl.clarin.chronocorpus.wordprofile.entity.WordProfile;
 
@@ -30,71 +31,21 @@ public class Application {
     public static void main(String... args) {
 
         Application app = new Application();
-       /* DocumentStore.getInstance().getDocuments()
-                .stream()
-                .map(d -> d.getMetadata().getProperty("authors"))
-                .forEach(System.out::println);*/
 
-/*        DictionaryQuery d = new DictionaryQuery.Builder()
-                .propertyValueList("authors")
-                .build();
-        app.testWithTimer(d, "CLimate");*/
-
-/*        ConcordanceQuery con = new ConcordanceQuery.Builder()
-                .withOrth("niebieski")
-                .build();
-        app.testWithTimer(con, "CLimate");*/
-
-  //      DocumentListQuery l = new DocumentListQuery.Builder()
-  //              .withMetaPublicationYear("1953")
-  //              .build();
-   //     app.testWithTimer(l, "List doc:");
-
-
-        DocumentQuery doc = new DocumentQuery.Builder()
+/*        DocumentQuery doc = new DocumentQuery.Builder()
                 .withMetaJurnalTitle("Chłopi;Gromada;Piast")
                 .build();
 
-        app.testWithTimer(doc, "Document");
+        app.testWithTimer(doc, "Document");*/
 
-/*
-        GeoNamesQuery g = new GeoNamesQuery.Builder().build();
-        app.testWithTimer(g, "map");
-
-*/
-
-/*       TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
+        TimeSeriesQuery ser = new TimeSeriesQuery.Builder()
                 .withBase("niebieski")
                 .withPartOfSpeech("0")
                 .withUnit(TimeUnit.year)
                 .build();
-        app.testWithTimer(ana1l, "Time series");*/
 
-//        FrequencyQuery fq  = new FrequencyQuery.Builder()
-//                .countByBase(true)
-//                .build();
-//
-//        app.testWithTimer(fq, "FQ");
+        app.testWithTimer(ser, "TS");
 
-/*       WordProfileQuery wp = new WordProfileQuery.Builder()
-                .withRightWindowSize("1")
-                .withLeftWindowSize("1")
-                .withPartOfSpeech("2")
-                .withWindowItemPartOfSpeech("4")
-                .withOrth("Szczecin")
-                .build();
-
-        app.testWithTimer(wp, "Word Profile");*/
-
-
-
-/*        QuantityAnalysisQuery qa = new QuantityAnalysisQuery.Builder()
-                .calculationUnit(CalculationUnit.letter)
-                .calculationType(CalculationType.zipf_histogram)
-                .calculationObject(CalculationObject.word)
-                .build();
-
-        app.testWithTimer(qa, "QAQ");*/
     }
 
     public Application() {
