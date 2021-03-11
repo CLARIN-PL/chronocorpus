@@ -32,14 +32,15 @@ public class Application {
 
         Application app = new Application();
 
-/*        DocumentQuery doc = new DocumentQuery.Builder()
-                .withMetaJurnalTitle("Chłopi;Gromada;Piast")
-                .build();
+       /* DocumentStore.getInstance().getDocuments().forEach(d -> {
+            System.out.println(d);
+            System.out.println("---");
+        });*/
 
-        app.testWithTimer(doc, "Document");*/
+       // app.testWithTimer(doc, "Document");
 
         TimeSeriesQuery ser = new TimeSeriesQuery.Builder()
-                .withBase("niebieski")
+                .withBase("niebieski;czerwony")
                 .withPartOfSpeech("0")
                 .withUnit(TimeUnit.year)
                 .build();
