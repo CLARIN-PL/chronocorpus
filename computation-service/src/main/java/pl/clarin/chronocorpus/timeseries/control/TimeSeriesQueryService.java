@@ -33,7 +33,7 @@ public class TimeSeriesQueryService {
     }
 
     public JsonArray findTimeSeries(List<String> keyWords, Optional<Integer> pos, Optional<TimeUnit> unit,
-                                    Set<Property> metadata, boolean byBase, boolean addCombinedGraph) {
+                                    Set<Property> metadata, boolean byBase) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         List<TimeSeriesRow> all = new ArrayList<>();
 
@@ -42,13 +42,10 @@ public class TimeSeriesQueryService {
             all.addAll(r);
             arrayBuilder.add(new TimeSeries(kw, byBase, pos.orElse(0), r).toJson());
         });
-
-        if(addCombinedGraph) {
-            all.sort(Comparator.comparing(TimeSeriesRow::getYear).thenComparing(TimeSeriesRow::getMonth));
-            Map<String, Integer> sum = all.stream().collect(
-                    Collectors.groupingBy(TimeSeriesRow::getKey, Collectors.summingInt(TimeSeriesRow::getCount)));
-            arrayBuilder.add(new TimeSeries("all", byBase, pos.orElse(0), sum).toJsonMergedGraphs());
-        }
+        all.sort(Comparator.comparing(TimeSeriesRow::getYear).thenComparing(TimeSeriesRow::getMonth));
+        Map<String, Integer> sum = all.stream().collect(
+                Collectors.groupingBy(TimeSeriesRow::getKey, Collectors.summingInt(TimeSeriesRow::getCount)));
+        arrayBuilder.add(new TimeSeries("all", byBase, pos.orElse(0), sum).toJsonMergedGraphs());
         return arrayBuilder.build();
     }
 
@@ -59,7 +56,7 @@ public class TimeSeriesQueryService {
 
         for (Document d : DocumentStore.getInstance().getDocuments()) {
 
-            if (d.getMetadata().matches(metadata) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
+            if ( (d.getMetadata() != null? d.getMetadata().matches(metadata) :true) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
                 unit.ifPresent(u -> {
                     if (TimeUnit.year.equals(u)) {
                         pos.ifPresent(p -> {

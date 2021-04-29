@@ -10,6 +10,7 @@ import pl.clarin.chronocorpus.query.boundary.*;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
 import pl.clarin.chronocorpus.task.entity.Task;
+import pl.clarin.chronocorpus.timeseries.entity.TimeSeries;
 import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
 import pl.clarin.chronocorpus.wordprofile.entity.WordProfile;
 
@@ -44,16 +45,12 @@ public class Application {
         app.testWithTimer(l, "List doc:");
 */
 
+       /* DocumentStore.getInstance().getDocuments().forEach(d -> {
+            System.out.println(d);
+            System.out.println("---");
+        });*/
 
-        DocumentQuery doc = new DocumentQuery.Builder()
-                .withDocumentId("23157")
-                .build();
-
-        app.testWithTimer(doc, "Document");
-
-
-        GeoNamesQuery g = new GeoNamesQuery.Builder().build();
-        app.testWithTimer(g, "map");
+       // app.testWithTimer(doc, "Document");
 
 
 /*
@@ -76,19 +73,14 @@ public class Application {
                 .withPartOfSpeech("2")
                 .withWindowItemPartOfSpeech("0")
                 .withOrth("Polska")
+        TimeSeriesQuery ser = new TimeSeriesQuery.Builder()
+                .withBase("niebieski;czerwony")
+                .withPartOfSpeech("0")
+                .withUnit(TimeUnit.year)
                 .build();
 
-        app.testWithTimer(wp, "Word Profile");*/
-
-
-
-/*        QuantityAnalysisQuery qa = new QuantityAnalysisQuery.Builder()
-                .calculationUnit(CalculationUnit.letter)
-                .calculationType(CalculationType.zipf_histogram)
-                .calculationObject(CalculationObject.word)
-                .build();
-
-        app.testWithTimer(qa, "QAQ");*/
+        app.testWithTimer(ser, "TS");
+*/
     }
 
     public Application() {

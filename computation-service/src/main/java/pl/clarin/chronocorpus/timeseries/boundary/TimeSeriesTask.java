@@ -53,7 +53,7 @@ public class TimeSeriesTask extends Task {
             String[] words = w.split(";");
             rows.set(TimeSeriesQueryService.getInstance()
                     .findTimeSeries(Arrays.asList(words), findPartOfSpeechParameter(), findTimeUnit(),
-                            metadata, false, words.length > 1));
+                            metadata, false));
         });
 
         findBaseParameter().ifPresent(w -> {
@@ -61,7 +61,8 @@ public class TimeSeriesTask extends Task {
 
             rows.set(TimeSeriesQueryService.getInstance()
                     .findTimeSeries(Arrays.asList(words), findPartOfSpeechParameter(), findTimeUnit(),
-                            metadata, true, words.length > 1));
+                            metadata, true));
+
         });
 
         JsonObjectBuilder json = Json.createObjectBuilder()

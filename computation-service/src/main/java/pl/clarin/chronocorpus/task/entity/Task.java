@@ -5,7 +5,6 @@ import pl.clarin.chronocorpus.document.entity.Property;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonString;
-import javax.json.JsonValue;
 import java.util.Set;
 import java.util.stream.Collectors;
 import pl.clarin.chronocorpus.Progress;
