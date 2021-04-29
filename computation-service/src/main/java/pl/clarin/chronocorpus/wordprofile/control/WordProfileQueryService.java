@@ -127,7 +127,11 @@ public class WordProfileQueryService {
                         (tokens.get(z).getOrth().equals(",") || (tokens.get(z).getOrth().equals(".")))) {
                     break;
                 }
-                if (tokens.get(z).getPos() == pos) {
+                if (pos == 0) {
+                    if (tokens.get(z).getPos() == 1 || tokens.get(z).getPos() == 2 || tokens.get(z).getPos() == 3 || tokens.get(z).getPos() == 4) {
+                        result.add(new WordProfile(null, null, word, tokens.get(z).getOrth(), tokens.get(z).getBase()));
+                    }
+                } else if (tokens.get(z).getPos() == pos) {
                     result.add(new WordProfile(null, null, word, tokens.get(z).getOrth(), tokens.get(z).getBase()));
                 }
             }
@@ -144,7 +148,11 @@ public class WordProfileQueryService {
                         (tokens.get(z).getOrth().equals(",") || (tokens.get(z).getOrth().equals(".")))) {
                     break;
                 }
-                if (tokens.get(z).getPos() == pos) {
+                if (pos == 0) {
+                    if (tokens.get(z).getPos() == 1 || tokens.get(z).getPos() == 2 || tokens.get(z).getPos() == 3 || tokens.get(z).getPos() == 4) {
+                        result.add(new WordProfile(tokens.get(z).getOrth(), tokens.get(z).getBase(), word, null, null));
+                    }
+                } else  if (tokens.get(z).getPos() == pos) {
                     result.add(new WordProfile(tokens.get(z).getOrth(), tokens.get(z).getBase(), word, null, null));
                 }
             }

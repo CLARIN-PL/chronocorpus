@@ -44,7 +44,7 @@ public class Application {
         app.testWithTimer(l, "List doc:");
 */
 
- /*
+
         DocumentQuery doc = new DocumentQuery.Builder()
                 .withDocumentId("23157")
                 .build();
@@ -55,14 +55,14 @@ public class Application {
         GeoNamesQuery g = new GeoNamesQuery.Builder().build();
         app.testWithTimer(g, "map");
 
-*/
 
+/*
         TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
-                .withBase("dom;mieszkanie;chałupa")
+                .withBase("niebieski")
                 .withPartOfSpeech("2")
-                .withUnit(TimeUnit.day)
+                .withUnit(TimeUnit.month)
                 .build();
-        app.testWithTimer(ana1l, "Time series");
+        app.testWithTimer(ana1l, "Time series");*/
 
 //        FrequencyQuery fq  = new FrequencyQuery.Builder()
 //                .countByBase(true)
@@ -70,12 +70,12 @@ public class Application {
 //
 //        app.testWithTimer(fq, "FQ");
 
-/*       WordProfileQuery wp = new WordProfileQuery.Builder()
+/*      WordProfileQuery wp = new WordProfileQuery.Builder()
                 .withRightWindowSize("1")
                 .withLeftWindowSize("1")
                 .withPartOfSpeech("2")
-                .withWindowItemPartOfSpeech("4")
-                .withOrth("Szczecin")
+                .withWindowItemPartOfSpeech("0")
+                .withOrth("Polska")
                 .build();
 
         app.testWithTimer(wp, "Word Profile");*/

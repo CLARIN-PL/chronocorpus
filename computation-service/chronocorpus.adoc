@@ -96,6 +96,10 @@ Example request and respond when searching for document.
                         "name": "Kraków"
                   ]
                 },
+            ],
+            "word_cloud": [
+                    {"name":"przed","value":0},
+                    {"name":"slim","value":1}
             ]
         }
     ]
