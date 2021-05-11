@@ -1,5 +1,6 @@
 package pl.clarin.chronocorpus.task.boundary;
 
+import pl.clarin.chronocorpus.administration.boundary.StatisticsTask;
 import pl.clarin.chronocorpus.concordance.boundary.ConcordanceTask;
 import pl.clarin.chronocorpus.dictionaries.boundary.DictionariesTask;
 import pl.clarin.chronocorpus.document.boundary.DocumentListTask;
@@ -28,6 +29,7 @@ public class TaskLookUp {
             if(json.getString("task_type").equalsIgnoreCase("word_profile")) return Optional.of(new WordProfileTask(json));
             if(json.getString("task_type").equalsIgnoreCase("geo_proper_names")) return Optional.of(new GeographicalProperNamesTask(json));
             if(json.getString("task_type").equalsIgnoreCase("quantity_analysis")) return Optional.of(new QuantityAnalysisTask(json));
+            if(json.getString("task_type").equalsIgnoreCase("statistics")) return Optional.of(new StatisticsTask(json));
         }
         return Optional.empty();
     }

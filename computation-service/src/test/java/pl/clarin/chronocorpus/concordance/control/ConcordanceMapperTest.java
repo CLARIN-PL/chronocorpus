@@ -1,9 +1,6 @@
 package pl.clarin.chronocorpus.concordance.control;
 
-
 import org.hamcrest.CoreMatchers;
-import org.junit.Ignore;
-import org.junit.Test;
 import pl.clarin.chronocorpus.concordance.entity.Concordance;
 import pl.clarin.chronocorpus.document.entity.Sentence;
 import pl.clarin.chronocorpus.document.entity.Token;
@@ -13,14 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ConcordanceMapperTest {
 
-    @Test @Ignore
     public void shouldSplitSentenceByWord() {
 
         Sentence s = new Sentence();
@@ -47,7 +43,6 @@ public class ConcordanceMapperTest {
 
     }
 
-    @Test @Ignore
     public void shouldSplitSentenceByManyOrthWord() {
 
         Sentence s = new Sentence();
@@ -72,7 +67,6 @@ public class ConcordanceMapperTest {
     }
 
 
-    @Test
     public void shouldSplitSentenceByRegex() {
 
         String s1 = "domek który, mam dom w którym pełno jest domowników a ona chodzi w podomce. Dziś, był śnieg do pasa " +

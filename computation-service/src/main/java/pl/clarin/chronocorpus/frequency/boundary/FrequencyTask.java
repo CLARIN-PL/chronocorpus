@@ -1,5 +1,6 @@
 package pl.clarin.chronocorpus.frequency.boundary;
 
+import pl.clarin.chronocorpus.administration.control.StatisticsQueryService;
 import pl.clarin.chronocorpus.dictionaries.control.DictionaryQueryService;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.frequency.control.FrequencyQueryService;
@@ -55,6 +56,7 @@ public class FrequencyTask extends Task {
                 .add("task_id", id)
                 .add("rows", frequency);
 
+        StatisticsQueryService.getInstance().updateFrequencyQueryCount();
         return json.build();
     }
 }

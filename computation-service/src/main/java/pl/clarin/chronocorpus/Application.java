@@ -31,35 +31,32 @@ public class Application {
     public static void main(String... args) {
 
         Application app = new Application();
+
 /*
         ConcordanceQuery con = new ConcordanceQuery.Builder()
-                .withOrth("powietrza")
+                .withOrth("wybory")
                 .build();
         app.testWithTimer(con, "CLimate");
-        */
-
-/*
-        DocumentListQuery l = new DocumentListQuery.Builder()
-                .withMetaPublicationYear("1953")
-                .build();
-        app.testWithTimer(l, "List doc:");
 */
 
-       /* DocumentStore.getInstance().getDocuments().forEach(d -> {
-            System.out.println(d);
+
+        StatisticsQuery stat = new StatisticsQuery.Builder()
+                .build();
+        app.testWithTimer(stat, "Stats");
+
+
+/*        DocumentStore.getInstance()
+                .getDocuments().forEach(d -> {
+            System.out.println(d.getMetadata().getProperty("publication_date"));
             System.out.println("---");
         });*/
 
-       // app.testWithTimer(doc, "Document");
-
-
-/*
         TimeSeriesQuery ana1l = new TimeSeriesQuery.Builder()
-                .withBase("niebieski")
+                .withBase("wybory")
                 .withPartOfSpeech("2")
                 .withUnit(TimeUnit.month)
                 .build();
-        app.testWithTimer(ana1l, "Time series");*/
+        app.testWithTimer(ana1l, "Time series");
 
 //        FrequencyQuery fq  = new FrequencyQuery.Builder()
 //                .countByBase(true)

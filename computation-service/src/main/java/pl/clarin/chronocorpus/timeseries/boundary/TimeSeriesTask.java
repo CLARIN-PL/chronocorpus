@@ -1,6 +1,7 @@
 package pl.clarin.chronocorpus.timeseries.boundary;
 
 import pl.clarin.chronocorpus.Progress;
+import pl.clarin.chronocorpus.administration.control.StatisticsQueryService;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.task.entity.Task;
 import pl.clarin.chronocorpus.timeseries.control.TimeSeriesQueryService;
@@ -69,6 +70,7 @@ public class TimeSeriesTask extends Task {
                 .add("task_id", id)
                 .add("rows", rows.get());
 
+        StatisticsQueryService.getInstance().updateTimeSeriesQueryCount();
         return json.build();
     }
 }

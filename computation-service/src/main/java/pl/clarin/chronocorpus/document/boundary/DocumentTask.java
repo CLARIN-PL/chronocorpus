@@ -1,5 +1,6 @@
 package pl.clarin.chronocorpus.document.boundary;
 
+import pl.clarin.chronocorpus.administration.control.StatisticsQueryService;
 import pl.clarin.chronocorpus.document.control.DocumentQueryService;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.task.entity.Task;
@@ -44,6 +45,7 @@ public class DocumentTask extends Task {
                     .forEach(d -> documents.add(d.toJson()));
         }
         json.add("documents", documents);
+        StatisticsQueryService.getInstance().updateDocumentsQueryCount();
         return json.build();
     }
 }

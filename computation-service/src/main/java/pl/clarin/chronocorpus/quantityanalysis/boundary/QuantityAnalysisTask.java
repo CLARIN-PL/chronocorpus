@@ -1,5 +1,6 @@
 package pl.clarin.chronocorpus.quantityanalysis.boundary;
 
+import pl.clarin.chronocorpus.administration.control.StatisticsQueryService;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.geographicalpropernames.control.GeographicalQueryService;
 import pl.clarin.chronocorpus.quantityanalysis.control.QuantityAnalysisQueryService;
@@ -75,6 +76,7 @@ public class QuantityAnalysisTask extends Task {
                 .add("task_id", id)
                 .add("rows", anal);
 
+        StatisticsQueryService.getInstance().updateQuantityAnalysisQueryCount();
         return json.build();
     }
 }
