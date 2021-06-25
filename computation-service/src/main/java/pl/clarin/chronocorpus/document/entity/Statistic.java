@@ -74,4 +74,6 @@ public class Statistic implements Serializable {
         return nouns;
     }
 
+    public int sumAll() {return verbs+adjectives+adverbs+nouns;}
+
 }

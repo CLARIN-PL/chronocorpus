@@ -96,6 +96,10 @@ Example request and respond when searching for document.
                         "name": "Kraków"
                   ]
                 },
+            ],
+            "word_cloud": [
+                    {"name":"przed","value":0},
+                    {"name":"slim","value":1}
             ]
         }
     ]
@@ -630,5 +634,28 @@ Example request and response fetching dictionary values or property lists
         "Robotnik","Rolnik Polski","Rzeczpospolita","Rzeczpospolita i Dziennik Gospodarczy",
         "Sztandar Młodych","Żołnierz Wolności","Życie Warszawy"
     ]
+}
+----
+`Statistics Request`:
+----
+{
+    "task_type":"statistics",
+    "metadata_filter":[],
+    "query_parameters":[],
+    "response_parameters":[]}
+}
+----
+`Statistics Response`:
+----
+{
+    "statistics": {
+            "concordance_query_count":7,
+            "frequency_query_count":0,
+            "time_series_query_count":2,
+            "word_profile_query_count":0,
+            "quantity_analysis_query_count":0,
+            "map_names_query_count":0,
+            "documents_query_count":0
+    }
 }
 ----

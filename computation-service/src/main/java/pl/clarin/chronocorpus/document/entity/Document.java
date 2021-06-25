@@ -2,12 +2,14 @@ package pl.clarin.chronocorpus.document.entity;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import pl.clarin.chronocorpus.dictionaries.control.DictionaryQueryService;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -46,6 +48,17 @@ public class Document implements Serializable {
         }
     }
 
+    private Map<String, Integer> getWordCloudByBase(){
+        List<String> stop = DictionaryQueryService.getInstance().defaultStopList();
+        Map<String, Integer> result = new HashMap<>();
+        bases.entrySet().stream()
+                .filter( e -> !stop.contains(e.getKey()))
+                .forEach(e -> {
+                    result.put(e.getKey(), e.getValue().sumAll());
+                });
+        return result;
+    }
+
     private void map(Token w, String key, Map<String, Statistic> bases) {
         if (!bases.containsKey(key)) {
             Statistic s = new Statistic();
@@ -67,11 +80,19 @@ public class Document implements Serializable {
         JsonArrayBuilder pn = Json.createArrayBuilder();
         properNames.forEach(n -> pn.add(n.toJson()));
 
+        JsonArrayBuilder wc = Json.createArrayBuilder();
+        getWordCloudByBase().forEach((k, v) -> {
+            wc.add(Json.createObjectBuilder()
+                    .add("name", k)
+                    .add("value", v));
+        });
+
         return Json.createObjectBuilder()
                 .add("id", id)
                 .add("metadata", metadata.toJson())
                 .add("text", toText())
                 .add("proper_names", pn)
+                .add("word_cloud", wc)
                 .build();
     }
 

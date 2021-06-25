@@ -1,5 +1,6 @@
 package pl.clarin.chronocorpus.geographicalpropernames.boundary;
 
+import pl.clarin.chronocorpus.administration.control.StatisticsQueryService;
 import pl.clarin.chronocorpus.geographicalpropernames.control.GeographicalQueryService;
 import pl.clarin.chronocorpus.task.entity.Task;
 
@@ -25,6 +26,7 @@ public class GeographicalProperNamesTask extends Task {
                 .add("task_id", id)
                 .add("rows", geo);
 
+        StatisticsQueryService.getInstance().updateMapNamesQueryCount();
         return json.build();
     }
 }

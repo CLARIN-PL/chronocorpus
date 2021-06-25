@@ -58,7 +58,9 @@ public class TimeSeriesQueryService {
 
         for (Document d : DocumentStore.getInstance().getDocuments()) {
 
-            if ( (d.getMetadata() == null || d.getMetadata().matches(metadata)) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
+//            if ( (d.getMetadata() == null || d.getMetadata().matches(metadata)) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
+
+            if ((d.getMetadata() != null ? d.getMetadata().matches(metadata) : true) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
                 unit.ifPresent(u -> {
                     if (TimeUnit.year.equals(u)) {
                         pos.ifPresent(p -> {
@@ -80,7 +82,11 @@ public class TimeSeriesQueryService {
                             String month = d.getMetadata().getProperty("publication_month");
                             Integer count = byBase ? d.documentBaseFrequency().get(keyWord).getValue(p) :
                                     d.documentOrthFrequency().get(keyWord).getValue(p);
-                            TimeSeriesRow row = new TimeSeriesRow(Integer.parseInt(year), Integer.parseInt(month), count);
+
+                            Integer y = Integer.parseInt(year);
+                            Integer m = Integer.parseInt(month);
+                            TimeSeriesRow row = new TimeSeriesRow(y, m, count);
+
                             if (!result.containsKey(row)) {
                                 result.put(row, row);
                             } else {

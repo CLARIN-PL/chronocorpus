@@ -33,11 +33,24 @@ public class Application {
 
         Application app = new Application();
 
-       /* DocumentStore.getInstance().getDocuments().forEach(d -> {
-            System.out.println(d);
+/*
+        ConcordanceQuery con = new ConcordanceQuery.Builder()
+                .withOrth("wybory")
+                .build();
+        app.testWithTimer(con, "CLimate");
+*/
+
+
+        StatisticsQuery stat = new StatisticsQuery.Builder()
+                .build();
+        app.testWithTimer(stat, "Stats");
+
+
+/*        DocumentStore.getInstance()
+                .getDocuments().forEach(d -> {
+            System.out.println(d.getMetadata().getProperty("publication_date"));
             System.out.println("---");
         });*/
-
        // app.testWithTimer(doc, "Document");
 
        TimeSeriesQuery ser = new TimeSeriesQuery.Builder()
@@ -67,6 +80,27 @@ public class Application {
         byKey.forEach(k ->{
             System.out.println(k +"\t" + cc.get(k));
         });*/
+
+//        FrequencyQuery fq  = new FrequencyQuery.Builder()
+//                .countByBase(true)
+//                .build();
+//
+//        app.testWithTimer(fq, "FQ");
+
+/*      WordProfileQuery wp = new WordProfileQuery.Builder()
+                .withRightWindowSize("1")
+                .withLeftWindowSize("1")
+                .withPartOfSpeech("2")
+                .withWindowItemPartOfSpeech("0")
+                .withOrth("Polska")
+        TimeSeriesQuery ser = new TimeSeriesQuery.Builder()
+                .withBase("niebieski;czerwony")
+                .withPartOfSpeech("0")
+                .withUnit(TimeUnit.year)
+                .build();
+
+        app.testWithTimer(ser, "TS");
+*/
     }
 
     public Application() {

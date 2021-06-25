@@ -1,5 +1,7 @@
 package pl.clarin.chronocorpus.concordance.boundary;
 
+import pl.clarin.chronocorpus.administration.control.StatisticsQueryService;
+import pl.clarin.chronocorpus.administration.entity.Statistics;
 import pl.clarin.chronocorpus.concordance.control.ConcordanceQueryServiceNew;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.concordance.control.ConcordanceQueryService;
@@ -48,7 +50,7 @@ public class ConcordanceTask extends Task {
 
         findBaseParameter().ifPresent(w ->  json.add("rows", ConcordanceQueryServiceNew.getInstance()
                 .findConcordance(w, responseParameters, metadata, true)));
-
+        StatisticsQueryService.getInstance().updateConcordanceQueryCount();
         return json.build();
     }
 }

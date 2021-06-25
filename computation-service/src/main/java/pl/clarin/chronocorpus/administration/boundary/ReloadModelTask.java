@@ -1,4 +1,4 @@
-package pl.clarin.chronocorpus.administration;
+package pl.clarin.chronocorpus.administration.boundary;
 
 import pl.clarin.chronocorpus.task.entity.Task;
 
