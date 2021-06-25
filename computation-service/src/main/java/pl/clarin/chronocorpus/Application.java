@@ -3,6 +3,7 @@ package pl.clarin.chronocorpus;
 import org.ini4j.Ini;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
+import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationUnit;
@@ -18,7 +19,7 @@ import pl.clarin.chronocorpus.wordprofile.entity.WordProfile;
 import javax.json.JsonObject;
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,14 +40,33 @@ public class Application {
 
        // app.testWithTimer(doc, "Document");
 
-        TimeSeriesQuery ser = new TimeSeriesQuery.Builder()
-                .withBase("niebieski;czerwony")
-                .withPartOfSpeech("0")
-                .withUnit(TimeUnit.year)
+       TimeSeriesQuery ser = new TimeSeriesQuery.Builder()
+                .withBase("wiosna;lato;zima;jesień")
+                .withPartOfSpeech("2")
+                .withUnit(TimeUnit.month)
                 .build();
 
         app.testWithTimer(ser, "TS");
+      /*  Map<String, Integer> cc = new HashMap<>();
+        for (Document d : DocumentStore.getInstance().getDocuments()) {
+            int count = d.findSubsequenceCountForBaseText("zielony góra");
 
+            if( count > 0){
+                String y = d.getMetadata().getProperty("publication_year");
+                String m = d.getMetadata().getProperty("publication_month");
+                if(!cc.containsKey(y)){
+                    cc.put(y+"\t"+m, 0);
+                }
+                cc.replace(y+"\t"+m, cc.get(y+"\t"+m) + count);
+            }
+        }
+        System.out.println(cc);
+        List<String> byKey = new ArrayList<>(cc.keySet());
+        Collections.sort(byKey);
+
+        byKey.forEach(k ->{
+            System.out.println(k +"\t" + cc.get(k));
+        });*/
     }
 
     public Application() {

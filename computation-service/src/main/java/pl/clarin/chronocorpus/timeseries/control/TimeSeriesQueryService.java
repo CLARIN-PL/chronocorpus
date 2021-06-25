@@ -37,10 +37,12 @@ public class TimeSeriesQueryService {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         List<TimeSeriesRow> all = new ArrayList<>();
 
-        keyWords.parallelStream().forEach(kw -> {
+        keyWords.forEach(kw -> {
             List<TimeSeriesRow> r = findByKeyWord(kw, pos, unit, metadata, byBase);
-            all.addAll(r);
-            arrayBuilder.add(new TimeSeries(kw, byBase, pos.orElse(0), r).toJson());
+            if(r!= null && !r.isEmpty()) {
+                all.addAll(r);
+                arrayBuilder.add(new TimeSeries(kw, byBase, pos.orElse(0), r).toJson());
+            }
         });
         all.sort(Comparator.comparing(TimeSeriesRow::getYear).thenComparing(TimeSeriesRow::getMonth));
         Map<String, Integer> sum = all.stream().collect(
@@ -56,7 +58,7 @@ public class TimeSeriesQueryService {
 
         for (Document d : DocumentStore.getInstance().getDocuments()) {
 
-            if ( (d.getMetadata() != null? d.getMetadata().matches(metadata) :true) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
+            if ( (d.getMetadata() == null || d.getMetadata().matches(metadata)) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
                 unit.ifPresent(u -> {
                     if (TimeUnit.year.equals(u)) {
                         pos.ifPresent(p -> {

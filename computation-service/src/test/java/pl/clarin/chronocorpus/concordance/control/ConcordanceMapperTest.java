@@ -72,7 +72,7 @@ public class ConcordanceMapperTest {
     }
 
 
-    @Test
+    @Test @Ignore
     public void shouldSplitSentenceByRegex() {
 
         String s1 = "domek który, mam dom w którym pełno jest domowników a ona chodzi w podomce. Dziś, był śnieg do pasa " +

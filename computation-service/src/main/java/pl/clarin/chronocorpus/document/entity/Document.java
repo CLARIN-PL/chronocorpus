@@ -10,6 +10,8 @@ import javax.json.JsonObject;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Document implements Serializable {
@@ -78,6 +80,34 @@ public class Document implements Serializable {
                 .map(Sentence::getSentence)
                 .collect(Collectors.joining());
     }
+
+
+    public int findSubsequenceCountForOrthText(String find){
+        Pattern PATTERN =
+                Pattern.compile("("+find+"+)");
+
+        Matcher countEmailMatcher = PATTERN.matcher(toText());
+
+        int count = 0;
+        while (countEmailMatcher.find()) {
+            count++;
+        }
+        return count;
+    }
+
+    public int findSubsequenceCountForBaseText(String find){
+        Pattern PATTERN =
+                Pattern.compile("("+find+"+)");
+
+        Matcher countEmailMatcher = PATTERN.matcher(toTextInBase().toLowerCase());
+
+        int count = 0;
+        while (countEmailMatcher.find()) {
+            count++;
+        }
+        return count;
+    }
+
 
     public String toTextInBase() {
         return sentences.stream()
