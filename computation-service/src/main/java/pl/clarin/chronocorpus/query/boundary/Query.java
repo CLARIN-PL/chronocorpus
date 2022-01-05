@@ -57,6 +57,12 @@ public class Query {
             return getThis();
         }
 
+        public T withMetaAuthor(String authors) {
+            Property p = new Property("authors", authors);
+            meta.add(p.toJson());
+            return getThis();
+        }
+
         public T withAdditionalResponseProperties(String... props) {
             Stream.of(props).forEach(responseParameters::add);
             return getThis();

@@ -54,6 +54,12 @@ public class WordProfileQuery extends Query {
             return this;
         }
 
+        public WordProfileQuery.Builder withStopList(String stopList) {
+            Property p = new Property("stop_list", stopList);
+            withQueryProperty(p);
+            return this;
+        }
+
         public WordProfileQuery build() {
             return new WordProfileQuery(this);
         }

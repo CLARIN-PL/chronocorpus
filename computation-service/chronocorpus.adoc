@@ -140,7 +140,7 @@ Example request and respond when searching for document.
                     },
                     {
                         "name":"authors",
-                        "value":"ap."
+                        "value":"ap.;Jan Pałka;Popek;"
                     },
                     {
                         "name":"publication_year",
@@ -247,6 +247,7 @@ Example request and respond when searching concordances.
 ----
 === Querying word profile
 Example request and respond getting word profile frequency.
+If you do not set a stop_list, the default list is loaded instead.
 
 `Word Profiles Request`:
 ----
@@ -273,6 +274,11 @@ Example request and respond getting word profile frequency.
         {
             "name":"right_window_size",
             "value":"1"
+        },
+        {
+            "name":"stop_list",
+            "value":"być;który;z;i"
+        }
         }
     ],
     "response_parameters":[]}

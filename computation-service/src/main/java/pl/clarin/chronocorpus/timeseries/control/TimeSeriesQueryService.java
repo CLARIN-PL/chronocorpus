@@ -33,7 +33,7 @@ public class TimeSeriesQueryService {
     }
 
     public JsonArray findTimeSeries(List<String> keyWords, Optional<Integer> pos, Optional<TimeUnit> unit,
-                                    Set<Property> metadata, boolean byBase) {
+                                    Set<Property> metadata, boolean byBase, boolean onlyAll) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         List<TimeSeriesRow> all = new ArrayList<>();
 
@@ -47,8 +47,14 @@ public class TimeSeriesQueryService {
         all.sort(Comparator.comparing(TimeSeriesRow::getYear).thenComparing(TimeSeriesRow::getMonth));
         Map<String, Integer> sum = all.stream().collect(
                 Collectors.groupingBy(TimeSeriesRow::getKey, Collectors.summingInt(TimeSeriesRow::getCount)));
-        arrayBuilder.add(new TimeSeries("all", byBase, pos.orElse(0), sum).toJsonMergedGraphs());
-        return arrayBuilder.build();
+        if(onlyAll) {
+            JsonArrayBuilder arrayBuilderAll = Json.createArrayBuilder();
+            arrayBuilderAll.add(new TimeSeries("all", byBase, pos.orElse(0), sum).toJsonMergedGraphs());
+            return arrayBuilderAll.build();
+        }else{
+            arrayBuilder.add(new TimeSeries("all", byBase, pos.orElse(0), sum).toJsonMergedGraphs());
+            return arrayBuilder.build();
+        }
     }
 
     //TODO needs solution for multi word expressions like Armia Czerwona

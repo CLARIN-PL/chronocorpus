@@ -50,6 +50,9 @@ public class DictionariesTask extends Task {
         DictionaryQueryService.getInstance()
                 .defaultStopList().forEach(defaultStopList::add);
 
+        JsonArrayBuilder semanticList = Json.createArrayBuilder();
+        DictionaryQueryService.getInstance().getSemanticListNames().forEach(semanticList::add);
+
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id);
 
@@ -58,6 +61,7 @@ public class DictionariesTask extends Task {
                     .add("parts_of_speech", partsOfSpeech)
                     .add("exposition", exposition)
                     .add("property_names", propertyNames)
+                    .add("semantic_list", semanticList)
                     .add("default_stop_list", defaultStopList);
 
             json.add("dictionaries", dict);

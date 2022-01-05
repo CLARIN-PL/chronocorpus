@@ -40,6 +40,7 @@ public class WordProfileQueryService {
                                      Integer rightWindowSize,
                                      Integer partOfSpeech,
                                      Integer windowItemPartOfSpeech,
+                                     Set<String> stopList,
                                      Set<Property> metadata, boolean byBase) {
 
         Map<WordProfile, Long> result = new HashMap<>();
@@ -85,6 +86,7 @@ public class WordProfileQueryService {
         }
 
         List<WordProfileResult> r = colocations.entrySet().stream()
+                .filter(e -> !stopList.contains(e.getKey()))
                 .map( e -> new WordProfileResult(e.getKey(), e.getValue()))
                 .sorted(Comparator.comparingLong(WordProfileResult::getFrequency).reversed())
                 .collect(Collectors.toList());

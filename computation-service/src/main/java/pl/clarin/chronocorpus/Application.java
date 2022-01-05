@@ -1,6 +1,8 @@
 package pl.clarin.chronocorpus;
 
 import org.ini4j.Ini;
+import pl.clarin.chronocorpus.dictionaries.boundary.DictionariesTask;
+import pl.clarin.chronocorpus.dictionaries.control.DictionaryQueryService;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
 import pl.clarin.chronocorpus.document.entity.Document;
@@ -33,17 +35,25 @@ public class Application {
 
         Application app = new Application();
 
+        DictionaryQueryService.getInstance().getSemanticListByName("colors")
+                .forEach(System.out::println);
+/*
+        DictionaryQuery dic = new DictionaryQuery.Builder()
+                .findDictionaries(true)
+                .build();
+        app.testWithTimer(dic, "Dic");*/
+
 /*
         ConcordanceQuery con = new ConcordanceQuery.Builder()
-                .withOrth("wybory")
+                .withOrth("do")
+                .withMetaAuthor("Jan Sadziak;G. J.;")
                 .build();
-        app.testWithTimer(con, "CLimate");
+        app.testWithTimer(con, "Conc");
 */
 
-
-        StatisticsQuery stat = new StatisticsQuery.Builder()
+/*        StatisticsQuery stat = new StatisticsQuery.Builder()
                 .build();
-        app.testWithTimer(stat, "Stats");
+        app.testWithTimer(stat, "Stats");*/
 
 
 /*        DocumentStore.getInstance()
@@ -53,13 +63,15 @@ public class Application {
         });*/
        // app.testWithTimer(doc, "Document");
 
-       TimeSeriesQuery ser = new TimeSeriesQuery.Builder()
+/*       TimeSeriesQuery ser = new TimeSeriesQuery.Builder()
                 .withBase("wiosna;lato;zima;jesień")
                 .withPartOfSpeech("2")
                 .withUnit(TimeUnit.month)
                 .build();
 
         app.testWithTimer(ser, "TS");
+
+ */
       /*  Map<String, Integer> cc = new HashMap<>();
         for (Document d : DocumentStore.getInstance().getDocuments()) {
             int count = d.findSubsequenceCountForBaseText("zielony góra");
@@ -81,11 +93,12 @@ public class Application {
             System.out.println(k +"\t" + cc.get(k));
         });*/
 
-//        FrequencyQuery fq  = new FrequencyQuery.Builder()
-//                .countByBase(true)
-//                .build();
-//
-//        app.testWithTimer(fq, "FQ");
+/*        FrequencyQuery fq  = new FrequencyQuery.Builder()
+                .countByBase(true)
+                .withMetaJurnalTitle("Chłopi")
+                .build();
+
+        app.testWithTimer(fq, "FQ");*/
 
 /*      WordProfileQuery wp = new WordProfileQuery.Builder()
                 .withRightWindowSize("1")
@@ -93,14 +106,19 @@ public class Application {
                 .withPartOfSpeech("2")
                 .withWindowItemPartOfSpeech("0")
                 .withOrth("Polska")
+              .withStopList("być;który;jak;mieć")
+              .build();
+
+        app.testWithTimer(wp, "WP");*/
+
         TimeSeriesQuery ser = new TimeSeriesQuery.Builder()
-                .withBase("niebieski;czerwony")
+                .withSemanticList("colors")
                 .withPartOfSpeech("0")
                 .withUnit(TimeUnit.year)
                 .build();
 
         app.testWithTimer(ser, "TS");
-*/
+
     }
 
     public Application() {

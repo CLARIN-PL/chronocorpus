@@ -2,6 +2,7 @@ package pl.clarin.chronocorpus.timeseries.boundary;
 
 import pl.clarin.chronocorpus.Progress;
 import pl.clarin.chronocorpus.administration.control.StatisticsQueryService;
+import pl.clarin.chronocorpus.dictionaries.control.DictionaryQueryService;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.task.entity.Task;
 import pl.clarin.chronocorpus.timeseries.control.TimeSeriesQueryService;
@@ -22,6 +23,13 @@ public class TimeSeriesTask extends Task {
         return queryParameters.stream()
                 .filter(p -> p.getName().equals("time_unit"))
                 .map(p -> TimeUnit.valueOf(p.getValueAsString()))
+                .findFirst();
+    }
+
+    private Optional<String> findSemanticList() {
+        return queryParameters.stream()
+                .filter(p -> p.getName().equals("semantic_list"))
+                .map(Property::getValueAsString)
                 .findFirst();
     }
 
@@ -54,7 +62,7 @@ public class TimeSeriesTask extends Task {
             String[] words = w.split(";");
             rows.set(TimeSeriesQueryService.getInstance()
                     .findTimeSeries(Arrays.asList(words), findPartOfSpeechParameter(), findTimeUnit(),
-                            metadata, false));
+                            metadata, false, false));
         });
 
         findBaseParameter().ifPresent(w -> {
@@ -62,7 +70,14 @@ public class TimeSeriesTask extends Task {
 
             rows.set(TimeSeriesQueryService.getInstance()
                     .findTimeSeries(Arrays.asList(words), findPartOfSpeechParameter(), findTimeUnit(),
-                            metadata, true));
+                            metadata, true, false));
+
+        });
+
+        findSemanticList().ifPresent(s -> {
+            rows.set(TimeSeriesQueryService.getInstance()
+                    .findTimeSeries(DictionaryQueryService.getInstance().getSemanticListByName(s), findPartOfSpeechParameter(), findTimeUnit(),
+                            metadata, true, true));
 
         });
 

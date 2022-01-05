@@ -1,6 +1,7 @@
 package pl.clarin.chronocorpus.wordprofile.boundary;
 
 import pl.clarin.chronocorpus.administration.control.StatisticsQueryService;
+import pl.clarin.chronocorpus.dictionaries.control.DictionaryQueryService;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.task.entity.Task;
 import pl.clarin.chronocorpus.timeseries.control.TimeSeriesQueryService;
@@ -11,9 +12,13 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import pl.clarin.chronocorpus.Progress;
 
 public class WordProfileTask extends Task {
@@ -64,6 +69,22 @@ public class WordProfileTask extends Task {
                 .findFirst();
     }
 
+    private Set<String> findStopListParameter() {
+        Set<String> stopList;
+
+        Optional<String> s = queryParameters.stream()
+                .filter(p -> p.getName().equals("stop_list"))
+                .map(Property::getValueAsString)
+                .findFirst();
+        if (s.isPresent()) {
+            stopList = Stream.of(s.get().split(";")).collect(Collectors.toSet());
+        } else {
+            stopList = new HashSet<>(DictionaryQueryService.getInstance().defaultStopList());
+        }
+        return stopList;
+    }
+
+
     @Override
     public JsonObject doTask(Progress pr) {
 
@@ -72,19 +93,20 @@ public class WordProfileTask extends Task {
         findOrthParameter().ifPresent(w ->
                 frequency.set(WordProfileQueryService.getInstance()
                         .findWordProfile(w, findLeftWindowUnit(), findRightWindowUnit(),
-                                findPartOfSpeechParameter(), findWindowItemPartOfSpeechParameter(),  metadata, false)));
+                                findPartOfSpeechParameter(), findWindowItemPartOfSpeechParameter(),
+                                findStopListParameter(), metadata, false)));
 
         findBaseParameter().ifPresent(w ->
                 frequency.set(WordProfileQueryService.getInstance()
                         .findWordProfile(w, findLeftWindowUnit(), findRightWindowUnit(),
-                                findPartOfSpeechParameter(), findWindowItemPartOfSpeechParameter(),  metadata, true)));
-
+                                findPartOfSpeechParameter(), findWindowItemPartOfSpeechParameter(),
+                                findStopListParameter(), metadata, true)));
 
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id)
                 .add("rows", frequency.get());
 
-        StatisticsQueryService.getInstance().updateTimeSeriesQueryCount();
+        StatisticsQueryService.getInstance().updateWordProfileQueryCount();
         return json.build();
     }
 }

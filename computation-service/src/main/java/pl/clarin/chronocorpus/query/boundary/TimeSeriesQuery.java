@@ -42,6 +42,11 @@ public class TimeSeriesQuery extends Query {
             return this;
         }
 
+        public TimeSeriesQuery.Builder withSemanticList(String lst) {
+            Property p = new Property("semantic_list", lst);
+            withQueryProperty(p);
+            return this;
+        }
 
         public TimeSeriesQuery build() {
             return new TimeSeriesQuery(this);

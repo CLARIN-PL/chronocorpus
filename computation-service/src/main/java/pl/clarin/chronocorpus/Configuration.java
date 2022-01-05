@@ -8,6 +8,7 @@ public class Configuration {
     public static String STATISTICS_FILE;
     public static String METADATA_ZIP_FILE;
     public static String DATA_ZIP_FILE;
+    public static String SEMANTIC_LISTS_DIR;
 
     public static String TOOL_NAME;
     public static String HOST;
@@ -20,6 +21,7 @@ public class Configuration {
         STATISTICS_FILE = ini.get("configuration", "statistics_file");
         METADATA_ZIP_FILE = ini.get("configuration", "metadata_zip_file");
         DATA_ZIP_FILE = ini.get("configuration","data_zip_file");
+        SEMANTIC_LISTS_DIR = ini.get("configuration","semantic_lists_dir");
 
         TOOL_NAME= ini.get("service", "tool");
         HOST = ini.get("service", "rabbit_host");
