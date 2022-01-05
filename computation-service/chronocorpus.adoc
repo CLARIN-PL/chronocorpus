@@ -500,6 +500,7 @@ Example request and response fetching time series by base form
 Parameters:
     base = may contain words separated by ; this will return multi value graph words mus share part of speech
     time_unit = [month, year]
+    semantic_list = [colors] - value list comes from semantic lists dictionary
 
 `Time series Request`:
 ----
@@ -523,7 +524,12 @@ Parameters:
         {
             "name":"time_unit",
             "value":"month"
-        }],
+        }
+        {
+            "name":"semantic_list",
+            "value":"colors"
+        }
+        ],
     "response_parameters":[]
 }
 ----
@@ -612,6 +618,9 @@ Example request and response fetching dictionary values or property lists
         "default_stop_list":[
             "w", "i", "to", "z", "na", "że", "po", "pod", "za",
             "który", "być", "się", "nie", "do", "o", "on", "ten", "a", "też"
+        ],
+        "semantic_list":[
+             "colors"
         ]
     }
 }
