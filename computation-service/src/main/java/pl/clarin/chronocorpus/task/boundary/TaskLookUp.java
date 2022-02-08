@@ -8,6 +8,7 @@ import pl.clarin.chronocorpus.document.boundary.DocumentTask;
 import pl.clarin.chronocorpus.frequency.boundary.FrequencyTask;
 import pl.clarin.chronocorpus.geographicalpropernames.boundary.GeographicalProperNamesTask;
 import pl.clarin.chronocorpus.quantityanalysis.boundary.QuantityAnalysisTask;
+import pl.clarin.chronocorpus.similarity.boundary.SimilarityTask;
 import pl.clarin.chronocorpus.task.entity.Task;
 import pl.clarin.chronocorpus.timeseries.boundary.TimeSeriesTask;
 import pl.clarin.chronocorpus.wordprofile.boundary.WordProfileTask;
@@ -30,6 +31,7 @@ public class TaskLookUp {
             if(json.getString("task_type").equalsIgnoreCase("geo_proper_names")) return Optional.of(new GeographicalProperNamesTask(json));
             if(json.getString("task_type").equalsIgnoreCase("quantity_analysis")) return Optional.of(new QuantityAnalysisTask(json));
             if(json.getString("task_type").equalsIgnoreCase("statistics")) return Optional.of(new StatisticsTask(json));
+            if(json.getString("task_type").equalsIgnoreCase("similarity")) return Optional.of(new SimilarityTask(json));
         }
         return Optional.empty();
     }

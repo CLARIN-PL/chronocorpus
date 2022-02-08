@@ -43,6 +43,15 @@ public class WordProfileQueryService {
                                      Set<String> stopList,
                                      Set<Property> metadata, boolean byBase) {
 
+        List<WordProfileResult> r = getWordProfileResults(keyWord, leftWindowSize, rightWindowSize, partOfSpeech, windowItemPartOfSpeech, stopList, metadata, byBase);
+
+        JsonArrayBuilder frequency = Json.createArrayBuilder();
+        r.stream().map(WordProfileResult::toJson).forEach(frequency::add);
+
+        return frequency.build();
+    }
+
+    public List<WordProfileResult> getWordProfileResults(String keyWord, Integer leftWindowSize, Integer rightWindowSize, Integer partOfSpeech, Integer windowItemPartOfSpeech, Set<String> stopList, Set<Property> metadata, boolean byBase) {
         Map<WordProfile, Long> result = new HashMap<>();
 
         for (Document d : DocumentStore.getInstance().getDocuments()) {
@@ -93,11 +102,7 @@ public class WordProfileQueryService {
 
         long sum = r.stream().mapToLong(WordProfileResult::getFrequency).sum();
         r.forEach(i -> i.setPercentage((i.getFrequency()*100f)/sum));
-
-        JsonArrayBuilder frequency = Json.createArrayBuilder();
-        r.stream().map(WordProfileResult::toJson).forEach(frequency::add);
-
-        return frequency.build();
+        return r;
     }
 
     public Map<WordProfile, Long> getWordProfile(List<Token> tokens, String word, boolean byBase, Integer pos,

@@ -15,6 +15,7 @@ public class Statistics implements Serializable {
     private final AtomicInteger quantityAnalysisQueryCount = new AtomicInteger(0);
     private final AtomicInteger mapNamesQueryCount = new AtomicInteger(0);
     private final AtomicInteger documentsQueryCount = new AtomicInteger(0);
+    private final AtomicInteger similarityQueryCount = new AtomicInteger(0);
 
     public AtomicInteger getConcordanceQueryCount() {
         return concordanceQueryCount;
@@ -44,6 +45,8 @@ public class Statistics implements Serializable {
         return documentsQueryCount;
     }
 
+    public AtomicInteger getSimilarityQueryCount() { return similarityQueryCount;}
+
     public JsonObject toJson(){
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("concordance_query_count",concordanceQueryCount.get());
@@ -53,7 +56,7 @@ public class Statistics implements Serializable {
         builder.add("quantity_analysis_query_count",quantityAnalysisQueryCount.get());
         builder.add("map_names_query_count",mapNamesQueryCount.get());
         builder.add("documents_query_count",documentsQueryCount.get());
-
+        builder.add("similarity_query_count",similarityQueryCount.get());
         return builder.build();
     }
 }

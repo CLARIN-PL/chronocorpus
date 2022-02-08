@@ -83,6 +83,11 @@ public class StatisticsQueryService {
         backup();
     }
 
+    public void updateSimilarityQueryCount() {
+        statistics.getSimilarityQueryCount().incrementAndGet();
+        backup();
+    }
+
     private boolean checkBackupFileExists() {
         return f.exists() && !f.isDirectory();
     }

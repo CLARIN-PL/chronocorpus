@@ -1,21 +1,13 @@
 package pl.clarin.chronocorpus;
 
 import org.ini4j.Ini;
-import pl.clarin.chronocorpus.dictionaries.boundary.DictionariesTask;
-import pl.clarin.chronocorpus.dictionaries.control.DictionaryQueryService;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
-import pl.clarin.chronocorpus.document.entity.Document;
-import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
-import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
-import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationUnit;
 import pl.clarin.chronocorpus.query.boundary.*;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
 import pl.clarin.chronocorpus.task.entity.Task;
-import pl.clarin.chronocorpus.timeseries.entity.TimeSeries;
 import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
-import pl.clarin.chronocorpus.wordprofile.entity.WordProfile;
 
 
 import javax.json.JsonObject;
@@ -35,8 +27,21 @@ public class Application {
 
         Application app = new Application();
 
-        DictionaryQueryService.getInstance().getSemanticListByName("colors")
-                .forEach(System.out::println);
+
+        SimilarityQuery sim = new SimilarityQuery.Builder()
+                .withFirstBase("komunizm")
+                .withSecondBase("socjalizm")
+                .withPartOfSpeech("2")
+                .withLeftWindowSize("1")
+                .withRightWindowSize("1")
+                .withWindowItemPartOfSpeech("0")
+                .build();
+        app.testWithTimer(sim, "Sim");
+
+
+
+/*        DictionaryQueryService.getInstance().getSemanticListByName("colors")
+                .forEach(System.out::println);*/
 /*
         DictionaryQuery dic = new DictionaryQuery.Builder()
                 .findDictionaries(true)
@@ -105,19 +110,19 @@ public class Application {
                 .withLeftWindowSize("1")
                 .withPartOfSpeech("2")
                 .withWindowItemPartOfSpeech("0")
-                .withOrth("Polska")
+                .withOrth("komunizm")
               .withStopList("być;który;jak;mieć")
               .build();
 
         app.testWithTimer(wp, "WP");*/
-
+/*
         TimeSeriesQuery ser = new TimeSeriesQuery.Builder()
                 .withSemanticList("colors")
                 .withPartOfSpeech("0")
                 .withUnit(TimeUnit.year)
                 .build();
 
-        app.testWithTimer(ser, "TS");
+        app.testWithTimer(ser, "TS");*/
 
     }
 
