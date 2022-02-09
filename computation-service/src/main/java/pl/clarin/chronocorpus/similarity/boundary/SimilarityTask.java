@@ -86,7 +86,7 @@ public class SimilarityTask extends Task {
     @Override
     public JsonObject doTask(Progress pr) {
 
-        AtomicReference<JsonArray> similarity = new AtomicReference<>();
+        AtomicReference<JsonObject> similarity = new AtomicReference<>();
 
         if(findFirstBaseParameter().isPresent() && findSecondBaseParameter().isPresent()){
             similarity.set(SimilarityQueryService.getInstance().findSimilarity(
@@ -98,7 +98,7 @@ public class SimilarityTask extends Task {
 
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id)
-                .add("rows", similarity.get());
+                .add("network", similarity.get());
 
         StatisticsQueryService.getInstance().updateSimilarityQueryCount();
         return json.build();

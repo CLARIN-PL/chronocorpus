@@ -1,21 +1,14 @@
 package pl.clarin.chronocorpus.similarity.control;
 
-import pl.clarin.chronocorpus.document.control.DocumentStore;
-import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Property;
-import pl.clarin.chronocorpus.document.entity.Sentence;
-import pl.clarin.chronocorpus.document.entity.Token;
 import pl.clarin.chronocorpus.similarity.entity.SimilarityResult;
 import pl.clarin.chronocorpus.wordprofile.control.WordProfileQueryService;
-import pl.clarin.chronocorpus.wordprofile.entity.WordProfile;
 import pl.clarin.chronocorpus.wordprofile.entity.WordProfileResult;
 
 import javax.json.*;
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 public class SimilarityQueryService {
 
@@ -35,7 +28,7 @@ public class SimilarityQueryService {
         return instance;
     }
 
-    public JsonArray findSimilarity(String firstWord, String secondWord,
+    public JsonObject findSimilarity(String firstWord, String secondWord,
                                      Integer leftWindowSize,
                                      Integer rightWindowSize,
                                      Integer partOfSpeech,
@@ -62,15 +55,45 @@ public class SimilarityQueryService {
             preGraph.get(w.getCollocate()).setW2(w.getFrequency());
         });
 
-        JsonArrayBuilder graph = Json.createArrayBuilder();
+        JsonArrayBuilder nodes = Json.createArrayBuilder();
+        JsonArrayBuilder edges = Json.createArrayBuilder();
+
+        AtomicInteger idGen = new AtomicInteger(3);
+
+        nodes.add(createNode(1, firstWord));
+        nodes.add(createNode(2, secondWord));
+
         preGraph.forEach((k,v) -> {
-            JsonObjectBuilder jb = Json.createObjectBuilder();
-            jb.add("collocate", k);
-            jb.add(firstWord, v.getW1());
-            jb.add(secondWord, v.getW2());
+            Integer id = idGen.getAndIncrement();
+            nodes.add(createNode(id, k));
+            if(v.getW1() > 0){
+                edges.add(createEdge(id, 1, v.getW1()));
+            }
+            if(v.getW2() > 0){
+                edges.add(createEdge(id, 2, v.getW2()));
+            }
         });
-        return graph.build();
+
+        JsonObjectBuilder network = Json.createObjectBuilder();
+        network.add("nodes", nodes);
+        network.add("edges", edges);
+
+        return network.build();
     }
 
+    private JsonObject createNode(Integer id, String label){
+        JsonObjectBuilder jb = Json.createObjectBuilder();
+        jb.add("id", id);
+        jb.add("label", label);
+        return jb.build();
+    }
+
+    private JsonObject createEdge(Integer from, Integer to, Long width){
+        JsonObjectBuilder jb = Json.createObjectBuilder();
+        jb.add("from", from);
+        jb.add("to", to);
+        jb.add("width", width);
+        return jb.build();
+    }
 
 }

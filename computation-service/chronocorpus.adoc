@@ -674,3 +674,75 @@ Example request and response fetching dictionary values or property lists
     }
 }
 ----
+
+=== Querying similarity graph
+Example request and respond getting similarity graph.
+If you do not set a stop_list, the default list is loaded instead.
+
+`Similarity Request`:
+----
+{
+    "task_type":"word_profile",
+    "metadata_filter":[],
+    "query_parameters":[
+        {
+            "name":"first_base",
+            "value":"komunizm"
+        },
+        {
+            "name":"second_base",
+            "value":"socjalizm"
+        },
+        {
+            "name":"part_of_speech",
+            "value":"2"
+        },
+        {
+            "name":"window_item_part_of_speech",
+            "value":"2"
+        },
+        {
+            "name":"left_window_size",
+            "value":"3"
+        },
+        {
+            "name":"right_window_size",
+            "value":"1"
+        },
+        {
+            "name":"stop_list",
+            "value":"być;który;z;i"
+        }
+        }
+    ],
+    "response_parameters":[]}
+----
+`Similarity Response`:
+----
+{
+    "task_id":"7910de51-4ca9-4769-80c5-839fa4f358a4",
+    "network": {
+        "nodes":[
+            {"id":1,"label":"komunizm"},
+            {"id":2,"label":"socjalizm"},
+            {"id":3,"label":"siła"},
+            {"id":4,"label":"życie"},
+            {"id":5,"label":"czuwać"},
+            {"id":6,"label":"wynijść"},
+            {"id":7,"label":"pionier"},
+            {"id":8,"label":"promieniować"},
+            {"id":9,"label":"tkwić"}
+        ],
+        "edges":[
+           {"from":3,"to":1,"width":2},
+           {"from":3,"to":2,"width":32},
+           {"from":4,"to":2,"width":2},
+           {"from":5,"to":2,"width":1},
+           {"from":6,"to":2,"width":1},
+           {"from":7,"to":2,"width":3},
+           {"from":8,"to":2,"width":1},
+           {"from":9,"to":1,"width":1}
+        ]
+    }
+}
+----
