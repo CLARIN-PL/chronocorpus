@@ -682,7 +682,7 @@ If you do not set a stop_list, the default list is loaded instead.
 `Similarity Request`:
 ----
 {
-    "task_type":"word_profile",
+    "task_type":"similarity",
     "metadata_filter":[],
     "query_parameters":[
         {
