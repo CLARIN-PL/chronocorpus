@@ -60,18 +60,25 @@ public class SimilarityQueryService {
 
         AtomicInteger idGen = new AtomicInteger(3);
 
-        nodes.add(createNode(1, firstWord));
-        nodes.add(createNode(2, secondWord));
+        nodes.add(createNode(1, firstWord, "#7879ff"));
+        nodes.add(createNode(2, secondWord, "#ff8178"));
 
         preGraph.forEach((k,v) -> {
             Integer id = idGen.getAndIncrement();
-            nodes.add(createNode(id, k));
+            String color = "#000000";
+
             if(v.getW1() > 0){
                 edges.add(createEdge(id, 1, v.getW1()));
+                color ="#7879ff";
             }
             if(v.getW2() > 0){
                 edges.add(createEdge(id, 2, v.getW2()));
+                color ="#ff8178";
             }
+            if(v.getW1() > 0 && v.getW2() > 0) {
+                color ="#78ffcb";
+            }
+            nodes.add(createNode(id, k, color));
         });
 
         JsonObjectBuilder network = Json.createObjectBuilder();
@@ -81,10 +88,11 @@ public class SimilarityQueryService {
         return network.build();
     }
 
-    private JsonObject createNode(Integer id, String label){
+    private JsonObject createNode(Integer id, String label, String color){
         JsonObjectBuilder jb = Json.createObjectBuilder();
         jb.add("id", id);
         jb.add("label", label);
+        jb.add("color", createColor(color));
         return jb.build();
     }
 
@@ -96,4 +104,10 @@ public class SimilarityQueryService {
         return jb.build();
     }
 
+    private JsonObject createColor(String color){
+        JsonObjectBuilder jb = Json.createObjectBuilder();
+        jb.add("background", color);
+        jb.add("border", color);
+        return  jb.build();
+    }
 }
