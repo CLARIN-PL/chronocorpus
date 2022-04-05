@@ -29,8 +29,14 @@ public class SimilarityQuery extends Query {
             return this;
         }
 
-        public SimilarityQuery.Builder withPartOfSpeech(String pos) {
-            Property p = new Property("part_of_speech", pos);
+        public SimilarityQuery.Builder withFirstPartOfSpeech(String pos) {
+            Property p = new Property("first_part_of_speech", pos);
+            withQueryProperty(p);
+            return this;
+        }
+
+        public SimilarityQuery.Builder withSecondPartOfSpeech(String pos) {
+            Property p = new Property("second_part_of_speech", pos);
             withQueryProperty(p);
             return this;
         }
@@ -42,13 +48,13 @@ public class SimilarityQuery extends Query {
         }
 
         public SimilarityQuery.Builder withLeftWindowSize(String size) {
-            Property p = new Property("left_window_size", Integer.valueOf(size));
+            Property p = new Property("left_window_size", Integer.parseInt(size));
             withQueryProperty(p);
             return this;
         }
 
         public SimilarityQuery.Builder withRightWindowSize(String size) {
-            Property p = new Property("right_window_size", Integer.valueOf(size));
+            Property p = new Property("right_window_size", Integer.parseInt(size));
             withQueryProperty(p);
             return this;
         }

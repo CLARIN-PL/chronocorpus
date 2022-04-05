@@ -110,7 +110,7 @@ public class Application {
                 .withLeftWindowSize("1")
                 .withPartOfSpeech("2")
                 .withWindowItemPartOfSpeech("0")
-                .withOrth("komunizm")
+                .withBase("komunizm")
               .withStopList("być;który;jak;mieć")
               .build();
 

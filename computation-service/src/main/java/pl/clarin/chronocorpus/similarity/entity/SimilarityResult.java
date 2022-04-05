@@ -1,8 +1,8 @@
 package pl.clarin.chronocorpus.similarity.entity;
 
 public class SimilarityResult {
-     private long w1;
-     private long w2;
+     private long w1 = 0;
+     private long w2 = 0;
 
     public long getW1() {
         return w1;

@@ -39,9 +39,16 @@ public class SimilarityTask extends Task {
                 .findFirst().orElse(null);
     }
 
-    private Integer findPartOfSpeechParameter(){
+    private Integer findFirstPartOfSpeechParameter(){
         return queryParameters.stream()
-                .filter(p -> p.getName().equals("part_of_speech"))
+                .filter(p -> p.getName().equals("first_part_of_speech"))
+                .map( p -> Integer.parseInt(p.getValueAsString()))
+                .findFirst().orElse(0);
+    }
+
+    private Integer findSecondPartOfSpeechParameter(){
+        return queryParameters.stream()
+                .filter(p -> p.getName().equals("second_part_of_speech"))
                 .map( p -> Integer.parseInt(p.getValueAsString()))
                 .findFirst().orElse(0);
     }
@@ -91,8 +98,8 @@ public class SimilarityTask extends Task {
         if(findFirstBaseParameter().isPresent() && findSecondBaseParameter().isPresent()){
             similarity.set(SimilarityQueryService.getInstance().findSimilarity(
                     findFirstBaseParameter().get(), findSecondBaseParameter().get(), findLeftWindowUnit(), findRightWindowUnit(),
-                    findPartOfSpeechParameter(), findWindowItemPartOfSpeechParameter(),
-                    findStopListParameter(), metadata, true
+                    findFirstPartOfSpeechParameter(),findSecondPartOfSpeechParameter(), findWindowItemPartOfSpeechParameter(),
+                    findStopListParameter(), metadata, false
             ));
         }
 
