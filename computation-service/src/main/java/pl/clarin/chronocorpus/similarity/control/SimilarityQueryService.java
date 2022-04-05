@@ -7,6 +7,7 @@ import pl.clarin.chronocorpus.wordprofile.entity.WordProfileResult;
 
 import javax.json.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SimilarityQueryService {
 
@@ -26,7 +27,7 @@ public class SimilarityQueryService {
         return instance;
     }
 
-    public JsonArray findSimilarity(String firstWord, String secondWord,
+    public JsonObject findSimilarity(String firstWord, String secondWord,
                                      Integer leftWindowSize,
                                      Integer rightWindowSize,
                                      Integer firstPartOfSpeech,
@@ -61,15 +62,59 @@ public class SimilarityQueryService {
             preGraph.get(w.getCollocate()).setW2(w.getFrequency());
         });
 
-        JsonArrayBuilder graph = Json.createArrayBuilder();
+        JsonArrayBuilder nodes = Json.createArrayBuilder();
+        JsonArrayBuilder edges = Json.createArrayBuilder();
+
+        AtomicInteger idGen = new AtomicInteger(3);
+
+        nodes.add(createNode(1, firstWord, "#7879ff"));
+        nodes.add(createNode(2, secondWord, "#ff8178"));
+
         preGraph.forEach((k,v) -> {
-            JsonObjectBuilder jb = Json.createObjectBuilder();
-            jb.add("collocate", k);
-            jb.add(firstWord, v.getW1());
-            jb.add(secondWord, v.getW2());
+            Integer id = idGen.getAndIncrement();
+            String color = "#000000";
+
+            if(v.getW1() > 0){
+                edges.add(createEdge(id, 1, v.getW1()));
+                color ="#7879ff";
+            }
+            if(v.getW2() > 0){
+                edges.add(createEdge(id, 2, v.getW2()));
+                color ="#ff8178";
+            }
+            if(v.getW1() > 0 && v.getW2() > 0) {
+                color ="#78ffcb";
+            }
+            nodes.add(createNode(id, k, color));
         });
-        return graph.build();
+
+        JsonObjectBuilder network = Json.createObjectBuilder();
+        network.add("nodes", nodes);
+        network.add("edges", edges);
+
+        return network.build();
     }
 
+    private JsonObject createNode(Integer id, String label, String color){
+        JsonObjectBuilder jb = Json.createObjectBuilder();
+        jb.add("id", id);
+        jb.add("label", label);
+        jb.add("color", createColor(color));
+        return jb.build();
+    }
 
+    private JsonObject createEdge(Integer from, Integer to, Long width){
+        JsonObjectBuilder jb = Json.createObjectBuilder();
+        jb.add("from", from);
+        jb.add("to", to);
+        jb.add("width", width);
+        return jb.build();
+    }
+
+    private JsonObject createColor(String color){
+        JsonObjectBuilder jb = Json.createObjectBuilder();
+        jb.add("background", color);
+        jb.add("border", color);
+        return  jb.build();
+    }
 }

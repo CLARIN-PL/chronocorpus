@@ -110,7 +110,7 @@ public class WordProfileQueryService {
         List<WordProfile> tmp = new ArrayList<>();
         IntStream.range(0, tokens.size()).forEach(i -> {
             if (byBase) {
-                if (tokens.get(i).getBase().equals(word) && tokens.get(i).getPos() == pos) {
+                if (tokens.get(i).getBase() != null && tokens.get(i).getBase().equals(word) && tokens.get(i).getPos() == pos) {
                     tmp.addAll(findLeftWindow(tokens, tokens.get(i).getBase(), i, windowItemPos, leftWindowSize));
                     tmp.addAll(findRightWindow(tokens, tokens.get(i).getBase(), i,windowItemPos, rightWindowSize));
                 }
@@ -176,6 +176,6 @@ public class WordProfileQueryService {
     }
 
     public Predicate<Token> getBasePredicate(String keyWord) {
-        return word -> word.getBase().equals(keyWord);
+        return word -> keyWord.equals(word.getBase());
     }
 }
