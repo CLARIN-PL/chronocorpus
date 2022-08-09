@@ -2,12 +2,13 @@ package pl.clarin.chronocorpus.concordance.entity;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import java.util.Objects;
 
 public class Concordance {
 
-    private String left;
-    private String word;
-    private String right;
+    private final String left;
+    private final String word;
+    private final String right;
 
     public Concordance(String left, String word, String right) {
         this.left = left;
@@ -55,9 +56,9 @@ public class Concordance {
 
         Concordance that = (Concordance) o;
 
-        if (left != null ? !left.equals(that.left) : that.left != null) return false;
-        if (word != null ? !word.equals(that.word) : that.word != null) return false;
-        return right != null ? right.equals(that.right) : that.right == null;
+        if (!Objects.equals(left, that.left)) return false;
+        if (!Objects.equals(word, that.word)) return false;
+        return Objects.equals(right, that.right);
     }
 
     @Override

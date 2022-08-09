@@ -6,7 +6,7 @@ import javax.json.JsonObject;
 public class GeoProperty {
 
     private String name;
-    private String type;
+    private final String type;
     private int frequency;
     private double lon;
     private double lan;
@@ -17,7 +17,7 @@ public class GeoProperty {
         this.frequency = frequency;
     }
 
-    public JsonObject toJson(){
+    public JsonObject toJson() {
         return Json.createObjectBuilder()
                 .add("name", name)
                 .add("type", type)

@@ -7,16 +7,16 @@ import javax.json.JsonObject;
 import javax.json.JsonString;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import pl.clarin.chronocorpus.Progress;
 
 public abstract class Task {
 
-    
     protected String id;
     protected Set<Property> metadata;
     protected Set<Property> queryParameters;
     protected Set<String> responseParameters;
-    
+
 
     public Task(JsonObject json) {
         this.id = json.getString("id");
@@ -39,13 +39,12 @@ public abstract class Task {
                 .map(s -> s.getChars().toString())
                 .collect(Collectors.toSet());
     }
-    
-    
-    
+
+
     public abstract JsonObject doTask(Progress pr);
-    public  JsonObject doTask()
-    {
+
+    public JsonObject doTask() {
         return doTask(new Progress(null));
     }
-    
+
 }

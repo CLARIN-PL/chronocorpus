@@ -2,7 +2,6 @@ package pl.clarin.chronocorpus.query.boundary;
 
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.task.entity.TaskType;
-import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
 
 public class WordProfileQuery extends Query {
 
@@ -43,13 +42,13 @@ public class WordProfileQuery extends Query {
         }
 
         public WordProfileQuery.Builder withLeftWindowSize(String size) {
-            Property p = new Property("left_window_size", Integer.valueOf(size));
+            Property p = new Property("left_window_size", Integer.parseInt(size));
             withQueryProperty(p);
             return this;
         }
 
         public WordProfileQuery.Builder withRightWindowSize(String size) {
-            Property p = new Property("right_window_size", Integer.valueOf(size));
+            Property p = new Property("right_window_size", Integer.parseInt(size));
             withQueryProperty(p);
             return this;
         }

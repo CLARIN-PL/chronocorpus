@@ -4,7 +4,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.List;
 
 public class Property implements Serializable {
 

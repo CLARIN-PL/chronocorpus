@@ -33,9 +33,9 @@ public class DocumentFileLoader {
 
     private static volatile DocumentFileLoader instance;
 
-    private static Map<String, Token> wordCache = new HashMap<>();
-    private static Map<String, Property> propertyCache = new HashMap<>();
-    private static Map<String, ProperName> properNameCache = new HashMap<>();
+    private static final Map<String, Token> wordCache = new HashMap<>();
+    private static final Map<String, Property> propertyCache = new HashMap<>();
+    private static final Map<String, ProperName> properNameCache = new HashMap<>();
 
     private static Token createWord(final String orth, final String base, final String ctag, final byte pos, final boolean spaceAfter) {
         return wordCache.computeIfAbsent(wordParametersAsString(orth, base, pos, spaceAfter), newParams ->

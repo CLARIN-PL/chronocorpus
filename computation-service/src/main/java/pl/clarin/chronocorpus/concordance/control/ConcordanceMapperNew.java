@@ -78,13 +78,13 @@ public class ConcordanceMapperNew {
 
             int leftCount = 0;
 
-            String test = "";
+            StringBuilder test = new StringBuilder();
 
-            if (!left.equals(test)) {
+            if (!left.equals(test.toString())) {
                 for (Token t : sentence.getTokens()) {
-                    test = test + t.getBaseWithDelimiter();
+                    test.append(t.getBaseWithDelimiter());
                     leftCount++;
-                    if (left.equals(test)) break;
+                    if (left.equals(test.toString())) break;
                 }
             }
 
@@ -97,11 +97,11 @@ public class ConcordanceMapperNew {
             }
 
             int wCount = 0;
-            test = "";
+            test = new StringBuilder();
             for (Token t : sentence.getTokens().subList(leftCount, sentence.getTokens().size())) {
-                test = test + t.getBaseWithDelimiter();
+                test.append(t.getBaseWithDelimiter());
                 wCount++;
-                if (word.equals(test.trim())) break;
+                if (word.equals(test.toString().trim())) break;
             }
 
             List<Token> tk = sentence.getTokens()

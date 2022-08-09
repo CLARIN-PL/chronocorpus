@@ -58,7 +58,7 @@ public class RESTService {
 
     private Ini init;
 
-    private Resulter resulter = new Resulter();
+    private final Resulter resulter = new Resulter();
 
     @Context
     private ResourceContext resourceContext;

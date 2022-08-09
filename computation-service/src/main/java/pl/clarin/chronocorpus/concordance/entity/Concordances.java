@@ -11,9 +11,9 @@ import java.util.Set;
 
 public class Concordances {
 
-    private int documentId;
-    private Set<Property> properties;
-    private Set<Concordance> concordances;
+    private final int documentId;
+    private final Set<Property> properties;
+    private final Set<Concordance> concordances;
 
     public Concordances(Pair<Integer, Set<Property>> doc, Set<Concordance> concordances) {
         this.documentId = doc.getValue0();
@@ -26,13 +26,13 @@ public class Concordances {
         JsonArrayBuilder prop = Json.createArrayBuilder();
         properties.forEach(p -> prop.add(p.toJson()));
 
-        JsonArrayBuilder conc = Json.createArrayBuilder();
-        concordances.forEach(c -> conc.add(c.toJson()));
+        JsonArrayBuilder array = Json.createArrayBuilder();
+        concordances.forEach(c -> array.add(c.toJson()));
 
         return Json.createObjectBuilder()
                 .add("document_id", documentId)
                 .add("properties", prop)
-                .add("concordances", conc)
+                .add("concordances", array)
                 .build();
     }
 

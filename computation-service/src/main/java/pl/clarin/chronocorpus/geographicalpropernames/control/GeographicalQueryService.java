@@ -47,8 +47,8 @@ public class GeographicalQueryService {
                     }
                 });
         JsonArrayBuilder geoNames = Json.createArrayBuilder();
-        map.forEach((k,v)->{
-            if(k.getGeoString() != null) {
+        map.forEach((k, v) -> {
+            if (k.getGeoString() != null) {
                 GeoProperty gp = new GeoProperty(k.getValue(), k.getType(), v);
                 gp.setLan(k.getLat());
                 gp.setLon(k.getLon());

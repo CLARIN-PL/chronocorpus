@@ -2,17 +2,14 @@ package pl.clarin.chronocorpus.concordance.control;
 
 import org.javatuples.Pair;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
-import pl.clarin.chronocorpus.document.entity.Document;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.document.entity.Sentence;
-import pl.clarin.chronocorpus.document.entity.Token;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -37,8 +34,8 @@ public class ConcordanceQueryServiceNew {
     public JsonArray findConcordance(String keyWord, Set<String> responseParams, Set<Property> metadata, boolean byBase) {
 
         Map<Pair<Integer, Set<Property>>, List<Sentence>> sentences = new HashMap<>();
-        Pattern splitPattern = Pattern.compile("\\b"+keyWord+"\\b");
-        Pattern searchPattern = Pattern.compile(".*\\b"+keyWord+"\\b.*");
+        Pattern splitPattern = Pattern.compile("\\b" + keyWord + "\\b");
+        Pattern searchPattern = Pattern.compile(".*\\b" + keyWord + "\\b.*");
 
         DocumentStore.getInstance().getDocuments().parallelStream()
                 .filter(d -> d.getMetadata().matches(metadata))
@@ -54,7 +51,7 @@ public class ConcordanceQueryServiceNew {
                             .stream()
                             .filter(p -> responseParams.contains(p.getName()))
                             .collect(Collectors.toSet());
-                    if(!matching.isEmpty())
+                    if (!matching.isEmpty())
                         sentences.put(new Pair<>(d.getId(), responseProperty), matching);
                 });
 
@@ -76,9 +73,9 @@ public class ConcordanceQueryServiceNew {
     private List<Predicate<Sentence>> getPredicates(Pattern pattern, boolean byBase) {
         List<Predicate<Sentence>> p = new ArrayList<>();
         if (byBase) {
-            p.add(s ->  pattern.matcher(s.getSentenceInBaseForm()).matches());
+            p.add(s -> pattern.matcher(s.getSentenceInBaseForm()).matches());
         } else {
-            p.add(s ->  pattern.matcher(s.getSentence()).matches());
+            p.add(s -> pattern.matcher(s.getSentence()).matches());
         }
         return p;
     }

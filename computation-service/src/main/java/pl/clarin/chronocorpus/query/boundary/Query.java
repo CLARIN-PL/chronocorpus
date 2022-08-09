@@ -19,10 +19,10 @@ public class Query {
 
     public static abstract class Builder<T extends Builder<T>> {
 
-        private JsonObjectBuilder json = Json.createObjectBuilder();
-        private JsonArrayBuilder queryParameters = Json.createArrayBuilder();
-        private JsonArrayBuilder meta = Json.createArrayBuilder();
-        private JsonArrayBuilder responseParameters = Json.createArrayBuilder();
+        private final JsonObjectBuilder json = Json.createObjectBuilder();
+        private final JsonArrayBuilder queryParameters = Json.createArrayBuilder();
+        private final JsonArrayBuilder meta = Json.createArrayBuilder();
+        private final JsonArrayBuilder responseParameters = Json.createArrayBuilder();
 
         protected abstract T getThis();
 
@@ -33,7 +33,7 @@ public class Query {
             return getThis();
         }
 
-        public T withMetaJurnalTitle(String title) {
+        public T withMetaJournalTitle(String title) {
             Property p = new Property("journal_title", title);
             meta.add(p.toJson());
             return getThis();

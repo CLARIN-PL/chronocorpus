@@ -11,6 +11,7 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
@@ -184,7 +185,7 @@ public class Resulter implements Runnable{
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 JSONObject response = new JSONObject();
-                String message = new String(body, "UTF-8");
+                String message = new String(body, StandardCharsets.UTF_8);
                 //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Received:" + message);
                 try {
                     response = process(new JSONObject(message));
@@ -195,7 +196,7 @@ public class Resulter implements Runnable{
                 } finally {
                     if (properties.getReplyTo() != null) { // for RPC
                         AMQP.BasicProperties replyProps = new AMQP.BasicProperties.Builder().correlationId(properties.getCorrelationId()).build();
-                        channel.basicPublish("", properties.getReplyTo(), replyProps, response.toString().getBytes("UTF-8"));
+                        channel.basicPublish("", properties.getReplyTo(), replyProps, response.toString().getBytes(StandardCharsets.UTF_8));
                     }
                     channel.basicAck(envelope.getDeliveryTag(), false);
                     // RabbitMq consumer worker thread notifies the RPC server owner thread 
@@ -219,8 +220,6 @@ public class Resulter implements Runnable{
             }
         } catch (IOException e) {
             Logger.getLogger(this.getClass().getName()).log(Level.FATAL, "Problems in task execution ", e);
-        } finally {
-            
         }
     }
 

@@ -6,10 +6,9 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
 
 public class Metadata implements Serializable {
 
@@ -19,7 +18,7 @@ public class Metadata implements Serializable {
 
     private boolean publicAccess;
 
-    private final List<Property> properties = new ObjectArrayList<>();;
+    private final List<Property> properties = new ObjectArrayList<>();
 
     public Metadata(){
     }

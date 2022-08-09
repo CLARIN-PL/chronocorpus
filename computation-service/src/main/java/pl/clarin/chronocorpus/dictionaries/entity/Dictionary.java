@@ -5,8 +5,8 @@ import javax.json.JsonObject;
 
 public class Dictionary {
 
-    private long id;
-    private String value;
+    private final long id;
+    private final String value;
 
     public Dictionary(long id, String value) {
         this.id = id;

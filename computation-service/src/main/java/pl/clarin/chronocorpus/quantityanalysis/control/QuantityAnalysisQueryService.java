@@ -14,11 +14,6 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -147,7 +142,7 @@ public class QuantityAnalysisQueryService {
         JsonArrayBuilder chartArray = Json.createArrayBuilder();
 
         if (chart != null)
-            chart.forEach((k, v) ->{
+            chart.forEach((k, v) -> {
                 chartArray.add(Json.createObjectBuilder().add(k.toString(), v));
 
             });

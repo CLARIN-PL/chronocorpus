@@ -20,7 +20,7 @@ public class QuantityAnalysisQuery extends Query {
             return TaskType.quantity_analysis;
         }
 
-        public QuantityAnalysisQuery.Builder partsOfSeech(String pos) {
+        public QuantityAnalysisQuery.Builder partsOfSpeech(String pos) {
             Property p = new Property("parts_of_speech", pos);
             withQueryProperty(p);
             return this;

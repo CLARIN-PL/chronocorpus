@@ -11,6 +11,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,7 +98,7 @@ public class StatisticsQueryService {
             long start = System.currentTimeMillis();
             LOGGER.info("Restoring statistics ...");
 
-            try (Input in = new Input(new FileInputStream(f))) {
+            try (Input in = new Input(Files.newInputStream(f.toPath()))) {
                 Object aNewObj = kryo.readClassAndObject(in);
 
                 if (aNewObj instanceof Statistics) {

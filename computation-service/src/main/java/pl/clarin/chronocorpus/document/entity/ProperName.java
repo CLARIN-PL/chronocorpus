@@ -4,6 +4,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class ProperName implements Serializable {
 
@@ -73,8 +74,8 @@ public class ProperName implements Serializable {
 
         ProperName that = (ProperName) o;
 
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
-        return value != null ? value.equals(that.value) : that.value == null;
+        if (!Objects.equals(type, that.type)) return false;
+        return Objects.equals(value, that.value);
     }
 
     @Override

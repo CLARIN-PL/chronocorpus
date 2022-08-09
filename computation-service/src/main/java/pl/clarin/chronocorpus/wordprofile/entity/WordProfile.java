@@ -1,16 +1,18 @@
 package pl.clarin.chronocorpus.wordprofile.entity;
 
+import java.util.Objects;
+
 public class WordProfile {
 
-    private String leftWordOrth;
+    private final String leftWordOrth;
 
-    private String leftWordBase;
+    private final String leftWordBase;
 
-    private String word;
+    private final String word;
 
-    private String rightWordOrth;
+    private final String rightWordOrth;
 
-    private String rightWordBase;
+    private final String rightWordBase;
 
     private Long frequency;
 
@@ -58,14 +60,14 @@ public class WordProfile {
 
         WordProfile that = (WordProfile) o;
 
-        if (leftWordOrth != null ? !leftWordOrth.equals(that.leftWordOrth) : that.leftWordOrth != null) return false;
-        if (leftWordBase != null ? !leftWordBase.equals(that.leftWordBase) : that.leftWordBase != null) return false;
+        if (!Objects.equals(leftWordOrth, that.leftWordOrth)) return false;
+        if (!Objects.equals(leftWordBase, that.leftWordBase)) return false;
         if (!word.equals(that.word)) return false;
-        if (rightWordOrth != null ? !rightWordOrth.equals(that.rightWordOrth) : that.rightWordOrth != null)
+        if (!Objects.equals(rightWordOrth, that.rightWordOrth))
             return false;
-        if (rightWordBase != null ? !rightWordBase.equals(that.rightWordBase) : that.rightWordBase != null)
+        if (!Objects.equals(rightWordBase, that.rightWordBase))
             return false;
-        return frequency != null ? frequency.equals(that.frequency) : that.frequency == null;
+        return Objects.equals(frequency, that.frequency);
     }
 
     @Override

@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import pl.clarin.chronocorpus.Progress;
 
 public class FrequencyTask extends Task {
@@ -31,18 +32,14 @@ public class FrequencyTask extends Task {
     }
 
     private Set<String> findStopListParameter() {
-        Set<String> stopList;
-
         Optional<String> s = queryParameters.stream()
                 .filter(p -> p.getName().equals("stop_list"))
                 .map(Property::getValueAsString)
                 .findFirst();
-        if (s.isPresent()) {
-            stopList = Stream.of(s.get().split(";")).collect(Collectors.toSet());
-        } else {
-            stopList = new HashSet<>(DictionaryQueryService.getInstance().defaultStopList());
-        }
-        return stopList;
+
+        return s.map(value -> Stream.of(value.split(";"))
+                .collect(Collectors.toSet()))
+                .orElseGet(() -> new HashSet<>(DictionaryQueryService.getInstance().defaultStopList()));
     }
 
     @Override
@@ -50,7 +47,7 @@ public class FrequencyTask extends Task {
 
 
         JsonArray frequency = FrequencyQueryService.getInstance()
-                .calculateFrequency(metadata, findStopListParameter(), findCountByBaseParameter(),pr);
+                .calculateFrequency(metadata, findStopListParameter(), findCountByBaseParameter(), pr);
 
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id)

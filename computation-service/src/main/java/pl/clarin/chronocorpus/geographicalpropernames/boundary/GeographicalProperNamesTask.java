@@ -8,6 +8,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+
 import pl.clarin.chronocorpus.Progress;
 
 public class GeographicalProperNamesTask extends Task {

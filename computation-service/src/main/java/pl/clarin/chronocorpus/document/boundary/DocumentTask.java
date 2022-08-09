@@ -33,11 +33,8 @@ public class DocumentTask extends Task {
 
         JsonArrayBuilder documents = Json.createArrayBuilder();
 
-        findDocumentIdParameter()
-                .ifPresent(docId ->
-                        DocumentQueryService.getInstance()
-                                .findDocumentById(Integer.parseInt(docId))
-                                .ifPresent(d -> documents.add(d.toJson())));
+        findDocumentIdParameter().flatMap(docId -> DocumentQueryService.getInstance()
+                .findDocumentById(Integer.parseInt(docId))).ifPresent(d -> documents.add(d.toJson()));
 
         if (!metadata.isEmpty()) {
             DocumentQueryService.getInstance()

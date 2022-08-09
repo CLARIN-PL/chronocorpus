@@ -10,8 +10,8 @@ import java.util.Map;
 public class TimeSeries {
 
     private String word;
-    private boolean isBaseForm;
-    private Integer pos;
+    private final boolean isBaseForm;
+    private final Integer pos;
     private List<TimeSeriesRow> series;
     private Map<String, Integer> merged;
 

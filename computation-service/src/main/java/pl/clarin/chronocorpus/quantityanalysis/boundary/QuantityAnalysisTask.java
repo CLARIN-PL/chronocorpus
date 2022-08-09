@@ -2,7 +2,6 @@ package pl.clarin.chronocorpus.quantityanalysis.boundary;
 
 import pl.clarin.chronocorpus.administration.control.StatisticsQueryService;
 import pl.clarin.chronocorpus.document.entity.Property;
-import pl.clarin.chronocorpus.geographicalpropernames.control.GeographicalQueryService;
 import pl.clarin.chronocorpus.quantityanalysis.control.QuantityAnalysisQueryService;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationObject;
 import pl.clarin.chronocorpus.quantityanalysis.entity.CalculationType;
@@ -15,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import pl.clarin.chronocorpus.Progress;
 
 public class QuantityAnalysisTask extends Task {
@@ -62,11 +62,11 @@ public class QuantityAnalysisTask extends Task {
     public JsonObject doTask(Progress pr) {
         JsonArrayBuilder anal = Json.createArrayBuilder();
 
-        Optional<CalculationUnit> unit  =findCalculationUnit();
-        Optional<CalculationObject> object  = findCalculationObject();
-        Optional<CalculationType> type  =findCalculationType();
+        Optional<CalculationUnit> unit = findCalculationUnit();
+        Optional<CalculationObject> object = findCalculationObject();
+        Optional<CalculationType> type = findCalculationType();
 
-        if(unit.isPresent() && object.isPresent() && type.isPresent()){
+        if (unit.isPresent() && object.isPresent() && type.isPresent()) {
             JsonObject r = QuantityAnalysisQueryService.getInstance()
                     .calculate(findPartsOfSpeech(), unit.get(), object.get(), type.get(), metadata);
             anal.add(r);

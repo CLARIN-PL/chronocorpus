@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class PartOfSpeechMapper {
 
-    private  Map<String, Byte> partsOfSpeech = new HashMap<>();
+    private final Map<String, Byte> partsOfSpeech = new HashMap<>();
 
     public static volatile PartOfSpeechMapper instance;
 

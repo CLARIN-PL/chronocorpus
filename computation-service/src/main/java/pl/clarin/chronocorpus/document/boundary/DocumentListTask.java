@@ -3,14 +3,13 @@ package pl.clarin.chronocorpus.document.boundary;
 import pl.clarin.chronocorpus.Progress;
 import pl.clarin.chronocorpus.document.control.DocumentQueryService;
 import pl.clarin.chronocorpus.document.entity.DocumentListItem;
-import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.task.entity.Task;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.util.Optional;
+
 
 public class DocumentListTask extends Task {
 

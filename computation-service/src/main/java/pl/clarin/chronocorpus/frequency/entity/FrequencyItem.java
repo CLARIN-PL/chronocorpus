@@ -5,8 +5,8 @@ import javax.json.JsonObject;
 
 public class FrequencyItem {
 
-    private String word;
-    private Byte pos;
+    private final String word;
+    private final Byte pos;
     private int frequency;
 
     public FrequencyItem(String word, Byte pos, int frequency) {

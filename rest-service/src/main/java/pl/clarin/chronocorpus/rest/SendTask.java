@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
@@ -108,7 +109,7 @@ public class SendTask {
                     .replyTo(replyQueueName)
                     .build();
 
-            channel.basicPublish("", taskQueueName, props, message.getBytes("UTF-8"));
+            channel.basicPublish("", taskQueueName, props, message.getBytes(StandardCharsets.UTF_8));
 
             Logger.getLogger(RESTService.class.getName()).log(Level.INFO, "Sending to " + taskQueueName + " " + message);
 

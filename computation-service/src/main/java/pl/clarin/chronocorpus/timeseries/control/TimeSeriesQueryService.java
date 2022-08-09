@@ -10,7 +10,6 @@ import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -66,7 +65,7 @@ public class TimeSeriesQueryService {
 
 //            if ( (d.getMetadata() == null || d.getMetadata().matches(metadata)) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
 
-            if ((d.getMetadata() != null ? d.getMetadata().matches(metadata) : true) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
+            if ((d.getMetadata() == null || d.getMetadata().matches(metadata)) && (byBase ? d.isBaseIn(keyWord) : d.isOrthIn(keyWord))) {
                 unit.ifPresent(u -> {
                     if (TimeUnit.year.equals(u)) {
                         pos.ifPresent(p -> {

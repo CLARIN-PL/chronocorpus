@@ -18,8 +18,8 @@ public class MapsLocationFinder {
     private static final Logger LOGGER = Logger.getLogger(MapsLocationFinder.class.getName());
 
     private static volatile MapsLocationFinder instance;
-    private NominatimClient nc;
-    private MapsLocationStore store = MapsLocationStore.getInstance();
+    private final NominatimClient nc;
+    private final MapsLocationStore store = MapsLocationStore.getInstance();
 
     private MapsLocationFinder() {
         HttpClient client =  HttpClientBuilder.create().build();

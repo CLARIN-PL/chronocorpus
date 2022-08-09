@@ -7,8 +7,8 @@ import java.util.List;
 
 public class WordProfileResult {
 
-   private String collocate;
-   private String matching;
+   private final String collocate;
+   private final String matching;
    private long frequency;
    private float percentage;
 
@@ -27,7 +27,7 @@ public class WordProfileResult {
            }
            this.frequency = this.frequency + m.getFrequency();
         }
-        this.matching = match.toString().substring(0, match.toString().length()-1);
+        this.matching = match.substring(0, match.toString().length()-1);
     }
 
     public JsonObject toJson(){

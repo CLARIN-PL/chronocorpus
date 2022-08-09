@@ -5,7 +5,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import pl.clarin.chronocorpus.dictionaries.control.DictionaryQueryService;
 
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.Serializable;
@@ -22,13 +21,13 @@ public class Document implements Serializable {
 
     private Metadata metadata;
 
-    private List<Sentence> sentences = new ObjectArrayList<>();
+    private final List<Sentence> sentences = new ObjectArrayList<>();
 
-    private Map<String, Statistic> bases = new Object2ObjectOpenHashMap<>();
-    private Map<String, Statistic> orths = new Object2ObjectOpenHashMap<>();
+    private final Map<String, Statistic> bases = new Object2ObjectOpenHashMap<>();
+    private final Map<String, Statistic> orths = new Object2ObjectOpenHashMap<>();
 
 
-    private List<ProperName> properNames = new ObjectArrayList<>();
+    private final List<ProperName> properNames = new ObjectArrayList<>();
 
     public Document() {
     }

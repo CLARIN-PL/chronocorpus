@@ -9,7 +9,7 @@ public class GeoNamesLocationFinder {
     private static final Logger LOGGER = Logger.getLogger(GeoNamesLocationFinder.class.getName());
 
     private static volatile GeoNamesLocationFinder instance;
-    private GeoNamesLocationStore store = GeoNamesLocationStore.getInstance();
+    private final GeoNamesLocationStore store = GeoNamesLocationStore.getInstance();
 
     private GeoNamesLocationFinder() {
     }

@@ -21,7 +21,7 @@ public class Application {
 
     private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
 
-    private TaskLookUp lookup;
+    private final TaskLookUp lookup;
 
     public static void main(String... args) {
 

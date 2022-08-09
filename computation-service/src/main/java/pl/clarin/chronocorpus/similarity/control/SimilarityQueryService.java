@@ -13,6 +13,7 @@ public class SimilarityQueryService {
 
     public static volatile SimilarityQueryService instance;
     private static final Integer FREQUENCY_THRESHOLD = 1;
+
     private SimilarityQueryService() {
     }
 
@@ -41,26 +42,26 @@ public class SimilarityQueryService {
         List<WordProfileResult> second = WordProfileQueryService.getInstance()
                 .getWordProfileResults(secondWord, leftWindowSize, rightWindowSize, secondPartOfSpeech, windowItemPartOfSpeech, stopList, metadata, byBase);
 
-        Map<String, SimilarityResult>  preGraph = new HashMap<>();
+        Map<String, SimilarityResult> preGraph = new HashMap<>();
 
         first.stream()
                 .filter(w -> w.getFrequency() > FREQUENCY_THRESHOLD)
-                .forEach( w -> {
-                if (!preGraph.containsKey(w.getCollocate())) {
-                    preGraph.put(w.getCollocate(), new SimilarityResult());
-                }
-                preGraph.get(w.getCollocate()).setW1(w.getFrequency());
+                .forEach(w -> {
+                    if (!preGraph.containsKey(w.getCollocate())) {
+                        preGraph.put(w.getCollocate(), new SimilarityResult());
+                    }
+                    preGraph.get(w.getCollocate()).setW1(w.getFrequency());
 
-        });
+                });
 
         second.stream()
                 .filter(w -> w.getFrequency() > FREQUENCY_THRESHOLD)
-                .forEach( w -> {
-            if(!preGraph.containsKey(w.getCollocate())){
-                preGraph.put(w.getCollocate(), new SimilarityResult());
-            }
-            preGraph.get(w.getCollocate()).setW2(w.getFrequency());
-        });
+                .forEach(w -> {
+                    if (!preGraph.containsKey(w.getCollocate())) {
+                        preGraph.put(w.getCollocate(), new SimilarityResult());
+                    }
+                    preGraph.get(w.getCollocate()).setW2(w.getFrequency());
+                });
 
         JsonArrayBuilder nodes = Json.createArrayBuilder();
         JsonArrayBuilder edges = Json.createArrayBuilder();
@@ -70,20 +71,20 @@ public class SimilarityQueryService {
         nodes.add(createNode(1, firstWord, "#7879ff"));
         nodes.add(createNode(2, secondWord, "#ff8178"));
 
-        preGraph.forEach((k,v) -> {
+        preGraph.forEach((k, v) -> {
             Integer id = idGen.getAndIncrement();
             String color = "#000000";
 
-            if(v.getW1() > 0){
+            if (v.getW1() > 0) {
                 edges.add(createEdge(id, 1, v.getW1()));
-                color ="#7879ff";
+                color = "#7879ff";
             }
-            if(v.getW2() > 0){
+            if (v.getW2() > 0) {
                 edges.add(createEdge(id, 2, v.getW2()));
-                color ="#ff8178";
+                color = "#ff8178";
             }
-            if(v.getW1() > 0 && v.getW2() > 0) {
-                color ="#78ffcb";
+            if (v.getW1() > 0 && v.getW2() > 0) {
+                color = "#78ffcb";
             }
             nodes.add(createNode(id, k, color));
         });
@@ -95,7 +96,7 @@ public class SimilarityQueryService {
         return network.build();
     }
 
-    private JsonObject createNode(Integer id, String label, String color){
+    private JsonObject createNode(Integer id, String label, String color) {
         JsonObjectBuilder jb = Json.createObjectBuilder();
         jb.add("id", id);
         jb.add("label", label);
@@ -103,7 +104,7 @@ public class SimilarityQueryService {
         return jb.build();
     }
 
-    private JsonObject createEdge(Integer from, Integer to, Long width){
+    private JsonObject createEdge(Integer from, Integer to, Long width) {
         JsonObjectBuilder jb = Json.createObjectBuilder();
         jb.add("from", from);
         jb.add("to", to);
@@ -111,10 +112,10 @@ public class SimilarityQueryService {
         return jb.build();
     }
 
-    private JsonObject createColor(String color){
+    private JsonObject createColor(String color) {
         JsonObjectBuilder jb = Json.createObjectBuilder();
         jb.add("background", color);
         jb.add("border", color);
-        return  jb.build();
+        return jb.build();
     }
 }

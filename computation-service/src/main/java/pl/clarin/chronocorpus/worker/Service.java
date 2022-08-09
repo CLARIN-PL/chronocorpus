@@ -38,7 +38,6 @@ public class Service<W extends Worker> {
 
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Problems with initalising workers", ex);
-            return;
         }
 
     }

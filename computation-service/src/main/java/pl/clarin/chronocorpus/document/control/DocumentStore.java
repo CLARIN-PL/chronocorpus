@@ -10,6 +10,7 @@ import pl.clarin.chronocorpus.Configuration;
 import pl.clarin.chronocorpus.document.entity.Document;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,7 +78,7 @@ public class DocumentStore {
             long start = System.currentTimeMillis();
             LOGGER.info("Restoring documents ...");
 
-            try (Input in = new Input(new FileInputStream(f))) {
+            try (Input in = new Input(Files.newInputStream(f.toPath()))) {
                 Object aNewSet = kryo.readClassAndObject(in);
 
                 if (aNewSet instanceof ObjectOpenHashSet) {

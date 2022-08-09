@@ -4,8 +4,7 @@ import pl.clarin.chronocorpus.administration.control.StatisticsQueryService;
 import pl.clarin.chronocorpus.dictionaries.control.DictionaryQueryService;
 import pl.clarin.chronocorpus.document.entity.Property;
 import pl.clarin.chronocorpus.task.entity.Task;
-import pl.clarin.chronocorpus.timeseries.control.TimeSeriesQueryService;
-import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
+
 import pl.clarin.chronocorpus.wordprofile.control.WordProfileQueryService;
 
 import javax.json.Json;
@@ -70,18 +69,14 @@ public class WordProfileTask extends Task {
     }
 
     private Set<String> findStopListParameter() {
-        Set<String> stopList;
-
         Optional<String> s = queryParameters.stream()
                 .filter(p -> p.getName().equals("stop_list"))
                 .map(Property::getValueAsString)
                 .findFirst();
-        if (s.isPresent()) {
-            stopList = Stream.of(s.get().split(";")).collect(Collectors.toSet());
-        } else {
-            stopList = new HashSet<>(DictionaryQueryService.getInstance().defaultStopList());
-        }
-        return stopList;
+
+        return s.map(value -> Stream.of(value.split(";"))
+                .collect(Collectors.toSet()))
+                .orElseGet(() -> new HashSet<>(DictionaryQueryService.getInstance().defaultStopList()));
     }
 
 
