@@ -3,6 +3,7 @@ package pl.clarin.chronocorpus;
 import org.ini4j.Ini;
 import pl.clarin.chronocorpus.document.control.DocumentFileLoader;
 import pl.clarin.chronocorpus.document.control.DocumentStore;
+import pl.clarin.chronocorpus.geographicalpropernames.boundary.GeographicalProperNamesTask;
 import pl.clarin.chronocorpus.query.boundary.*;
 import pl.clarin.chronocorpus.task.boundary.TaskLookUp;
 import pl.clarin.chronocorpus.task.boundary.UnknownTaskException;
@@ -27,8 +28,7 @@ public class Application {
 
         Application app = new Application();
 
-
-        SimilarityQuery sim = new SimilarityQuery.Builder()
+/*        SimilarityQuery sim = new SimilarityQuery.Builder()
                 .withFirstBase("komunizm")
                 .withSecondBase("socjalizm")
                 .withFirstPartOfSpeech("2")
@@ -37,9 +37,11 @@ public class Application {
                 .withRightWindowSize("1")
                 .withWindowItemPartOfSpeech("0")
                 .build();
-        app.testWithTimer(sim, "Sim");
+        app.testWithTimer(sim, "Sim");*/
 
-
+        GeoNamesQuery mm = new GeoNamesQuery.Builder()
+                .build();
+        app.testWithTimer(mm, "Dic");
 
 /*        DictionaryQueryService.getInstance().getSemanticListByName("colors")
                 .forEach(System.out::println);*/

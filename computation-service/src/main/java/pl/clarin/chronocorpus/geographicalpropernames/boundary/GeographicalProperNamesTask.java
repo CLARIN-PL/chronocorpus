@@ -21,7 +21,7 @@ public class GeographicalProperNamesTask extends Task {
     public JsonObject doTask(Progress pr) {
 
         JsonArray geo = GeographicalQueryService.getInstance()
-                .findGeoNames(metadata);
+                .findTimelapse(metadata, 1);
 
         JsonObjectBuilder json = Json.createObjectBuilder()
                 .add("task_id", id)
