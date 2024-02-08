@@ -1,33 +1,18 @@
-##############################################
-#  NLP Tools for Polish from G4.19 Group
-#  Wroclaw University of Science and Technology
-#  
-#  Client - Workers
-#           chrono...
-#
-#  Contact: Tomasz.Walkowiak@pwr.edu.pl
-#
-###############################################
-
-FROM openjdk:8 as builder
+FROM maven:3.8.1-openjdk-17-slim as builder
 
 LABEL application="Chronocorpus"
 LABEL description="Client - Workers"
 LABEL organiztation="NLP Tools for Polish from G4.19 Group - Wroclaw University of Science and Technology"
 LABEL maintainer="tomasz.walkowiak@pwr.edu.pl"
 
-RUN apt-get update
-RUN apt-get install -y subversion maven
-
 WORKDIR /home/install
 COPY  ./pom.xml /home/install/pom.xml
 
 COPY  ./rest-service /home/install/rest-service
 WORKDIR /home/install/rest-service
-RUN mvn clean
-RUN mvn install
+RUN mvn -U clean install
 
-FROM openjdk:8
+FROM openjdk:17
  
 WORKDIR /home/worker
 COPY --from=builder /home/install/rest-service/target/RESTchronocorpus.jar .
