@@ -1,4 +1,4 @@
-FROM maven:3.8.1-openjdk-17-slim as builder
+FROM maven:3.8.1-openjdk-8 as builder
 
 LABEL application="Chronocorpus"
 LABEL description="Client - Workers"
@@ -12,7 +12,7 @@ COPY  ./rest-service /home/install/rest-service
 WORKDIR /home/install/rest-service
 RUN mvn -U clean install
 
-FROM openjdk:17
+FROM openjdk:8
  
 WORKDIR /home/worker
 COPY --from=builder /home/install/rest-service/target/RESTchronocorpus.jar .

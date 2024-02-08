@@ -83,8 +83,7 @@ public abstract class Worker extends Thread {
         channel.basicQos(1);
 
         Consumer consumer = new DefaultConsumer(channel) {
-           
-            
+
             @Override
             public void handleDelivery(
                     String consumerTag,
