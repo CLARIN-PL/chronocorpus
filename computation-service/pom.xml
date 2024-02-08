@@ -91,29 +91,14 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>hack-binary</id>
-                        <phase>clean</phase>
-                        <configuration>
-                            <file>${project.basedir}/lib/g419-corpus-2.5-SNAPSHOT.jar</file>
-                            <repositoryLayout>default</repositoryLayout>
-                            <groupId>g419.corpus</groupId>
-                            <artifactId>io</artifactId>
-                            <version>2.5-SNAPSHOT</version>
-                            <packaging>jar</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
         <finalName>chronocorpus</finalName>
     </build>
+    <repositories>
+        <repository>
+            <id>reposilite-repository-releases</id>
+            <name>Reposilite Repository</name>
+            <url>https://maven.clarin-pl.eu/releases</url>
+        </repository>
+    </repositories>
 </project>

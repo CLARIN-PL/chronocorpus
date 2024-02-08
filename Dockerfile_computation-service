@@ -1,19 +1,16 @@
-FROM openjdk:8
+FROM maven:3.8.1-openjdk-17-slim
 
 LABEL application="Chronocorpus"
 LABEL description="Client - Workers"
 LABEL organiztation="NLP Tools for Polish from G4.19 Group - Wroclaw University of Science and Technology"
 LABEL maintainer="tomasz.walkowiak@pwr.edu.pl"
 
-RUN apt-get update
-RUN apt-get install -y subversion maven
-
 WORKDIR /home/install
 COPY  ./pom.xml /home/install/pom.xml
 COPY  ./computation-service /home/install/computation-service
 WORKDIR /home/install/computation-service
-RUN mvn  clean
-RUN mvn  install
+RUN mvn -U clean install
+
 
 
 
