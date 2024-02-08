@@ -28,8 +28,8 @@ public class StatisticsQueryService {
 
     private StatisticsQueryService() {
         super();
-        kryo.register(Statistics.class);
         kryo.register(AtomicInteger.class);
+        kryo.register(Statistics.class);
         restore();
     }
 
@@ -37,6 +37,7 @@ public class StatisticsQueryService {
         if (instance == null) {
             synchronized (StatisticsQueryService.class) {
                 if (instance == null) {
+                    LOGGER.info("Building statistics ...");
                     instance = new StatisticsQueryService();
                 }
             }
