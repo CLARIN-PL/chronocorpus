@@ -1,19 +1,13 @@
 package pl.clarin.chronocorpus.administration.control;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
 import pl.clarin.chronocorpus.Configuration;
 import pl.clarin.chronocorpus.administration.entity.Statistics;
-import pl.clarin.chronocorpus.document.control.DocumentStore;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.io.*;
-import java.nio.file.Files;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class StatisticsQueryService {
@@ -28,7 +22,6 @@ public class StatisticsQueryService {
 
     private StatisticsQueryService() {
         super();
-        kryo.register(AtomicInteger.class);
         kryo.register(Statistics.class);
         restore();
     }
@@ -96,7 +89,7 @@ public class StatisticsQueryService {
     }
 
     private void restore() {
-        if (checkBackupFileExists()) {
+       /* if (checkBackupFileExists()) {
             long start = System.currentTimeMillis();
             LOGGER.info("Restoring statistics ...");
 
@@ -112,11 +105,11 @@ public class StatisticsQueryService {
 
             long time = System.currentTimeMillis() - start;
             LOGGER.info("Restoring statistics took: " + time + "ms");
-        }
+        }*/
     }
 
     private void backup() {
-        try (Output out = new Output(new FileOutputStream(Configuration.STATISTICS_FILE))) {
+       /* try (Output out = new Output(new FileOutputStream(Configuration.STATISTICS_FILE))) {
             LOGGER.info("Saving statistics ...");
             long start = System.currentTimeMillis();
             kryo.writeClassAndObject(out, statistics);
@@ -125,6 +118,6 @@ public class StatisticsQueryService {
             LOGGER.info("Saving statistics took: " + time + "ms");
         } catch (FileNotFoundException e) {
             LOGGER.log(Level.SEVERE, "Statistics saving failure", e);
-        }
+        }*/
     }
 }

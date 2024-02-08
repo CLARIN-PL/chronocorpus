@@ -51,13 +51,11 @@ public class Application {
                 .build();
         app.testWithTimer(dic, "Dic");*/
 
-/*
         ConcordanceQuery con = new ConcordanceQuery.Builder()
                 .withOrth("do")
                 .withMetaAuthor("Jan Sadziak;G. J.;")
                 .build();
         app.testWithTimer(con, "Conc");
-*/
 
 /*        StatisticsQuery stat = new StatisticsQuery.Builder()
                 .build();
