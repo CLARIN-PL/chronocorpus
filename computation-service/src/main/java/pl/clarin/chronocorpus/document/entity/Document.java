@@ -8,12 +8,15 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Document implements Serializable {
 
@@ -101,7 +104,6 @@ public class Document implements Serializable {
                 .collect(Collectors.joining());
     }
 
-
     public int findSubsequenceCountForOrthText(String find){
         Pattern PATTERN =
                 Pattern.compile("("+find+"+)");
@@ -127,7 +129,6 @@ public class Document implements Serializable {
         }
         return count;
     }
-
 
     public String toTextInBase() {
         return sentences.stream()
@@ -163,4 +164,5 @@ public class Document implements Serializable {
     public List<ProperName> getProperNames() {
         return properNames;
     }
+
 }

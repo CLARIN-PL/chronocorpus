@@ -66,8 +66,6 @@ services:
     volumes:
         - ./rest-service/config.ini:/home/worker/config.ini
     working_dir: /home/worker/    
-    depends_on:
-      - base
     entrypoint:
          - java
          - -jar 
