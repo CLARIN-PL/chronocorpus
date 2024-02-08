@@ -38,7 +38,6 @@ public class DocumentStore {
         kryo.register(pl.clarin.chronocorpus.document.entity.Property.class);
         kryo.register(pl.clarin.chronocorpus.document.entity.Metadata.class);
         kryo.register(pl.clarin.chronocorpus.document.entity.Token.class);
-
         restore();
     }
 

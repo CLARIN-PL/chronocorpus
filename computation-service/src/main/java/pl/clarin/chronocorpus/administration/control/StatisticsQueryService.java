@@ -27,6 +27,7 @@ public class StatisticsQueryService {
     private Statistics statistics= new Statistics();
 
     private StatisticsQueryService() {
+        super();
         kryo.register(Statistics.class);
         kryo.register(AtomicInteger.class);
         restore();
@@ -34,7 +35,7 @@ public class StatisticsQueryService {
 
     public static StatisticsQueryService getInstance() {
         if (instance == null) {
-            synchronized (DocumentStore.class) {
+            synchronized (StatisticsQueryService.class) {
                 if (instance == null) {
                     instance = new StatisticsQueryService();
                 }
