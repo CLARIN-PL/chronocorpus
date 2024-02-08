@@ -6,6 +6,13 @@
         <artifactId>chronocorpus</artifactId>
         <version>1.0</version>
     </parent>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <modelVersion>4.0.0</modelVersion>
     <artifactId>computation-servce</artifactId>
     <packaging>jar</packaging>
@@ -52,10 +59,6 @@
             <version>8.2.2</version>
         </dependency>
     </dependencies>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <build>
         <plugins>
