@@ -13,7 +13,9 @@ import pl.clarin.chronocorpus.timeseries.entity.TimeUnit;
 
 import javax.json.JsonObject;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +42,7 @@ public class Application {
         app.testWithTimer(sim, "Sim");*/
 
         GeoNamesQuery mm = new GeoNamesQuery.Builder()
+                .withMetaPublicationYear("1966")
                 .build();
         app.testWithTimer(mm, "Dic");
 
@@ -50,23 +53,29 @@ public class Application {
                 .findDictionaries(true)
                 .build();
         app.testWithTimer(dic, "Dic");*/
-
-        ConcordanceQuery con = new ConcordanceQuery.Builder()
-                .withOrth("do")
-                .withMetaAuthor("Jan Sadziak;G. J.;")
+//
+/*
+       ConcordanceQuery con = new ConcordanceQuery.Builder()
+                .withBase("osoba")
                 .build();
         app.testWithTimer(con, "Conc");
+*/
 
 /*        StatisticsQuery stat = new StatisticsQuery.Builder()
                 .build();
         app.testWithTimer(stat, "Stats");*/
 
 
-/*        DocumentStore.getInstance()
-                .getDocuments().forEach(d -> {
-            System.out.println(d.getMetadata().getProperty("publication_date"));
+       DocumentStore.getInstance()
+                .getDocuments()
+               .stream()
+               .forEach(d -> {
+            System.out.println(d);
+            System.out.println(d.toText());
+            System.out.println("-******-");
+            System.out.println(d.getMetadata().toJson());
             System.out.println("---");
-        });*/
+        });
        // app.testWithTimer(doc, "Document");
 
 /*       TimeSeriesQuery ser = new TimeSeriesQuery.Builder()
@@ -76,28 +85,6 @@ public class Application {
                 .build();
 
         app.testWithTimer(ser, "TS");
-
- */
-      /*  Map<String, Integer> cc = new HashMap<>();
-        for (Document d : DocumentStore.getInstance().getDocuments()) {
-            int count = d.findSubsequenceCountForBaseText("zielony góra");
-
-            if( count > 0){
-                String y = d.getMetadata().getProperty("publication_year");
-                String m = d.getMetadata().getProperty("publication_month");
-                if(!cc.containsKey(y)){
-                    cc.put(y+"\t"+m, 0);
-                }
-                cc.replace(y+"\t"+m, cc.get(y+"\t"+m) + count);
-            }
-        }
-        System.out.println(cc);
-        List<String> byKey = new ArrayList<>(cc.keySet());
-        Collections.sort(byKey);
-
-        byKey.forEach(k ->{
-            System.out.println(k +"\t" + cc.get(k));
-        });*/
 
 /*        FrequencyQuery fq  = new FrequencyQuery.Builder()
                 .countByBase(true)
@@ -125,6 +112,7 @@ public class Application {
 
         app.testWithTimer(ser, "TS");*/
 
+
     }
 
     public Application() {
@@ -132,7 +120,7 @@ public class Application {
         lookup = new TaskLookUp();
         if (DocumentStore.getInstance().hasNoStoredDocuments()) {
             try {
-                DocumentStore.getInstance().setDocuments(DocumentFileLoader.getInstance().load());
+              DocumentStore.getInstance().setDocuments(DocumentFileLoader.getInstance().load());
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "Error loading document store", e);
             }
@@ -160,6 +148,18 @@ public class Application {
 
         long start4 = System.currentTimeMillis();
         LOGGER.log(Level.INFO, name+" response json:"+ this.process(j));
+        long time4 = System.currentTimeMillis() - start4;
+        LOGGER.log(Level.INFO, name + " execution took: " + time4 + "ms");
+    }
+
+    public void testWithTimerSaveToFile(Query q, String name, String meta , PrintWriter printWriter){
+        JsonObject j = q.getJson();
+        LOGGER.log(Level.INFO, name+" query json:"+ j);
+
+        long start4 = System.currentTimeMillis();
+        String r = this.process(j).toString();
+        LOGGER.log(Level.INFO, name+" response json:"+ r);
+        printWriter.println(meta+ r);
         long time4 = System.currentTimeMillis() - start4;
         LOGGER.log(Level.INFO, name + " execution took: " + time4 + "ms");
     }

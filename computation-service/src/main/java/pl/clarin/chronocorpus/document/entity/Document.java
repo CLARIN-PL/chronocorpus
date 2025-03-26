@@ -165,4 +165,12 @@ public class Document implements Serializable {
         return properNames;
     }
 
+    @Override
+    public String toString() {
+        return "Document{" +
+                "id=" + id +
+                ", metadata=" + metadata +
+                ", properNames=" + properNames +
+                '}';
+    }
 }

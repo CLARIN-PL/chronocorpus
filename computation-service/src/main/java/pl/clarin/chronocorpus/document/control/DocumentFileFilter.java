@@ -47,9 +47,9 @@ public class DocumentFileFilter {
                 new Property(name, value));
     }
 
-    private static ProperName createProperName(final String type, final String value, final String geoString) {
+    private static ProperName createProperName(final String type, final String base, final String value, final String geoString) {
         return properNameCache.computeIfAbsent(propertyParameterAsString(type, value), newParams ->
-                new ProperName(type, value, geoString));
+                new ProperName(type, base, value, geoString));
     }
 
     private static String wordParametersAsString(String orth, String base,  int pos, boolean spaceAfter) {
@@ -162,7 +162,7 @@ public class DocumentFileFilter {
 
                 for(Annotation a : ccl.getAnnotations()){
                     if(a.getType().startsWith("nam")){
-                        doc.getProperNames().add(createProperName(a.getType(), a.getText(), a.getMetadata("coord")));
+                        doc.getProperNames().add(createProperName(a.getType(),"", a.getText(), a.getMetadata("coord")));
                     }
                 }
 

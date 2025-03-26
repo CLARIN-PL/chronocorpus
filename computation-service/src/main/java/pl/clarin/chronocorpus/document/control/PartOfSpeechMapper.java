@@ -56,4 +56,8 @@ public class PartOfSpeechMapper {
         return partsOfSpeech.getOrDefault(pos,(byte) 0);
     }
 
+    public byte getPosFromCTag(String pos){
+        String[] split = pos.split(":");
+        return partsOfSpeech.getOrDefault(split[0],(byte) 0);
+    }
 }

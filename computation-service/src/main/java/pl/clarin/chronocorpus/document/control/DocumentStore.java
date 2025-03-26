@@ -58,7 +58,6 @@ public class DocumentStore {
 
     public void setDocuments(Set<Document> documents) {
         this.documents = documents;
-
         if(!checkBackupFileExists()) {
             backup();
         }

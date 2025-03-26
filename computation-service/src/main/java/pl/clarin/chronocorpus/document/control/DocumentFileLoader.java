@@ -49,7 +49,7 @@ public class DocumentFileLoader {
 
     private static ProperName createProperName(final String type, final String value, final String geoString) {
         return properNameCache.computeIfAbsent(propertyParameterAsString(type, value), newParams ->
-                new ProperName(type, value, geoString));
+                new ProperName(type, "", value, geoString));
     }
 
     private static String wordParametersAsString(String orth, String base,  int pos, boolean spaceAfter) {
@@ -72,7 +72,7 @@ public class DocumentFileLoader {
     }
 
     //TODO normalizacja danych słownikowych
-    private Map<String, Metadata> loadMetadata(String metadataZipFile) throws IOException {
+    public Map<String, Metadata> loadMetadata(String metadataZipFile) throws IOException {
         LOGGER.log(Level.INFO, "Loading metadata documents from files please wait .....");
         long start = System.currentTimeMillis();
         Map<String, Metadata> metadata = new HashMap<>();

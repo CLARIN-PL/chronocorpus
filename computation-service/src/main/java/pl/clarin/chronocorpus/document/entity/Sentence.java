@@ -9,6 +9,28 @@ import java.util.stream.Collectors;
 public class Sentence implements Serializable {
 
     private final List<Token> tokens = new ObjectArrayList<>();
+    private int index;
+    private int sentenceStart;
+    private int sentenceEnd;
+
+    public Sentence(int index, int sentenceStart, int sentenceEnd) {
+        this.index = index;
+        this.sentenceStart = sentenceStart;
+        this.sentenceEnd = sentenceEnd;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public int getSentenceStart() {
+        return sentenceStart;
+    }
+
+    public int getSentenceEnd() {
+        return sentenceEnd;
+    }
+
 
     public Sentence() {
     }
