@@ -28,6 +28,7 @@ public class SimilarityQueryService {
         return instance;
     }
 
+    // dodać opcje log-likehood ratio
     public JsonObject findSimilarity(String firstWord, String secondWord,
                                      Integer leftWindowSize,
                                      Integer rightWindowSize,

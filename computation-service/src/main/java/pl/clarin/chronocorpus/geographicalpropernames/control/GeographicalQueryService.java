@@ -10,6 +10,8 @@ import pl.clarin.chronocorpus.geographicalpropernames.entity.LocationCount;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -62,7 +64,7 @@ public class GeographicalQueryService {
         return geoNames.build();
     }
 
-    public JsonArray findTimelapse(Set<Property> metadata, int frequencyTrashHold){
+    public JsonArray findTimelapse(Set<Property> metadata, int frequencyTrashHold) {
         JsonArrayBuilder builder = Json.createArrayBuilder();
         DictionaryQueryService.getInstance()
                 .findByPropertyName("publication_year")
@@ -81,10 +83,13 @@ public class GeographicalQueryService {
                 .filter(d -> d.getMetadata().matches(metadata))
                 .filter(d -> d.getMetadata().getProperty("publication_year").equals(year))
                 .flatMap(d -> d.getProperNames().stream())
-                .filter(p -> p.getType().startsWith("nam_loc") && !p.getBase().isEmpty() && !p.getGeoString().isEmpty())
+                .filter(p -> p.getType().startsWith("nam_loc")
+                                            && !checkTypeList(p.getType())
+                                            && !p.getBase().isEmpty()
+                                            && !p.getGeoString().isEmpty())
                 .forEach(p -> {
                     if (!map.containsKey(p.getBase())) {
-                        map.put(p.getBase(), new LocationCount(new AtomicInteger(1), p.getLon(),p.getLat()));
+                        map.put(p.getBase(), new LocationCount(new AtomicInteger(1), p.getLon(), p.getLat()));
                     } else {
                         map.get(p.getBase()).count().incrementAndGet();
                     }
@@ -106,6 +111,37 @@ public class GeographicalQueryService {
 
         return geoNames;
     }
+
+    private boolean checkTypeList(String type) {
+      List<String> names = Arrays.asList(
+                "nam_loc_astronomical",
+                "nam_loc_gpe_admin",
+                "nam_loc_gpe_admin1",
+                "nam_loc_gpe_admin2",
+                "nam_loc_gpe_admin3",
+                "nam_loc_gpe_district",
+                "nam_loc_gpe_subdivision",
+                "nam_loc_hydronym",
+                "nam_loc_hydronym_bay",
+                "nam_loc_hydronym_lagoon",
+                "nam_loc_hydronym_lake",
+                "nam_loc_hydronym_ocean",
+                "nam_loc_hydronym_river",
+                "nam_loc_hydronym_sea",
+                "nam_loc_land",
+                "nam_loc_land_cape",
+                "nam_loc_land_continent",
+                "nam_loc_land_desert",
+                "nam_loc_land_island",
+                "nam_loc_land_mountain",
+                "nam_loc_land_peak",
+                "nam_loc_land_peninsula",
+                "nam_loc_land_protected_area",
+                "nam_loc_land_region",
+                "nam_loc_land_sandspit");
+      return names.contains(type);
+    }
+
 }
 
 
