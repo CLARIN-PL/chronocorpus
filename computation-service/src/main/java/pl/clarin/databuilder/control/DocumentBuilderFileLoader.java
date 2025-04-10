@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,9 +54,10 @@ public class DocumentBuilderFileLoader {
         while (entries.hasMoreElements()) {
             try {
                 ZipEntry entry = entries.nextElement();
+                LOGGER.log(Level.INFO,"Processing: " + entry.getName());
                 InputStream is = zipFile.getInputStream(entry);
                 DocumentDTO dto = ClarinJsonReader.read(is);
-                String id = entry.getName().replace(".json","").trim();
+                String id = entry.getName().replace(".txt","").trim();
                 if(metadata.containsKey(id)) {
                     Document document = DocumentConverter.convert(
                             new Document(documentId.getAndIncrement(), metadata.get(id)), dto);
@@ -65,7 +65,7 @@ public class DocumentBuilderFileLoader {
                 }
                 is.close();
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE,"Loading document failed", e);
+                LOGGER.log(Level.SEVERE,"Loading document failed" , e);
             }
         }
         zipFile.close();

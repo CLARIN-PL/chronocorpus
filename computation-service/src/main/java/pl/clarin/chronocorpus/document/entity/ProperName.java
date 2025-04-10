@@ -68,7 +68,7 @@ public class ProperName implements Serializable {
         builder.add("type", type);
         builder.add("value", value);
 
-        if (getGeoString() != null) {
+        if (getGeoString() != null && !geoString.isEmpty()) {
             JsonObjectBuilder objBuilder = Json.createObjectBuilder();
             objBuilder.add("type", getSubType());
             objBuilder.add("base", base);
